@@ -92,8 +92,13 @@ const NO_GUIDES: readonly MgGuide[] = [];
  * write took back what the menu showed.
  */
 const inspectorKey = (target: EventTarget | null): boolean => Boolean((target as Element | null)?.closest?.('[data-film-inspector], [role="listbox"], [role="menu"]'));
-/** A selected layer lost in a redraw is let go after this long without finding it again. */
-const LOST_PICK_GRACE_MS = 1200;
+/**
+ * A selected layer lost in a redraw is let go after this long without finding it again. A page drawn anew (the film
+ * edited, a paste undone) takes seconds on a slow machine, and letting go as soon as it is not the first time found
+ * would lose the selection the person still has: long enough for the page to come back, short enough that a layer
+ * really gone is let go.
+ */
+const LOST_PICK_GRACE_MS = 6000;
 /** The selection is measured again each time the playhead enters another half second. */
 const STALE_BUCKET_MS = 500;
 const staleBucket = (timeMs: number): number => Math.round(timeMs / STALE_BUCKET_MS);

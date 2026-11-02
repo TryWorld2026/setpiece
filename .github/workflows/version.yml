@@ -43,7 +43,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"
+          # npm attests a publish to its source repository, and only accepts one that is public
+          NPM_CONFIG_PROVENANCE: ${{ !github.event.repository.private }}
       - name: Tag the published version
         if: steps.changesets.outputs.published == 'true'
         run: |
