@@ -3092,6 +3092,8 @@ export const Timeline = React.memo(function Timeline({
                 data-can-move={able.move ? '1' : '0'}
                 data-can-resize={able.resize ? '1' : '0'}
                 data-media-trouble={trouble}
+                /* a video's own sound, once the film's page has said it (its menu then has Mute) */
+                data-own-audio={block.ownAudio ? '1' : undefined}
                 data-chat-lit={chatLit ? '' : undefined}
                 /* overflow is clipped on the inner box: the selection frame is drawn outside */
                 className={`group/block absolute inset-y-0 ${

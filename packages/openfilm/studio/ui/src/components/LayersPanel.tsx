@@ -76,15 +76,15 @@ export function LayersPanel(p: LayersPanelProps) {
   const read = React.useCallback(async () => {
     const next = await askRef.current<LayerClip[]>('tree');
     if (next && !sameTree(clipsRef.current, next)) setClips(next);
-    return next != null;
+    return next;
   }, []);
   React.useEffect(() => {
     let live = true;
     let timer = 0;
     const again = async () => {
-      const ok = await read();
-      /* the picture not ready yet: asked again soon */
-      if (live && !ok) timer = window.setTimeout(() => void again(), 500);
+      const next = await read();
+      /* the picture not ready yet (no answer, or nothing drawn yet): asked again soon */
+      if (live && !next?.some((c) => c.layers.length)) timer = window.setTimeout(() => void again(), 500);
     };
     timer = window.setTimeout(() => void again(), 60);
     return () => { live = false; window.clearTimeout(timer); };

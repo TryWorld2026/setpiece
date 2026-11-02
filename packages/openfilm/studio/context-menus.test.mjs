@@ -56,6 +56,12 @@ test('a click only selects; a right click gives the whole menu, Reference first,
     /* a clip on the timeline: Reference, a line, then the rest, with what its bar had (Duplicate, Speed, Mute) */
     const video = page.locator('[data-block-id]').nth(1);
     await video.waitFor({ state: 'visible' });
+    /* the menu is built when it opens, and a clip has Mute only once the film's page has said the clip has its own
+       sound (a slow machine says it seconds after the clip is drawn): wait for that, not for the menu to change */
+    await page.waitForFunction(
+      () => document.querySelectorAll('[data-block-id]')[1]?.hasAttribute('data-own-audio') ?? false,
+      null, { timeout: 60_000 },
+    );
     await video.click({ position: { x: 20, y: 10 } });
     await video.click({ button: 'right', position: { x: 20, y: 10 } });
     await until(async () => (await menu())?.length, 'the clip menu opens');

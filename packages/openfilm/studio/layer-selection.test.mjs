@@ -52,7 +52,8 @@ async function withCard(name, run, { chat = false, again = false } = {}) {
     /** A point of the film (its px) on the screen. */
     const on = (x, y) => ({ x: box.x + x * scale, y: box.y + y * scale });
     const until = async (check, what) => {
-      for (let i = 0; i < 60; i += 1) { if (await check()) return; await page.waitForTimeout(100); }
+      /* a page shown again (an undo of a paste) is written, reloaded and read back: seconds on a slow runner */
+      for (let i = 0; i < 150; i += 1) { if (await check()) return; await page.waitForTimeout(100); }
       assert.fail(what);
     };
     /** What is selected on the picture: how many layers together (null: not several), the Layers rows selected, and
