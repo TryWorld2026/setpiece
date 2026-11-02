@@ -125,11 +125,12 @@ for something new; `major` only by agreement), and write a line for the changelo
 file it writes in `.changeset/`. A change to tests, docs or CI alone needs none (`pnpm changeset --empty` says so).
 Each line in the changelog links its pull request and thanks its author.
 
-All the packages share one version. When changesets reach `main`, the release workflow opens a "Version packages"
+All the packages share one version. When changesets reach `main`, the version workflow opens a "Version packages"
 pull request that bumps it and writes the changelogs; merging it publishes `@tryworld/set` to npm (with provenance, from CI
-only). Then a maintainer pushes the tag `v<version>`: the desktop workflow builds the app, signs and notarizes it, and
-makes a draft GitHub release with the installers. Publishing that release makes it the latest, which the website's
-download links and the apps' update checks follow.
+only) and pushes the tag `v<version>`. The desktop workflow then builds the app, signs and notarizes it when the signing
+secrets are set (unsigned otherwise), and makes a draft GitHub release with the installers. Publishing that release
+makes it the latest, which the website's download links and the apps' update checks follow. The required secrets are in
+[.github/workflows/README.md](.github/workflows/README.md).
 
 ## Where to start
 

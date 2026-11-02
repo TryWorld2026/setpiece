@@ -1,0 +1,77 @@
+name: Release desktop
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to build, such as v0.2.8
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  desktop:
+    name: Build installers
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the macOS app
+        run: pnpm --filter @tryworld/set-desktop release --unsigned
+      - name: Build the Windows installer
+        run: pnpm --filter @tryworld/set-desktop release --platform=win --arch=x64 --unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-installers
+          if-no-files-found: error
+          path: |
+            apps/desktop/.release/x64/out/*.dmg
+            apps/desktop/.release/x64/out/*.zip
+            apps/desktop/.release/x64/out/*.yml
+            apps/desktop/.release/win-x64/out/*.exe
+            apps/desktop/.release/win-x64/out/*.yml
+
+  publish:
+    name: Draft GitHub release
+    needs: desktop
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: desktop-installers
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: |
+          cd dist
+          find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - name: Create or update the draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" dist/* --clobber
+          else
+            gh release create "$tag" dist/* \
+              --draft \
+              --generate-notes \
+              --title "TryWorld Set $tag"
+          fi

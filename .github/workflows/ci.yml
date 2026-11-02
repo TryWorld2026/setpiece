@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: false
+      - name: Install ffmpeg
+        shell: bash
+        run: |
+          if command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -version | head -n 1
+          elif [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install ffmpeg
+          else
+            choco install ffmpeg -y --no-progress
+          fi
+      - name: Install gitleaks
+        shell: bash
+        run: |
+          go install github.com/gitleaks/gitleaks/v8@v8.30.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - run: pnpm install --frozen-lockfile
+      - name: Install the headless browser
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            pnpm --filter @tryworld/set exec playwright-core install --with-deps chromium-headless-shell
+          else
+            pnpm --filter @tryworld/set exec playwright-core install chromium-headless-shell
+          fi
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm test
+      - run: pnpm audit:public
+      - run: pnpm check:pack

@@ -1,4 +1,4 @@
-# @openfilm/desktop
+# @tryworld/set-desktop
 
 ## 0.2.7
 
