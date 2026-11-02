@@ -1,6 +1,6 @@
 {
   "name": "@tryworld/set",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "TryWorld Set: films as web pages, the manual that teaches your coding agent to make them, the `twset` command, and Studio, the editor to change anything in them.",
   "license": "MIT",
   "homepage": "https://github.com/TryWorld2026/tryworld-set",

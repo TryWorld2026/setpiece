@@ -1,5 +1,14 @@
 # @tryworld/set-desktop
 
+## 0.2.8
+
+### Patch Changes
+
+- [`9375992`](https://github.com/TryWorld2026/tryworld-set/commit/9375992b922adba0c1947e3ae831ac928149b43e) Thanks [@WEBGRS](https://github.com/WEBGRS)! - On Windows, looking for the agents holds the app about half as long: each agent's program is looked for once per look instead of twice, and the thousands of files that aren't there are told without making an error for each.
+
+- Updated dependencies [[`b70b5a1`](https://github.com/TryWorld2026/tryworld-set/commit/b70b5a15228b29a8fedc8e8866568c3524b2da1d), [`8b8c0f1`](https://github.com/TryWorld2026/tryworld-set/commit/8b8c0f1eb61b94591849bf57e82f79c15ce7c777), [`09e18d7`](https://github.com/TryWorld2026/tryworld-set/commit/09e18d7089aa4f51445f23b0708ac3d95a1077c4)]:
+  - @tryworld/set@0.2.8
+
 ## 0.2.7
 
 ### Patch Changes
