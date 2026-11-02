@@ -81,10 +81,13 @@ export function LayersPanel(p: LayersPanelProps) {
   React.useEffect(() => {
     let live = true;
     let timer = 0;
+    /* a picture drawn in the moment it is asked can be halfway (the video's row, its page's not yet): asking again
+       soon fills it. A film of videos alone shows no layers, so asking stops after a minute; a seek or an edit asks
+       again with a fresh minute. */
+    let left = 120;
     const again = async () => {
       const next = await read();
-      /* the picture not ready yet (no answer, or nothing drawn yet): asked again soon */
-      if (live && !next?.length) timer = window.setTimeout(() => void again(), 500);
+      if (live && !next?.some((c) => c.layers.length) && (left -= 1) > 0) timer = window.setTimeout(() => void again(), 500);
     };
     timer = window.setTimeout(() => void again(), 60);
     return () => { live = false; window.clearTimeout(timer); };

@@ -51,10 +51,10 @@ async function withCard(name, run, { chat = false, again = false } = {}) {
     const scale = box.width / 1080;
     /** A point of the film (its px) on the screen. */
     const on = (x, y) => ({ x: box.x + x * scale, y: box.y + y * scale });
-    const until = async (check, what) => {
+    const until = async (check, what, detail) => {
       /* a page shown again (an undo of a paste) is written, reloaded and read back: seconds on a slow runner */
       for (let i = 0; i < 150; i += 1) { if (await check()) return; await page.waitForTimeout(100); }
-      assert.fail(what);
+      assert.fail(detail ? `${what} (${JSON.stringify(await detail())})` : what);
     };
     /** What is selected on the picture: how many layers together (null: not several), the Layers rows selected, and
         the blue boxes drawn over the picture (their left tops, film px). */
@@ -269,7 +269,7 @@ test('a paste undone: no box stays where a copy went, and what is selected keeps
       return now.many === 3 && JSON.stringify(now.rows.sort()) === JSON.stringify(['#box1', 'On time', 'Parcel'])
         && boxedAt(now, 100, 200) && !now.boxes.some(([x]) => x === 124);
     };
-    await until(three, 'the three layers still in the page stay selected, with no box on a copy');
+    await until(three, 'the three layers still in the page stay selected, with no box on a copy', selection);
     await page.waitForTimeout(1500);
     assert.ok(await three(), 'and they stay so');
   }, { again: true });
