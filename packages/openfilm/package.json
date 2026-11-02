@@ -1,16 +1,16 @@
 {
-  "name": "openfilm",
+  "name": "@tryworld/set",
   "version": "0.2.7",
-  "description": "The open source AI video agent: films as web pages, the manual that teaches your coding agent to make them, the `openfilm` command, and Studio, the editor to change anything in them.",
+  "description": "TryWorld Set: films as web pages, the manual that teaches your coding agent to make them, the `twset` command, and Studio, the editor to change anything in them.",
   "license": "MIT",
-  "homepage": "https://openfilm.dev",
+  "homepage": "https://github.com/TryWorld2026/tryworld-set",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openfilm/openfilm.git",
+    "url": "git+https://github.com/TryWorld2026/tryworld-set.git",
     "directory": "packages/openfilm"
   },
   "bugs": {
-    "url": "https://github.com/openfilm/openfilm/issues"
+    "url": "https://github.com/TryWorld2026/tryworld-set/issues"
   },
   "keywords": [
     "video",
@@ -23,7 +23,7 @@
   ],
   "type": "module",
   "bin": {
-    "openfilm": "bin/openfilm.mjs"
+    "twset": "bin/twset.mjs"
   },
   "exports": {
     "./film-doc": "./src/film-doc.mjs",

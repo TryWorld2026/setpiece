@@ -14,7 +14,7 @@
  *             `--terms <file>` (one regular expression per line, as /source/flags or plain source; # comments):
  *             maintainers keep their own list of names that must not appear, outside the repository.
  *   path      a relative path out of the repository (tests may name one, to check it is refused).
- *   deps      a dependency on an `@openfilm/` package, or a `workspace:` range, that is not a package of this
+ *   deps      a dependency on an `@tryworld/` package, or a `workspace:` range, that is not a package of this
  *             workspace: everything here builds from this repository and npm alone.
  *   secret    gitleaks (`gitleaks dir`, with .gitleaks.toml: its default rules and this repository's allowlist).
  *
@@ -148,7 +148,7 @@ function scan(files) {
   return locales;
 }
 
-/** Every package.json: its `@openfilm/` and `workspace:` dependencies must be packages of this workspace. */
+/** Every package.json: its `@tryworld/` and `workspace:` dependencies must be packages of this workspace. */
 function checkDeps(files) {
   const manifests = files.filter((f) => f === 'package.json' || f.endsWith('/package.json'));
   const pkgs = manifests.map((f) => ({ file: f, json: JSON.parse(readFileSync(join(ROOT, f), 'utf8')) }));
@@ -158,7 +158,7 @@ function checkDeps(files) {
     for (const field of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
       for (const [name, range] of Object.entries(json[field] ?? {})) {
         if (local.has(name)) continue;
-        if (!name.startsWith('@openfilm/') && !String(range).startsWith('workspace:')) continue;
+        if (!name.startsWith('@tryworld/') && !String(range).startsWith('workspace:')) continue;
         const n = text.findIndex((l) => l.includes(`"${name}"`)) + 1;
         report(file, n, 'deps', `${field}: ${name}@${range} is not a package of this workspace`);
       }

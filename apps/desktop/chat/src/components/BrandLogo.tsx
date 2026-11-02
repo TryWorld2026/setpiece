@@ -1,35 +1,26 @@
 'use client';
 
-import React from 'react';
-
 /*
- * The mark: a playhead over two clips, together an F, in the surrounding text color (currentColor).
- * The clips are cut away around the playhead (a real gap, showing what is behind), so its shape holds in one color.
+ * The mark: a viewfinder around a play triangle, in the surrounding text color (currentColor). Four open corners
+ * say "frame", the triangle says "film": a set rather than a player, and it stays legible at 11 px.
  */
-const VIEWBOX = '8 6 84 92';
-const PLAYHEAD = 'M17 12H37Q40 12 40 15V27Q40 29 38.5 30.5L31 37V88Q31 92 27 92Q23 92 23 88V37L15.5 30.5Q14 29 14 27V15Q14 12 17 12Z';
+const VIEWBOX = '0 0 64 64';
+const CORNERS = 'M10 24V16Q10 10 16 10H24M40 10H48Q54 10 54 16V24M54 40V48Q54 54 48 54H40M24 54H16Q10 54 10 48V40';
+const PLAY = 'M27 23L42 32L27 41Z';
 
 export function BrandLogo({ size = 18, className }: { size?: number; className?: string }) {
-  const gap = `openfilm-gap-${React.useId().replace(/:/g, '')}`;
   return (
     <svg
       width={size}
       height={size}
       viewBox={VIEWBOX}
-      fill="currentColor"
+      fill="none"
       className={`block shrink-0 ${className ?? ''}`.trim()}
       role="img"
-      aria-label="OpenFilm"
+      aria-label="TryWorld Set"
     >
-      <mask id={gap} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
-        <rect width="100" height="100" fill="#fff" />
-        <path d={PLAYHEAD} stroke="#000" strokeWidth="7" strokeLinejoin="round" />
-      </mask>
-      <g mask={`url(#${gap})`}>
-        <rect x="22" y="12" width="64" height="20" rx="5" />
-        <rect x="25" y="44" width="47" height="19" rx="5" />
-      </g>
-      <path d={PLAYHEAD} />
+      <path d={CORNERS} stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={PLAY} fill="currentColor" strokeLinejoin="round" />
     </svg>
   );
 }

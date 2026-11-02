@@ -37,7 +37,7 @@ import { pathToFileURL } from 'node:url';
 
 const require = createRequire(import.meta.url);
 /* by its file URL: import() takes no Windows path (`D:\…`) */
-const skillsLib = () => import(pathToFileURL(require.resolve('openfilm/skills')).href);
+const skillsLib = () => import(pathToFileURL(require.resolve('@tryworld/set/skills')).href);
 
 /** The agents whose own skills can be hidden in OpenFilm (byok: the app's own agent, Pi). */
 export const FILTERED_AGENTS = Object.freeze(['claude', 'codex', 'opencode', 'qwen', 'byok']);
@@ -97,11 +97,12 @@ async function skillFolders(dir, { except = [] } = {}) {
 }
 
 /**
- * OpenFilm's own skill for agents in a terminal (the repository's skills/openfilm: "run `npx openfilm`, read the
- * manual"), installed in an agent: in the app it is never wanted, as the app tells the agent the same, and its `npx`
- * would contradict it. Never shown, never let in.
+ * TryWorld Set's own skill for agents in a terminal (the repository's skills/twset: "run `npx @tryworld/set`, read
+ * the manual"), installed in an agent: in the app it is never wanted, as the app tells the agent the same, and its
+ * `npx` would contradict it. Never shown, never let in. A skill an earlier OpenFilm install left behind is known too.
  */
-export const isOurs = (skill) => skill.name === 'openfilm' && /\bOpenFilm\b/.test(skill.description ?? '');
+export const isOurs = (skill) => (skill.name === 'twset' && /\bTryWorld Set\b/.test(skill.description ?? ''))
+  || (skill.name === 'openfilm' && /\bOpenFilm\b/.test(skill.description ?? ''));
 /** the folder and each above it, to the root */
 const upFrom = (cwd) => { const out = []; for (let up = resolve(cwd); ; up = dirname(up)) { out.push(up); if (up === dirname(up)) break; } return out; };
 const subdirs = (dir) => { try { return readdirSync(dir); } catch { return []; } };
@@ -113,7 +114,10 @@ const subdirs = (dir) => { try { return readdirSync(dir); } catch { return []; }
 export async function ownSkills(agent, { cwd = '', env = {}, home = homedir() } = {}) {
   const claudeHome = env.CLAUDE_CONFIG_DIR || join(home, '.claude');
   const codexHome = env.CODEX_HOME || join(home, '.codex');
-  const project = (subs) => (cwd ? upFrom(cwd) : []).filter((d) => d !== home).flatMap((d) => subs.map((s) => join(d, s)));
+  /* a project inside home: its own folders up to home, never home's own (read below) nor anything above it */
+  const above = cwd ? upFrom(cwd) : [];
+  const stop = above.indexOf(resolve(home));
+  const project = (subs) => (stop < 0 ? above : above.slice(0, stop)).flatMap((d) => subs.map((s) => join(d, s)));
   /** @type {string[]} */
   let dirs = [];
   switch (agent) {
@@ -231,7 +235,7 @@ function linkFolder(base, skills) {
   mkdirSync(join(dir, '.claude-plugin'), { recursive: true });
   mkdirSync(join(dir, 'skills'));
   mkdirSync(join(dir, '.agents'));
-  writeFileSync(join(dir, '.claude-plugin', 'plugin.json'), `${JSON.stringify({ name: 'openfilm', description: 'OpenFilm skills', version: '1.0.0' }, null, 2)}\n`);
+  writeFileSync(join(dir, '.claude-plugin', 'plugin.json'), `${JSON.stringify({ name: 'twset', description: 'TryWorld Set skills', version: '1.0.0' }, null, 2)}\n`);
   for (const skill of skills) {
     if (!/^[\w.-]+$/.test(skill.name)) continue;
     try { symlinkSync(skill.folder, join(dir, 'skills', skill.name), link); } catch { /* one that cannot be linked is left out */ }

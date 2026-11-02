@@ -19,7 +19,7 @@ import {
   splitPromptReferenceText,
   type PromptDisplay,
   type PromptReference as StoredPromptReference,
-} from '@openfilm/shared';
+} from '@tryworld/set-shared';
 import { Tooltip } from '@/components/Tooltip';
 import type { PromptReferenceKind } from './prompt-text';
 
@@ -59,7 +59,7 @@ export const PILL_ICON: Record<PromptReferenceKind, React.ComponentType<{ size?:
  * Unknown kinds fall back to a paperclip.
  *
  * A stored `kind` is a string, not this table's enum (see `promptReferenceSchema` in
- * @openfilm/shared): kinds come and go, but old messages keep theirs. A missing icon is
+ * @tryworld/set-shared): kinds come and go, but old messages keep theirs. A missing icon is
  * better than a message that fails to render.
  */
 function iconFor(kind: string): React.ComponentType<{ size?: number; className?: string }> {

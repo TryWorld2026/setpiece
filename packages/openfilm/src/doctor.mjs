@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * `openfilm doctor`: what this computer has for OpenFilm, as text a person pastes into an issue. Studio's Settings →
+ * `twset doctor`: what this computer has for TryWorld Set, as text a person pastes into an issue. Studio's Settings →
  * Developer copies the same report, with what the browser it is open in can do.
  *
  * Each check is a line: what it is, what was found, and when something is wrong, what to do about it. A path under the
@@ -79,7 +79,7 @@ export function formatReport(checks, extra = []) {
   const width = Math.max(...checks.map((c) => c.label.length)) + 2;
   const problems = checks.filter((c) => c.problem);
   return [
-    'OpenFilm doctor',
+    'TryWorld Set doctor',
     '',
     ...checks.map((c) => `${c.problem ? '✗' : '✓'} ${c.label.padEnd(width)}${c.text}`),
     ...(problems.length ? ['', 'To fix:', ...problems.map((c) => `  ${c.label}: ${c.problem}`)] : ['', 'Nothing to fix.']),
@@ -162,17 +162,17 @@ async function chipText() {
  * @param {{ run?: string, env?: Record<string, string | undefined>, studio?: { origin: string, version: string, app?: boolean } | null,
  *           browser?: boolean, network?: boolean, home?: string }} [options]
  */
-export async function doctor({ run = 'openfilm', env = process.env, studio = null, browser = true, network = true, home = homedir() } = {}) {
+export async function doctor({ run = 'twset', env = process.env, studio = null, browser = true, network = true, home = homedir() } = {}) {
   /** @type {Check[]} */
   const checks = [];
   const at = (/** @type {string} */ path) => tidy(path, home);
 
   const from = FROM_SOURCE ? 'a source checkout' : studio?.app ? 'the desktop app' : 'npm';
-  checks.push({ label: 'OpenFilm', text: `${VERSION} (${from}; run as ${run})` });
+  checks.push({ label: 'TryWorld Set', text: `${VERSION} (${from}; run as ${run})` });
   checks.push({ label: 'System', text: systemName() });
   const [major, minor] = process.versions.node.split('.').map(Number);
   const oldNode = major < 22 || (major === 22 && minor < 18);
-  checks.push({ label: 'Node', text: `${process.version} (${at(process.execPath)})`, ...(oldNode ? { problem: 'OpenFilm needs Node 22.18 or newer: install it from nodejs.org' } : {}) });
+  checks.push({ label: 'Node', text: `${process.version} (${at(process.execPath)})`, ...(oldNode ? { problem: 'TryWorld Set needs Node 22.18 or newer: install it from nodejs.org' } : {}) });
 
   const { agents, names } = agentHints(env);
   const term = env.TERM_PROGRAM ? `; terminal ${env.TERM_PROGRAM}` : '';
@@ -215,12 +215,12 @@ export async function doctor({ run = 'openfilm', env = process.env, studio = nul
   const dataOk = !existsSync(data) || writable(data);
   const projectsOk = !existsSync(projects) || writable(projects);
   checks.push({ label: 'Data', text: `${at(data)}${existsSync(data) ? (dataOk ? '' : ' (not writable)') : ' (not made yet)'}`,
-    ...(dataOk ? {} : { problem: `OpenFilm cannot write to ${at(data)}: give your account write access to it` }) });
+    ...(dataOk ? {} : { problem: `TryWorld Set cannot write to ${at(data)}: give your account write access to it` }) });
   checks.push({ label: 'Projects', text: `${at(projects)}${existsSync(projects) ? (projectsOk ? '' : ' (not writable)') : ' (not made yet)'}${gb(freeSpace(projects))}`,
-    ...(projectsOk ? {} : { problem: `OpenFilm cannot write to ${at(projects)}: choose another folder in Studio's Settings → General` }) });
+    ...(projectsOk ? {} : { problem: `TryWorld Set cannot write to ${at(projects)}: choose another folder in Studio's Settings → General` }) });
 
   if (network) {
-    const reached = await fetch('https://registry.npmjs.org/openfilm', { method: 'HEAD', signal: AbortSignal.timeout(5000) }).then((r) => r.ok, () => false);
+    const reached = await fetch('https://registry.npmjs.org/', { method: 'HEAD', signal: AbortSignal.timeout(5000) }).then((r) => r.ok, () => false);
     checks.push(reached ? { label: 'Network', text: 'npm reachable' }
       : { label: 'Network', text: 'npm not reachable', problem: 'npx and updates need registry.npmjs.org: check the network, a proxy, or the agent\'s sandbox' });
   }

@@ -21,7 +21,7 @@
  * (`logout`) switches account from Settings → Agents (agent-roster.mjs switchAccount); the others in the agent itself,
  * or its maker's app where they share it (Codex, DeepSeek Harness).
  *
- * The agent works the way it would in a terminal: in the project's folder, with the `openfilm` command on its PATH
+ * The agent works the way it would in a terminal: in the project's folder, with the `twset` command on its PATH
  * (this app's copy, so its Studio is the one in the window) and a few lines saying where it is (INSTRUCTIONS).
  *
  * Reads no Electron module, so `node --test` can use it.
@@ -136,13 +136,13 @@ In your replies you can point at things in Studio for the person: [[clip:ID]] (a
 [[file:PATH]] (a file of the project). They show as links that open it in Studio.`;
 
 /** What the agent is told about where it is, on top of its own instructions. */
-export const INSTRUCTIONS = `You are working inside OpenFilm, a desktop app for making videos. Beside this chat the person sees OpenFilm Studio,
+export const INSTRUCTIONS = `You are working inside TryWorld Set, a desktop app for making videos. Beside this chat the person sees TryWorld Set Studio,
 the video editor, showing the project in your working directory; it updates live as you save files.
 
-The project is an OpenFilm film: pages with window.film, cut together by film.html. Before you change anything, run
-\`openfilm\` with no arguments and read the manual it prints; follow it. Use the \`openfilm\` command on your PATH (this
-app's own, on the Studio beside you), not \`npx openfilm\`, whatever a skill says. Studio is already open on this
-project: you never need \`openfilm open\` and never open Studio in a browser. Run \`openfilm look\` after each change
+The project is a TryWorld Set film: pages with window.film, cut together by film.html. Before you change anything, run
+\`twset\` with no arguments and read the manual it prints; follow it. Use the \`twset\` command on your PATH (this
+app's own, on the Studio beside you), not \`npx @tryworld/set\`, whatever a skill says. Studio is already open on this
+project: you never need \`twset open\` and never open Studio in a browser. Run \`twset look\` after each change
 to see what you made. Render the MP4 only when the person asks for it; they can also export from Studio. Reply in the
 language the person writes in.
 
@@ -152,12 +152,12 @@ ${STUDIO_REFERENCES}`;
  * The app's own agent's whole system prompt, in place of Pi's (a coding assistant's, with Pi's own docs): who it is,
  * where it is and how it works with the person (agent-prompt.md: written for it, so not INSTRUCTIONS, which tell
  * another agent to go and read the manual), how the person points at Studio (STUDIO_REFERENCES), and the manual
- * `openfilm` prints, so it starts knowing it. Each thing is said once: what the manual says (`openfilm get`'s
+ * `twset` prints, so it starts knowing it. Each thing is said once: what the manual says (`twset get`'s
  * services, rendering, the person's changes) and what Pi's tools say of themselves are not said again.
  */
 export function ownAgentPrompt() {
   const prompt = readFileSync(new URL('./agent-prompt.md', import.meta.url), 'utf8').trim();
-  const manual = readFileSync(join(dirname(require.resolve('openfilm/package.json')), 'MANUAL.md'), 'utf8').replaceAll('npx openfilm', 'openfilm').trim();
+  const manual = readFileSync(join(dirname(require.resolve('@tryworld/set/package.json')), 'MANUAL.md'), 'utf8').replaceAll('npx @tryworld/set', 'twset').trim();
   return `${prompt}\n\n## Pointing at Studio\n\n${STUDIO_REFERENCES}\n\n<manual>\n${manual}\n</manual>`;
 }
 
@@ -359,7 +359,7 @@ export async function diagnoseAgent(id, { appVersion = '' } = {}) {
   const chosen = chosenPaths[id] ?? null;
   const hint = found ? null : chosen ? 'chosen-missing' : wsl ? 'wsl' : report.files.length ? 'unusable' : 'none';
   const lines = [
-    `OpenFilm ${appVersion}`.trim(),
+    `TryWorld Set ${appVersion}`.trim(),
     `Agent: ${spec.label} (${names.join(', ')})`,
     `System: ${process.platform} ${release()} ${arch()}`,
     `PATH from: ${lastPathSource() ?? 'unknown'}`,
@@ -582,7 +582,7 @@ export async function agentSignInMethods(id) {
   const child = spawn(launch.cmd, launch.args, { ...OWN_GROUP, env: childEnvironment({ shell, extra: launch.env }), stdio: ['pipe', 'pipe', 'ignore'], windowsHide: true });
   child.once('error', () => {});
   try {
-    const conn = acp.client({ name: 'openfilm-desktop' }).connect(acp.ndJsonStream(Writable.toWeb(child.stdin), Readable.toWeb(child.stdout)));
+    const conn = acp.client({ name: 'tryworld-set-desktop' }).connect(acp.ndJsonStream(Writable.toWeb(child.stdin), Readable.toWeb(child.stdout)));
     const init = await Promise.race([
       conn.agent.request(acp.methods.agent.initialize, { protocolVersion: acp.PROTOCOL_VERSION, clientCapabilities: CLIENT_CAPABILITIES, clientInfo: CLIENT_INFO }),
       new Promise((_, fail) => setTimeout(() => fail(new Error('timed out')), 30_000)),
@@ -853,7 +853,7 @@ export const CLIENT_CAPABILITIES = {
   _meta: { parameterizedModelPicker: true, jetbrains: { air: { version: 1, capabilities: ['recommendedValue'] } } },
 };
 
-const CLIENT_INFO = { name: 'openfilm-desktop', title: 'OpenFilm', version: '0.1.0' };
+const CLIENT_INFO = { name: 'tryworld-set-desktop', title: 'TryWorld Set', version: '0.1.0' };
 
 /** How long an agent may wait on its model with nothing coming before the turn is stopped. */
 const MODEL_STALL_MS = 5 * 60_000;
@@ -911,7 +911,7 @@ export function codexTooOld(agent, path, e, versionOf = codexVersion) {
   const version = versionOf(path);
   if (!version || !laterVersion(CODEX_TESTED, version)) return e;
   const why = e instanceof Error ? e.message : String(e);
-  return Object.assign(new Error(`Codex ${version} is older than OpenFilm needs (${CODEX_TESTED} or later): update Codex, then try again. ${why}`.trim()), { code: 'outdated' });
+  return Object.assign(new Error(`Codex ${version} is older than TryWorld Set needs (${CODEX_TESTED} or later): update Codex, then try again. ${why}`.trim()), { code: 'outdated' });
 }
 
 /** ACP's internal error: what an agent's own failures come as. */
@@ -1243,7 +1243,7 @@ export class AgentSession {
     this.child.once('error', () => {});
 
     const stream = acp.ndJsonStream(Writable.toWeb(this.child.stdin), Readable.toWeb(this.child.stdout));
-    this.conn = acp.client({ name: 'openfilm-desktop' })
+    this.conn = acp.client({ name: 'tryworld-set-desktop' })
       .onRequest(acp.methods.client.session.requestPermission, async (ctx) => {
         const optionId = (this.spec.approve ? allowOption(ctx.params) : null)
           ?? (this.opts.onPermission ? await this.opts.onPermission(ctx.params) : null);

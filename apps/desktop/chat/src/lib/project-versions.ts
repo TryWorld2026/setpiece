@@ -1,4 +1,4 @@
-import type { Turn, LibraryVideo, PromptDisplay, TurnAttachment } from '@openfilm/shared';
+import type { Turn, LibraryVideo, PromptDisplay, TurnAttachment } from '@tryworld/set-shared';
 import { readFileChanges, type FileChange, type TurnFileChanges } from './file-changes.ts';
 import { readBalance, type Balance, type TurnBalance } from './balance.ts';
 

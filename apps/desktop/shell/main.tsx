@@ -5,9 +5,9 @@
 import './bridge';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from 'openfilm/studio-ui/App.tsx';
-import { FocusNav } from 'openfilm/studio-ui/components/FocusNav.tsx';
-import { applyStudioHost } from 'openfilm/studio-ui/lib/host.ts';
+import { App } from '@tryworld/set/studio-ui/App.tsx';
+import { FocusNav } from '@tryworld/set/studio-ui/components/FocusNav.tsx';
+import { applyStudioHost } from '@tryworld/set/studio-ui/lib/host.ts';
 import { mountChat } from '../chat/src/mount';
 import './shell.css';
 import '../chat/src/chat.css';

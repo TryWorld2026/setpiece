@@ -35,7 +35,7 @@ export function skillsCommand(run, { cwd = process.cwd() } = {}) {
   const project = projectAround(cwd);
   const skills = usableSkills({ project });
   if (!skills.length) {
-    return { ok: true, lines: [`No skills installed. Install OpenFilm's in Studio's Skills, or \`${run} skill add <GitHub address or folder>\` adds one to yours (${shown(mySkillsDir())}).`] };
+    return { ok: true, lines: [`No skills installed. Install TryWorld Set's in Studio's Skills, or \`${run} skill add <GitHub address or folder>\` adds one to yours (${shown(mySkillsDir())}).`] };
   }
   const width = Math.min(28, Math.max(...skills.map((s) => s.name.length)));
   return {

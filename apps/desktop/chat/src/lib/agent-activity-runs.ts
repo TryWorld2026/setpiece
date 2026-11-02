@@ -1,4 +1,4 @@
-import type { AgentActAsset } from '@openfilm/shared';
+import type { AgentActAsset } from '@tryworld/set-shared';
 
 /**
  * How a turn's activity is laid out in rows.

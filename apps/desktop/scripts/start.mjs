@@ -1,5 +1,5 @@
 /**
- * Run the app from this repository: `pnpm --filter @openfilm/desktop start`.
+ * Run the app from this repository: `pnpm --filter @tryworld/set-desktop start`.
  *
  * It is the `dev` flavour (src/flavor.mjs): on macOS a renamed copy of Electron.app with its own name, bundle id and
  * data folder, so it never shares a Dock icon, a lock or a Studio with an installed OpenFilm. The window's page

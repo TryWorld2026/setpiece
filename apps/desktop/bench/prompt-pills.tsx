@@ -1,7 +1,7 @@
 /** The real prompt editor on a page of its own, with a file pill and a moment pill to move about. */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { promptReferenceToken } from '@openfilm/shared';
+import { promptReferenceToken } from '@tryworld/set-shared';
 import { PromptEditor, type PromptEditorHandle, type PromptReference } from '../chat/src/components/prompt-editor';
 import '../shell/shell.css';
 import '../chat/src/chat.css';

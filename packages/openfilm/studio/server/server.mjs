@@ -90,8 +90,8 @@ const DESKTOP_FILES = (() => { try { return String(JSON.parse(readFileSync(new U
  */
 export function desktopInstaller(os, arch, base = DESKTOP_FILES) {
   if (!base || (arch !== 'arm64' && arch !== 'x64')) return null;
-  if (os === 'mac') return `${base}/mac/${arch}/OpenFilm-${arch}.dmg`;
-  if (os === 'win') return `${base}/win/${arch}/OpenFilm-Setup-${arch}.exe`;
+  if (os === 'mac') return `${base}/mac/${arch}/TryWorld-Set-${arch}.dmg`;
+  if (os === 'win') return `${base}/win/${arch}/TryWorld-Set-Setup-${arch}.exe`;
   return null;
 }
 
@@ -157,7 +157,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
   /** The caller holds the key; a browser write must also come from the editor's own origin. */
   function authorize(/** @type {Req} */ req) {
     if (sameKey(/** @type {string | undefined} */ (req.headers['x-studio-key']))) return;
-    if (!sameKey(cookieKey(req))) throw new HttpError(401, 'open Studio from the address `openfilm open` prints');
+    if (!sameKey(cookieKey(req))) throw new HttpError(401, 'open Studio from the address `twset open` prints');
     if (req.method !== 'GET' && req.method !== 'HEAD' && req.headers.origin !== origin) throw new HttpError(403, 'not from Studio');
   }
 
@@ -201,7 +201,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
       return at.pathname + at.search;
     };
     if (path === '/open') {
-      if (!sameKey(url.searchParams.get('key'))) throw new HttpError(403, 'this link is from another Studio launch; use the one `openfilm open` printed');
+      if (!sameKey(url.searchParams.get('key'))) throw new HttpError(403, 'this link is from another Studio launch; use the one `twset open` printed');
       const to = url.searchParams.get('to') ?? '/';
       res.writeHead(302, { location: keyed(/^\/(?!\/)[^\s\\]*$/.test(to) ? to : '/'), 'set-cookie': signIn, 'referrer-policy': 'no-referrer' });
       return res.end();
@@ -227,7 +227,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
       if (whenIdle && exports.busy()) return json(res, 409, { error: 'an export is running' });
       if (whenIdle && making) return json(res, 409, { error: 'media is being made' });
       /* not busy, but kept (423, not 409: the app asks its own Studio whether it is busy this way) */
-      if (stays) return json(res, 423, { error: 'it is the OpenFilm app\'s, which keeps it' });
+      if (stays) return json(res, 423, { error: 'it is the TryWorld Set app\'s, which keeps it' });
       json(res, 200, { pages: editorPages.size });
       setImmediate(() => (onQuit ?? (() => { void studio.close(); }))());
       return;
@@ -297,7 +297,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
       if (making) return json(res, 409, { error: 'media is being made', code: 'making' });
       if (updating?.status === 'updating') return json(res, 202, { update: updating });
       const { latest } = await npmOpenfilm({ waitMs: 4000 });
-      if (!latest || !olderThanThis(VERSION, latest)) return json(res, 409, { error: 'this is the newest openfilm', code: 'newest' });
+      if (!latest || !olderThanThis(VERSION, latest)) return json(res, 409, { error: 'this is the newest TryWorld Set', code: 'newest' });
       updating = runUpdate(latest, (next) => { updating = next; });
       return json(res, 202, { update: updating });
     }
@@ -1122,7 +1122,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
 const FROM_SOURCE = existsSync(new URL('../ui/src', import.meta.url));
 
 /**
- * `npx -y openfilm@<version> update` in the background (its words in logs/update.log), as the person would run it: the
+ * `npx -y @tryworld/set@<version> update` in the background (its words in logs/update.log), as the person would run it: the
  * newest stops this Studio and starts itself in its place. `then` hears it failed later, with its last words, if this
  * Studio is still here to hear it; one that cannot start is said at once.
  * @param {string} version @param {(state: { status: 'failed', version: string, error: string }) => void} then
@@ -1136,7 +1136,7 @@ function runUpdate(version, then) {
   const failed = (/** @type {string} */ error) => then({ status: 'failed', version, error });
   try {
     const out = openSync(file, 'a');
-    const child = spawn('npx', ['-y', `openfilm@${version}`, 'update'], {
+    const child = spawn('npx', ['-y', `@tryworld/set@${version}`, 'update'], {
       detached: true, stdio: ['ignore', out, out], windowsHide: true, shell: process.platform === 'win32', env: { ...process.env, OPENFILM_NO_BROWSER: '1' },
     });
     child.once('error', (e) => failed(`npx did not start (it comes with Node.js): ${e.message}`));
@@ -1186,7 +1186,7 @@ function sendEditor(/** @type {Res} */ res, /** @type {string} */ dir, /** @type
   const page = join(root, 'index.html');
   /* no referrer: the page's address holds the key, and a link it opens must not carry it to another site */
   res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'referrer-policy': 'no-referrer', ...headers });
-  res.end(existsSync(page) ? readFileSync(page) : '<!doctype html><meta charset="utf-8"><title>OpenFilm Studio</title><p>The editor is not built: run <code>npm run build:ui</code>.</p>');
+  res.end(existsSync(page) ? readFileSync(page) : '<!doctype html><meta charset="utf-8"><title>TryWorld Set Studio</title><p>The editor is not built: run <code>npm run build:ui</code>.</p>');
 }
 
 /** A file in the system's file manager, selected. */

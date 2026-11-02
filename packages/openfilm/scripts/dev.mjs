@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // @ts-check
 /**
- * `npm run dev`: Studio from this checkout, beside an installed OpenFilm. Its state and exports are in .dev/
- * (git-ignored), its projects in the same library as every OpenFilm's (the one ~/.openfilm says, by default
+ * `npm run dev`: Studio from this checkout, beside an installed TryWorld Set. Its state and exports are in .dev/
+ * (git-ignored), its projects in the same library as every TryWorld Set's (the one ~/.openfilm says, by default
  * ~/Movies/OpenFilm/Projects on macOS), and it listens on port 4848 (OPENFILM_STUDIO_PORT for another). The editor is rebuilt when
  * studio/ui changes (reload the page); Studio restarts when studio/server or src change. It opens a sample project in
  * your browser (OPENFILM_NO_BROWSER=1: it only prints the address). Ctrl+C stops it all.
  *
- * It also writes .dev/bin/openfilm (and openfilm.cmd on Windows): this checkout's command on this Studio, for your own
+ * It also writes .dev/bin/twset (and twset.cmd on Windows): this checkout's command on this Studio, for your own
  * agent to try your changes with.
  */
 import { spawn } from 'node:child_process';
@@ -50,19 +50,19 @@ process.on('exit', () => {
   try { if (Number(readFileSync(LOCK, 'utf8').trim()) === process.pid) rmSync(LOCK); } catch { /* gone already */ }
 });
 
-/* this checkout's `openfilm` on this Studio, for your agent: the same environment, and it names itself in the manual */
+/* this checkout's `twset` on this Studio, for your agent: the same environment, and it names itself in the manual */
 const BIN = join(DEV, 'bin');
 mkdirSync(BIN, { recursive: true });
-const CLI = join(ROOT, 'bin', 'openfilm.mjs');
+const CLI = join(ROOT, 'bin', 'twset.mjs');
 const SHARED = ['OPENFILM_HOME', 'OPENFILM_LIBRARY', 'OPENFILM_SHARED_HOME', 'OPENFILM_EXPORTS', 'OPENFILM_STUDIO_PORT', 'OPENFILM_NO_UPDATE_CHECK', 'OPENFILM_OFFICIAL_SKILLS'].filter((k) => env[k]);
-const sh = join(BIN, 'openfilm');
-writeFileSync(sh, `#!/bin/sh\n${SHARED.map((k) => `export ${k}='${env[k]}'`).join('\n')}\nOPENFILM_RUN="${sh}" exec '${process.execPath}' '${CLI}' "$@"\n`);
+const sh = join(BIN, 'twset');
+writeFileSync(sh, `#!/bin/sh\n${SHARED.map((k) => `export ${k}='${env[k]}'`).join('\n')}\nTWSET_RUN="${sh}" exec '${process.execPath}' '${CLI}' "$@"\n`);
 chmodSync(sh, 0o755);
 if (process.platform === 'win32') {
-  writeFileSync(join(BIN, 'openfilm.cmd'), `@echo off\r\n${SHARED.map((k) => `set "${k}=${env[k]}"`).join('\r\n')}\r\nset "OPENFILM_RUN=%~f0"\r\n"${process.execPath}" "${CLI}" %*\r\n`);
+  writeFileSync(join(BIN, 'twset.cmd'), `@echo off\r\n${SHARED.map((k) => `set "${k}=${env[k]}"`).join('\r\n')}\r\nset "TWSET_RUN=%~f0"\r\n"${process.execPath}" "${CLI}" %*\r\n`);
 }
 
-const command = process.platform === 'win32' ? join(BIN, 'openfilm.cmd') : sh;
+const command = process.platform === 'win32' ? join(BIN, 'twset.cmd') : sh;
 
 /* a small film to open: one page, drawn by frame(t) */
 const SAMPLE = join(DEV, 'sample');
@@ -78,7 +78,7 @@ if (!existsSync(join(SAMPLE, 'film.html'))) {
   body { margin: 0; width: 1920px; height: 1080px; background: #0b0d12; display: grid; place-items: center; }
   h1 { font: 700 120px system-ui, sans-serif; color: #fff; }
 </style>
-<h1 id="title">Hello, OpenFilm</h1>
+<h1 id="title">Hello, TryWorld Set</h1>
 <script type="module">
 const title = document.getElementById('title');
 window.film = {

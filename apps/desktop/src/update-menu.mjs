@@ -11,7 +11,7 @@ import { UPDATE_DIALOG_WORDS } from './i18n/update-dialogs.mjs';
  *           showMessage: (options: Electron.MessageBoxOptions) => Promise<{ response: number }>, focusWindow: () => void,
  *           productName?: string }} options
  */
-export function createManualUpdateCheck({ controller, showMessage, focusWindow, productName = 'OpenFilm' }) {
+export function createManualUpdateCheck({ controller, showMessage, focusWindow, productName = 'TryWorld Set' }) {
   /** one check, one dialog: the menu clicked again while it is open waits on the same one */
   let pending = null;
 

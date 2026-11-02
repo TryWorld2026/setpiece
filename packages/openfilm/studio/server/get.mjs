@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * `openfilm get`: media for a project (voice-over, music, sound effects, transcripts, pictures, video) from a provider
+ * `twset get`: media for a project (voice-over, music, sound effects, transcripts, pictures, video) from a provider
  * the person connected with their own key (providers/). The CLI sends the verb and its options to Studio (`/api/get`);
  * here they are checked, a provider is picked (`--via`, else the person's choice in Studio's Settings; none chosen,
  * nothing runs), it runs, and what comes back lands in the project: files under assets/ only, and timed speech's
@@ -129,7 +129,7 @@ export const VERBS = /** @type {Record<string, VerbSpec>} */ ({
 export const WEB_VERBS = ['web-search', 'web-fetch'];
 
 /** Where the person connects a service and picks its models, said the same way everywhere. */
-export const WHERE_TO_CONNECT = 'In Studio, the OpenFilm logo at the top left opens Settings: connect a service under Providers, '
+export const WHERE_TO_CONNECT = 'In Studio, the TryWorld Set logo at the top left opens Settings: connect a service under Providers, '
   + 'with the person\'s own key, then choose the model for each kind of media under Services.';
 /** The services that make `verb`, by name: "fal.ai, Google or OpenAI". @param {string} verb */
 const makers = (verb) => {
@@ -141,13 +141,13 @@ const notConnected = (verbs) => `Not connected here: ${verbs.map((v) => `${v} ($
   + `Each works only once the person connects a service that makes it. ${WHERE_TO_CONNECT}`;
 /** Whether any of the services, connected or not, can make `verb`. */
 const offered = (/** @type {string} */ verb) => listProviders().some((p) => /** @type {readonly string[]} */ (p.verbs).includes(verb));
-/** The whole of `openfilm get` when nothing is connected. */
+/** The whole of `twset get` when nothing is connected. */
 const nothing = () => 'Nothing is connected for media here: each kind works only once the person connects a service that makes it (below). '
   + 'Until then, make sound and pictures in code, or use a service the person has a key for (with its API docs), and save them under assets/. '
-  + `\`openfilm get <what> --help\` shows what one kind takes (${Object.keys(VERBS).filter((v) => !WEB_VERBS.includes(v) && offered(v)).join(', ')}).`;
+  + `\`twset get <what> --help\` shows what one kind takes (${Object.keys(VERBS).filter((v) => !WEB_VERBS.includes(v) && offered(v)).join(', ')}).`;
 
 /** What `call` says when the person has added no service of their own. */
-const NO_OWN_SERVICES = 'The person has added no services of their own. In Studio, the OpenFilm logo at the top left opens Settings: '
+const NO_OWN_SERVICES = 'The person has added no services of their own. In Studio, the TryWorld Set logo at the top left opens Settings: '
   + 'they add one under Providers (its address, its key if it takes one, and what it does).';
 
 /** Each kind of media, in words (finding voices is part of voice-over). */
@@ -667,7 +667,7 @@ export async function getRoute(req, res, parts, asks) {
   res.once('close', () => { if (!res.writableEnded) controller.abort(); });
   try {
     const root = resolve(String(body.folder ?? ''));
-    if (!(await stat(join(root, FILM_FILE)).catch(() => null))?.isFile()) throw usage(`${root} is not a project; \`openfilm open\` makes one`);
+    if (!(await stat(join(root, FILM_FILE)).catch(() => null))?.isFile()) throw usage(`${root} is not a project; \`twset open\` makes one`);
     const given = body.args && typeof body.args === 'object' && !Array.isArray(body.args) ? /** @type {Record<string, unknown>} */ (body.args) : {};
     const text = await runGet(root, String(body.verb ?? ''), given, {
       ...(typeof body.via === 'string' && body.via ? { via: body.via } : {}),

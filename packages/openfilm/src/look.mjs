@@ -1,4 +1,4 @@
-// openfilm look: the agent's eyes. Draws the film (or one frame, or a range), checks it while drawing, and prints
+// twset look: the agent's eyes. Draws the film (or one frame, or a range), checks it while drawing, and prints
 // what is wrong before the path of the picture.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -37,7 +37,7 @@ export async function look(args, opts = {}) {
   try {
     // The contract
     if (m.duration != null && !(Number.isFinite(m.duration) && m.duration > 0)) errors.push('film.duration, when set, must be a finite number of seconds > 0');
-    if (m.duration == null && at == null && !range) throw new UsageError('this page has no duration, so it has no end: say what to look at, a range (openfilm look 0-6) or a time (openfilm look 2)');
+    if (m.duration == null && at == null && !range) throw new UsageError('this page has no duration, so it has no end: say what to look at, a range (twset look 0-6) or a time (twset look 2)');
     if (!(Number.isInteger(m.width) && m.width > 0 && Number.isInteger(m.height) && m.height > 0)) errors.push('film.width and film.height, when set, must both be positive whole numbers of CSS pixels');
     for (const clip of m.sounds) if (!existsSync(fileOf(s.root, s.entry, clip.src))) errors.push(`sound not found: ${clip.src}`);
     /* a page plays no sound of its own: what it still lists in `audio` is heard nowhere until it is a clip */

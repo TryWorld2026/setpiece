@@ -3,7 +3,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { History, Plus } from 'lucide-react';
-import { limitTitleWidth, SESSION_TITLE_MAX_WIDTH } from '@openfilm/shared';
+import { limitTitleWidth, SESSION_TITLE_MAX_WIDTH } from '@tryworld/set-shared';
 import { Tooltip } from './Tooltip';
 import { useT } from '@/i18n';
 import {

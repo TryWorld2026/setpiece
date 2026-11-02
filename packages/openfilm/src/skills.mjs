@@ -83,7 +83,7 @@ export function migrateMySkills({ from = oldSkillsDir(), to = mySkillsDir() } = 
     try { renameSyncSafe(skill.folder, target); moved.push(skill.name); } catch { kept.push(basename(skill.folder)); }
   }
   try {
-    writeFileSync(join(from, MOVED_NOTE), `Your OpenFilm skills are kept in ${to} now.
+    writeFileSync(join(from, MOVED_NOTE), `Your TryWorld Set skills are kept in ${to} now.
 ${kept.length ? `These stayed here, as a skill of the same name is there: ${kept.join(', ')}.
 ` : ''}`);
   } catch { /* the note is only a courtesy */ }

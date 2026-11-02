@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { _electron as electron } from 'playwright-core';
-import { filmHtml } from 'openfilm/film-doc';
+import { filmHtml } from '@tryworld/set/film-doc';
 import { DESKTOP, buildShell, prepare } from './app.mjs';
 import { loadChat, saveSessions } from '../src/chat-store.mjs';
 import { launcherEnvironment, loginShellEnvironment } from '../src/environment.mjs';

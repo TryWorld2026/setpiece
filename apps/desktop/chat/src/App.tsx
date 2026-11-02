@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { ArrowDown, Blocks, Coins, CornerDownLeft, LibraryBig, Loader2, Plus, ShieldQuestion, Square, X } from 'lucide-react';
-import { buildPromptDisplay, type Turn } from '@openfilm/shared';
+import { buildPromptDisplay, type Turn } from '@tryworld/set-shared';
 import { useT, useUiLocale } from '@/i18n';
 import { ConversationSessionBar } from '@/components/ConversationSessionBar';
 import { ProjectConversation, primeStoredTranscript } from '@/components/ProjectConversation';
@@ -15,7 +15,7 @@ import { ProjectStarters } from '@/components/ProjectStarters';
 import { AttachmentPreview, type AttachmentPreviewItem } from '@/components/AttachmentPreview';
 import { ModelPopover } from '@/components/ModelPopover';
 import { AddSkillDialog, type PickedSkill } from '@/components/AddSkill';
-import { SKILLS_CHANGED } from 'openfilm/studio-ui/lib/project-sources.ts';
+import { SKILLS_CHANGED } from '@tryworld/set/studio-ui/lib/project-sources.ts';
 import { CardActions, CardButton, ComposerCard } from '@/components/ComposerCard';
 import { LocalAgentQuestionCard } from '@/components/TurnQuestionCard';
 import { Tooltip } from '@/components/Tooltip';

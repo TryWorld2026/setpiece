@@ -30,7 +30,7 @@ test('the CLI starts one Studio in the background, reuses it, and it cleans up w
   const said = [];
   const first = await ensureStudio((line) => said.push(line));
   try {
-    assert.deepEqual(said, ['Starting OpenFilm Studio…']);
+    assert.deepEqual(said, ['Starting TryWorld Set Studio…']);
     const again = await ensureStudio((line) => said.push(line));
     assert.equal(again.pid, first.pid, 'the running one is reused');
     assert.equal(said.length, 1);
@@ -70,7 +70,7 @@ test('an older Studio is replaced, and one whose run.json was lost is still foun
   const studio = await ensureStudio((line) => said.push(line));
   try {
     assert.deepEqual(quits, ['old'], 'the older one was asked to stop');
-    assert.match(said[0], /^Updating OpenFilm Studio to /);
+    assert.match(said[0], /^Updating TryWorld Set Studio to /);
     assert.equal(studio.origin, `http://127.0.0.1:${port}`, 'the new one takes its port: pages open on it reconnect');
     assert.equal(studio.key, readFileSync(join(home, 'key'), 'utf8'), 'with the machine\'s key');
     rmSync(join(home, 'run.json'));
@@ -94,7 +94,7 @@ test('`openfilm open` never makes the current folder a project unasked, nor a co
   const scratch = mkdtempSync(join(tmpdir(), 'of-client-'));
   const env = { ...process.env, OPENFILM_HOME: join(scratch, 'home'), OPENFILM_LIBRARY: join(scratch, 'library'),
     OPENFILM_STUDIO_PORT: String(await freePort()), OPENFILM_NO_BROWSER: '1' };
-  const cli = (cwd, ...args) => spawnSync(process.execPath, [fileURLToPath(new URL('../bin/openfilm.mjs', import.meta.url)), 'open', ...args], { cwd, env, encoding: 'utf8' });
+  const cli = (cwd, ...args) => spawnSync(process.execPath, [fileURLToPath(new URL('../bin/twset.mjs', import.meta.url)), 'open', ...args], { cwd, env, encoding: 'utf8' });
   const repo = join(scratch, 'my-cli');
   mkdirSync(join(repo, '.git'), { recursive: true });
   writeFileSync(join(repo, 'package.json'), '{}');

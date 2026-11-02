@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * `pnpm check:pack`: packs the package npm gets (`openfilm`) as the release publishes it,
+ * `pnpm check:pack`: packs the package npm gets (`@tryworld/set`) as the release publishes it,
  * lists every file in each tarball, and fails when one holds what it must not or lacks what it needs.
  *
  * It packs with `pnpm pack`, not `npm pack --dry-run`: the release publishes with `pnpm publish` (changesets uses the
@@ -8,7 +8,7 @@
  *
  *   every package   no tests, fixtures, tsconfigs, dev state or scripts; no `workspace:` range; not private; every
  *                   file its package.json points at (main, types, bin, exports) is in the tarball
- *   openfilm        product.json is the official one (prepack), and the checkout's own is back afterwards (postpack);
+ *   @tryworld/set   product.json is the official one (prepack), and the checkout's own is back afterwards (postpack);
  *                   Studio's built editor is in
  *
  *   node scripts/check-pack.mjs
@@ -21,8 +21,11 @@ import { join } from 'node:path';
 
 const ROOT = join(import.meta.dirname, '..');
 const PACKAGES = [
-  { name: 'openfilm', dir: 'packages/openfilm' },
+  { name: '@tryworld/set', dir: 'packages/openfilm' },
 ];
+const PNPM = process.env.npm_execpath && /pnpm/i.test(process.env.npm_execpath)
+  ? { file: process.execPath, prefix: [process.env.npm_execpath] }
+  : { file: 'pnpm', prefix: [] };
 
 /** What a published package never holds. */
 const FORBIDDEN = [
@@ -55,11 +58,13 @@ const tmp = mkdtempSync(join(tmpdir(), 'check-pack-'));
 try {
   for (const { name, dir } of PACKAGES) {
     const pkgDir = join(ROOT, dir);
-    const productBefore = name === 'openfilm' ? readFileSync(join(pkgDir, 'product.json')) : null;
+    const productBefore = name === '@tryworld/set' ? readFileSync(join(pkgDir, 'product.json')) : null;
     const dest = join(tmp, name.replace(/[@/]/g, '_'));
-    execFileSync('pnpm', ['pack', '--pack-destination', dest], { cwd: pkgDir, stdio: ['ignore', 'ignore', 'inherit'], shell: process.platform === 'win32' });
+    execFileSync(PNPM.file, [...PNPM.prefix, 'pack', '--pack-destination', dest], {
+      cwd: pkgDir, stdio: ['ignore', 'ignore', 'inherit'], shell: PNPM.file === 'pnpm' && process.platform === 'win32',
+    });
     const tgz = join(dest, readdirSync(dest).find((f) => f.endsWith('.tgz')));
-    const files = tar(['-tzf', tgz]).trim().split('\n').map((f) => f.replace(/^package\//, ''));
+    const files = tar(['-tzf', tgz]).trim().split(/\r?\n/).map((f) => f.replace(/^package\//, ''));
     const read = (file) => tar(['-xzOf', tgz, `package/${file}`]);
     const manifest = JSON.parse(read('package.json'));
 
@@ -78,7 +83,7 @@ try {
     const listed = new Set(files);
     for (const file of pointedAt(manifest)) if (!listed.has(file)) problem(name, `package.json points at ${file}, which is not in the package`);
 
-    if (name === 'openfilm') {
+    if (name === '@tryworld/set') {
       const packed = JSON.parse(read('product.json'));
       const official = JSON.parse(readFileSync(join(pkgDir, 'product.official.json'), 'utf8'));
       if (!isDeepStrictEqual(packed, official)) problem(name, 'product.json in the package is not product.official.json');

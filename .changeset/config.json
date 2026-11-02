@@ -1,12 +1,12 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "openfilm/openfilm" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "TryWorld2026/tryworld-set" }],
   "commit": false,
   "fixed": [
     [
-      "openfilm",
-      "@openfilm/desktop",
-      "@openfilm/shared"
+      "@tryworld/set",
+      "@tryworld/set-desktop",
+      "@tryworld/set-shared"
     ]
   ],
   "linked": [],

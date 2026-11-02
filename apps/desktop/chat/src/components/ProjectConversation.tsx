@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { AGENT_DEFINITIONS, isAgentId } from '../../../src/agent-definitions.mjs';
-import type { PublicProgressSnapshot, TurnAttachment } from '@openfilm/shared';
+import type { PublicProgressSnapshot, TurnAttachment } from '@tryworld/set-shared';
 import { BellRing, Check, ChevronRight, Copy } from 'lucide-react';
 import { AgentActivityList, formatWorkDuration, StatusLine, type AgentActivityItem } from './AgentActivityRow';
 import { AgentIcon, hasAgentIcon } from './AgentIcons';

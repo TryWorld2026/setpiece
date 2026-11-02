@@ -16,7 +16,7 @@ test('the menu clicked twice shares one check and one dialog', async () => {
   await first;
   assert.equal(checks, 1);
   assert.equal(messages.length, 1);
-  assert.equal(messages[0].message, 'OpenFilm is up to date');
+  assert.equal(messages[0].message, 'TryWorld Set is up to date');
   assert.equal(messages[0].detail, 'Version 0.2.3');
 });
 
@@ -33,7 +33,7 @@ test('each state says what it is, never the updater\'s own error; only a ready u
     if (!messages.length) continue;
     assert.doesNotMatch(JSON.stringify(messages), /private\.example/);
     assert.deepEqual(messages[0].buttons, status === 'ready' ? ['Restart', 'Later'] : ['OK']);
-    if (status === 'downloading') assert.equal(messages[0].message, 'Downloading OpenFilm 0.2.4 (40%)');
+    if (status === 'downloading') assert.equal(messages[0].message, 'Downloading TryWorld Set 0.2.4 (40%)');
     if (status === 'error') assert.equal(messages[0].type, 'warning');
   }
 });

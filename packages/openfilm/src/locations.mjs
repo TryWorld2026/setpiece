@@ -136,7 +136,7 @@ export function usableFolder(value) {
   const path = resolve(value);
   if (dirname(path) === path) throw new Error('Choose a folder on that disk, not the disk itself.');
   for (const home of new Set([resolve(studioHomeDir()), resolve(sharedHome())])) {
-    if (path === home || path.startsWith(home + sep)) throw new Error('OpenFilm keeps its own settings there: choose another folder.');
+    if (path === home || path.startsWith(home + sep)) throw new Error('TryWorld Set keeps its own settings there: choose another folder.');
   }
   try {
     mkdirSync(path, { recursive: true });

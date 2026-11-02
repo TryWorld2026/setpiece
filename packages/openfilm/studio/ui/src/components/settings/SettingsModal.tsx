@@ -34,11 +34,11 @@ const NAV: Array<{ group: 'settings' | 'help'; sections: SettingsSection[] }> = 
   { group: 'help', sections: ['shortcuts', 'advanced', 'developer'] },
 ];
 
-/** where OpenFilm lives, linked at the foot of the nav */
+/** where TryWorld Set lives, linked at the foot of the nav */
 const LINKS = [
-  { label: 'settings.links.github', href: 'https://github.com/openfilm/openfilm' },
+  { label: 'settings.links.github', href: 'https://github.com/TryWorld2026/tryworld-set' },
   { label: 'settings.links.examples', href: 'https://github.com/openfilm/examples' },
-  { label: 'settings.links.site', href: 'https://openfilm.dev' },
+  { label: 'settings.links.site', href: 'https://tryworld.com.cn' },
 ];
 
 const SECTION_ICON: Record<SettingsSection, React.ReactNode> = {
@@ -365,7 +365,7 @@ function AboutGroup() {
   return (
     <SettingsGroup title={t('settings.about.group')}>
       <SettingsItem
-        title={info ? `OpenFilm ${info.version}` : 'OpenFilm'}
+        title={info ? `TryWorld Set ${info.version}` : 'TryWorld Set'}
         description={status}
         control={inApp || !info?.checking ? null : (
           <SettingsButton disabled={state === 'checking'} onClick={check}>{t('settings.about.check')}</SettingsButton>
@@ -382,7 +382,7 @@ function AboutGroup() {
             : t('settings.about.how')}
           control={(
             <>
-              <code className="select-all rounded-md bg-[var(--surface-2)] px-2 py-1 font-mono text-[12px] text-[var(--text)]">npx -y openfilm@latest update</code>
+              <code className="select-all rounded-md bg-[var(--surface-2)] px-2 py-1 font-mono text-[12px] text-[var(--text)]">npx -y @tryworld/set@latest update</code>
               <SettingsButton variant="primary" disabled={!web.update || web.update.status === 'updating'} onClick={web.start}>
                 {web.update?.status === 'updating' ? <Loader2 size={14} className="animate-spin" aria-hidden /> : null}
                 {t('update.webUpdate')}
@@ -463,7 +463,7 @@ function AppAboutGroup() {
   return (
     <SettingsGroup title={t('settings.about.group')}>
       <SettingsItem
-        title={`OpenFilm ${s?.version ?? ''}`.trim()}
+        title={`TryWorld Set ${s?.version ?? ''}`.trim()}
         badge={s?.channel === 'beta' ? <span className="rounded-full bg-[var(--fill-tsp)] px-2 py-0.5 text-[11.5px] text-[var(--text-muted)]">beta</span> : null}
         description={description}
         control={control}

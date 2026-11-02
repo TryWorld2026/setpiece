@@ -66,7 +66,7 @@ async function takeOver(home, log) {
 function fork({ port, env, onOpen, onBrowser, log }) {
   return new Promise((resolve, reject) => {
     const child = utilityProcess.fork(ENTRY, [], {
-      serviceName: 'OpenFilm Studio',
+      serviceName: 'TryWorld Set Studio',
       env: { ...env, OPENFILM_STUDIO_PORT: String(port) },
       stdio: 'pipe',
     });

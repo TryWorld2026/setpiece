@@ -55,7 +55,7 @@ for (const updates of [null, { check: async () => {}, beta: false, setBeta: () =
 
 const noop = () => {};
 const build = (language, platform, { packaged = false, updates = true } = {}) => applicationMenuTemplate({
-  productName: 'OpenFilm', packaged, language, toggleChat: noop, openProject: noop, reload: noop, devTools: noop, openSettings: noop,
+  productName: 'TryWorld Set', packaged, language, toggleChat: noop, openProject: noop, reload: noop, devTools: noop, openSettings: noop,
   tabs: { open: noop, close: noop, reopen: noop, step: noop, pick: noop },
   updates: updates ? { check: async () => {}, beta: false, setBeta: noop } : null,
 }, platform);
@@ -73,9 +73,9 @@ test('the menu speaks the page\'s language, else the system\'s as Studio picks i
   assert.equal(appLanguage(null, ['de-DE']), 'en');
   assert.equal(appLanguage(null), 'en');
   const [app, file] = build('zh-CN', 'darwin');
-  assert.equal(app.label, 'OpenFilm');
+  assert.equal(app.label, 'TryWorld Set');
   assert.equal(file.label, '文件');
-  assert.deepEqual(shown(app.submenu).map((item) => item.label), ['关于 OpenFilm', '检查更新…', 'Beta 版更新', '设置…', '服务', '隐藏 OpenFilm', '隐藏其他', '全部显示', '退出 OpenFilm']);
+  assert.deepEqual(shown(app.submenu).map((item) => item.label), ['关于 TryWorld Set', '检查更新…', 'Beta 版更新', '设置…', '服务', '隐藏 TryWorld Set', '隐藏其他', '全部显示', '退出 TryWorld Set']);
   assert.equal(build('xx', 'darwin')[1].label, 'File');
 });
 
@@ -87,10 +87,10 @@ test('every language names every item, Electron\'s role items too, on macOS and 
     const words = MENU_WORDS[language];
     assert.deepEqual(Object.keys(words).sort(), keys, language);
     for (const key of keys) assert.ok(words[key].trim(), `${language} ${key}`);
-    const named = new Map(Object.entries(words).map(([key, text]) => [text.replaceAll('{name}', 'OpenFilm'), key]));
+    const named = new Map(Object.entries(words).map(([key, text]) => [text.replaceAll('{name}', 'TryWorld Set'), key]));
     for (const platform of ['darwin', 'win32']) {
       const template = build(language, platform);
-      if (platform === 'darwin') assert.equal(template[0].label, 'OpenFilm');
+      if (platform === 'darwin') assert.equal(template[0].label, 'TryWorld Set');
       for (const item of shown(platform === 'darwin' ? template.slice(1) : template).concat(platform === 'darwin' ? shown(template[0].submenu) : [])) {
         assert.ok(named.has(item.label), `${language} ${platform}: "${item.label}" (${item.role ?? 'item'}) is not in its words`);
         used.add(named.get(item.label));
@@ -128,10 +128,10 @@ test('the update dialogs have every line in every language', async () => {
   await check({ status: 'ready', availableVersion: '0.2.4' })('ko');
   await check({ status: 'error', error: 'offline' })('es');
   assert.deepEqual(messages.map((m) => [m.title, m.message, m.detail, m.buttons]), [
-    ['检查更新', 'OpenFilm 已是最新版本', '版本 0.2.3（Beta）', ['好']],
-    ['アップデートを確認', 'OpenFilm をダウンロードしています', UPDATE_DIALOG_WORDS.ja.downloadingDetail, ['OK']],
-    ['업데이트 확인', 'OpenFilm 0.2.4 준비가 끝났습니다', UPDATE_DIALOG_WORDS.ko.readyDetail, ['재시작', '나중에']],
+    ['检查更新', 'TryWorld Set 已是最新版本', '版本 0.2.3（Beta）', ['好']],
+    ['アップデートを確認', 'TryWorld Set をダウンロードしています', UPDATE_DIALOG_WORDS.ja.downloadingDetail, ['OK']],
+    ['업데이트 확인', 'TryWorld Set 0.2.4 준비가 끝났습니다', UPDATE_DIALOG_WORDS.ko.readyDetail, ['재시작', '나중에']],
     ['업데이트 확인', '아직 재시작할 수 없습니다', UPDATE_DIALOG_WORDS.ko.errors['agent-busy'], ['확인']],
-    ['Buscar actualizaciones', 'No se pudo buscar actualizaciones', `${UPDATE_DIALOG_WORDS.es.errors.offline} OpenFilm también lo volverá a intentar por sí solo.`, ['Aceptar']],
+    ['Buscar actualizaciones', 'No se pudo buscar actualizaciones', `${UPDATE_DIALOG_WORDS.es.errors.offline} TryWorld Set también lo volverá a intentar por sí solo.`, ['Aceptar']],
   ]);
 });

@@ -29,7 +29,7 @@ import { registerSkillsIpc } from './skills-ipc.mjs';
 import { createRoster } from './agent-roster.mjs';
 import { checkAgentProgram, closeEverySession, diagnoseAgent, forgetAgentStatus, listAgents, localAgent, openAgentInstaller, openAgentSignIn, setChosenPaths, signOutAgent } from './agents.mjs';
 import { agentUsage, forgetAgentUsage } from './agent-usage.mjs';
-import { installOpenfilmCommand } from './openfilm-command.mjs';
+import { installTwsetCommand } from './openfilm-command.mjs';
 import { startUpdates } from './updates.mjs';
 import { stepAside } from './update-launch.mjs';
 import { ensureFfmpeg, ffmpegDir, ffmpegDownloadable, ffmpegIn, ffmpegOnPath } from './ffmpeg-runtime.mjs';
@@ -587,7 +587,7 @@ async function start() {
   /* the person's own skills: Skills/ beside this app's projects (~/Movies/OpenFilm/Skills), as its `openfilm` finds them */
   /* which official skills are installed and which skills are off: the prefs.json every OpenFilm here shares (openfilm/skills usableSkills) */
   const prefsHome = env.OPENFILM_SHARED_HOME || env.OPENFILM_HOME;
-  const mySkills = process.env.OPENFILM_SKILLS || (env.OPENFILM_LIBRARY ? join(dirname(env.OPENFILM_LIBRARY), 'Skills') : (await import('openfilm/skills')).mySkillsDir());
+  const mySkills = process.env.OPENFILM_SKILLS || (env.OPENFILM_LIBRARY ? join(dirname(env.OPENFILM_LIBRARY), 'Skills') : (await import('@tryworld/set/skills')).mySkillsDir());
   localAgents = registerLocalAgentIpc(ipcMain, {
     trusted: fromPage,
     log,
@@ -598,7 +598,7 @@ async function start() {
     onConnectionResult: (id, error) => roster?.recordConnectionResult(id, error),
     /* the `openfilm` command first (with the app's ffmpeg and browser in it); the app's ffmpeg last, for a computer
        that has none of its own: the person's own ffmpeg and browsers are what the agent's commands use */
-    binDir: installOpenfilmCommand(DATA, { ffmpeg: ffmpegHere, env: browsers }),
+    binDir: installTwsetCommand(DATA, { ffmpeg: ffmpegHere, env: browsers }),
     fallbackDir: ffmpegHere,
     env: {
       OPENFILM_HOME: env.OPENFILM_HOME,

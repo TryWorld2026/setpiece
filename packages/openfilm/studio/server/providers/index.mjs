@@ -55,8 +55,8 @@ async function named(id, verb, settings, strict) {
   if (!provider.verbs.includes(verb)) return fail(`${provider.name} does not do ${verb}.`);
   if (!providerKey(provider, settings)) {
     return fail(provider.keyless
-      ? `${provider.name} is not connected: connect it in Studio (the OpenFilm logo at the top left opens Settings → Providers), no key needed, or set ${provider.env}.`
-      : `There is no ${provider.name} key: add one in Studio (the OpenFilm logo at the top left opens Settings → Providers) or set ${provider.env}.`);
+      ? `${provider.name} is not connected: connect it in Studio (the TryWorld Set logo at the top left opens Settings → Providers), no key needed, or set ${provider.env}.`
+      : `There is no ${provider.name} key: add one in Studio (the TryWorld Set logo at the top left opens Settings → Providers) or set ${provider.env}.`);
   }
   return provider;
 }

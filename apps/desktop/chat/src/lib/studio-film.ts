@@ -4,7 +4,7 @@
  * the icon of what it is.
  */
 import React from 'react';
-import type { FilmDoc } from 'openfilm/film-doc';
+import type { FilmDoc } from '@tryworld/set/film-doc';
 
 /** how long a read may take before it is given up */
 const READ_WAIT_MS = 4000;

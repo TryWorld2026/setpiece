@@ -1,18 +1,18 @@
 {
-  "name": "@openfilm/shared",
+  "name": "@tryworld/set-shared",
   "version": "0.2.7",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "What OpenFilm's clients share: a chat turn and its public events, the agent's activity, prompt references, titles and Markdown parsing. Part of the desktop app; not published.",
-  "homepage": "https://openfilm.dev",
+  "description": "What TryWorld Set's clients share: a chat turn and its public events, the agent's activity, prompt references, titles and Markdown parsing. Part of the desktop app; not published.",
+  "homepage": "https://github.com/TryWorld2026/tryworld-set",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openfilm/openfilm.git",
+    "url": "git+https://github.com/TryWorld2026/tryworld-set.git",
     "directory": "packages/shared"
   },
   "bugs": {
-    "url": "https://github.com/openfilm/openfilm/issues"
+    "url": "https://github.com/TryWorld2026/tryworld-set/issues"
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
