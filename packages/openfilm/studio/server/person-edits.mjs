@@ -511,6 +511,9 @@ export function mergeFileWrite(root, path, theirs) {
  */
 export async function replaceIfStill(path, expect, data) {
   const tmp = data == null ? null : tempPath(path);
+  /* the rename is the write: once it is done, no await before returning, so the caller records the write before
+     anything else (a reader, the tests) can see the new file and ask what Studio knows of it */
+  let published = false;
   try {
     if (tmp) await writeFile(tmp, /** @type {string | Buffer} */ (data));
     const now = await readFile(path).catch((e) => (e?.code === 'ENOENT' ? null : Promise.reject(e)));
@@ -518,9 +521,11 @@ export async function replaceIfStill(path, expect, data) {
     if (!(same(now, want) || (want?.length === 0 && now == null))) return false;
     if (tmp) await replaceFile(tmp, path);
     else await rm(path, { force: true });
+    published = true;
     return true;
   } finally {
-    if (tmp) await rm(tmp, { force: true });
+    /* after a rename there is no temp file left (and waiting on one would open the window above) */
+    if (tmp && !published) await rm(tmp, { force: true });
   }
 }
 
