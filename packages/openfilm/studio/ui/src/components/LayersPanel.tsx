@@ -84,7 +84,7 @@ export function LayersPanel(p: LayersPanelProps) {
     const again = async () => {
       const next = await read();
       /* the picture not ready yet (no answer, or nothing drawn yet): asked again soon */
-      if (live && !next?.some((c) => c.layers.length)) timer = window.setTimeout(() => void again(), 500);
+      if (live && !next?.length) timer = window.setTimeout(() => void again(), 500);
     };
     timer = window.setTimeout(() => void again(), 60);
     return () => { live = false; window.clearTimeout(timer); };
