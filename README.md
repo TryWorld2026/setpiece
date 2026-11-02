@@ -9,7 +9,7 @@ AI 视频片场 / AI Video Agent。把想法变成可编辑、可导出的影片
 
 ## 状态
 
-Pre-alpha。仓库已建立，正在导入并改造 OpenFilm（MIT）。当前还没有可运行的构建。
+Pre-alpha。OpenFilm 代码已导入，上游历史保留；品牌改造和第一次构建正在进行。
 
 ## 产品结构
 
@@ -27,11 +27,11 @@ TryWorld Set 是 OpenFilm 的独立衍生项目。OpenFilm 的代码采用 MIT �
 
 TryWorld Set is an independent derivative of OpenFilm. Original code © 2026 OpenFilm contributors, MIT. OpenFilm is a trademark of its respective owner. TryWorld Set is not affiliated with or endorsed by the OpenFilm project.
 
-See [NOTICE.md](NOTICE.md) and [LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt).
+See [NOTICE.md](NOTICE.md), [LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt), and the upstream reference docs: [English](README.upstream.md) / [简体中文](README.upstream.zh-CN.md).
 
 ## 路线
 
-- [ ] Import OpenFilm at the audited base commit
+- [x] Import OpenFilm at the audited base commit
 - [ ] Rebrand CLI, Studio, desktop app, package names
 - [ ] Preserve upstream license and generate third-party notices
 - [ ] Build and verify on Windows
