@@ -12,8 +12,8 @@ toolchain, with a new identity and interface.
 
 ## Status
 
-`0.3.0` is an active private-alpha build. The source is an independent commercial derivative of OpenFilm, with the
-upstream Git history preserved.
+`0.3.0` is the first public Alpha, distributed through npm and GitHub pre-releases. The source is an independent
+commercial derivative of OpenFilm, with the upstream Git history preserved.
 
 ## Product
 
@@ -27,6 +27,18 @@ upstream Git history preserved.
 
 The `twset` and `openfilm` command names remain hidden compatibility aliases. The previous `@tryworld/set` npm
 package is superseded by `@tryworld/setpiece`.
+
+## Install
+
+Requires Node.js `>=22.18`:
+
+```sh
+npx -y @tryworld/setpiece@latest open
+```
+
+Unsigned desktop Alpha installers for macOS (Apple Silicon / Intel) and Windows x64 are attached to the
+[`v0.3.0` pre-release](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0). On macOS, right-click the app
+to open it, or run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
 
 ## Run from source
 

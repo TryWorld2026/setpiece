@@ -11,7 +11,8 @@ OpenFilm 的编辑、时间线、素材、智能体与导出能力，并采用�
 
 ## 状态
 
-`0.3.0` 是正在开发中的私有 Alpha 版本。本项目是 OpenFilm 的独立商业衍生版本，并保留上游 Git 历史。
+`0.3.0` 是首个公开 Alpha，通过 npm 与 GitHub 预发布提供。本项目是 OpenFilm 的独立商业衍生版本，并保留上游
+Git 历史。
 
 ## 产品
 
@@ -24,6 +25,18 @@ OpenFilm 的编辑、时间线、素材、智能体与导出能力，并采用�
 - 版本：`0.3.0`
 
 `twset` 与 `openfilm` 命令继续作为隐藏兼容别名保留。旧 npm 包 `@tryworld/set` 由 `@tryworld/setpiece` 接替。
+
+## 安装
+
+需要 Node.js `>=22.18`：
+
+```sh
+npx -y @tryworld/setpiece@latest open
+```
+
+macOS（Apple Silicon / Intel）与 Windows x64 的未签名桌面 Alpha 安装包见
+[`v0.3.0` 预发布](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0)。macOS 首次打开请右键选择打开；
+如被 Gatekeeper 阻止，可执行 `xattr -cr /Applications/Setpiece.app`。
 
 ## 从源码运行
 
