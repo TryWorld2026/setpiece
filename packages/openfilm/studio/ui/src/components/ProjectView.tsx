@@ -128,8 +128,9 @@ import { nextOverrides, overrideOf, type OverrideGeometry, type OverrideTarget }
 import { compactScale, type MgTransform, type NodeOverride, type OverridePivot, type StageElement, type StageElementStyle, type StageGeometry } from '@/lib/stage-types';
 import { usePreviewPrefs } from '@/lib/preview-prefs';
 import { isTypingTarget } from './typing-target';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 
-const PANE = 'relative flex min-h-0 min-w-0 flex-col overflow-hidden rounded-[7px]';
+const PANE = 'relative flex min-h-0 min-w-0 flex-col overflow-hidden';
 /** The files a picture inside a page can be replaced with. */
 const PICTURE_FILE = /\.(png|jpe?g|gif|webp|avif|svg|bmp)$/i;
 /* ⌘ is the modifier on a Mac, Ctrl elsewhere (the editor's keys, lib/timeline-keys) */
@@ -145,11 +146,11 @@ const HOST_PANEL_TOP = 32;
  */
 function useKeptFlag(key: string, initial = true): [boolean, (open: boolean) => void, React.Dispatch<React.SetStateAction<boolean>>] {
   const [open, setOpen] = React.useState(() => {
-    try { const kept = localStorage.getItem(key); return kept == null ? initial : kept !== '0'; } catch { return initial; }
+    try { const kept = readPreference(key); return kept == null ? initial : kept !== '0'; } catch { return initial; }
   });
   const keep = React.useCallback((next: boolean) => {
     setOpen(next);
-    try { localStorage.setItem(key, next ? '1' : '0'); } catch { /* not kept */ }
+    try { writePreference(key, next ? '1' : '0'); } catch { /* not kept */ }
   }, [key]);
   return [open, keep, setOpen];
 }
@@ -715,7 +716,7 @@ export function ProjectView({ projectId, onProject, onLeave }: {
   const { width: storedTimelineHeight, commit: commitTimelineHeight, saved: timelineHeightSaved } = usePaneSize('openfilm.project.timelineH', TIMELINE_H, MIN_DOCK_H);
   const { width: inspectorWidth, commit: commitInspectorWidth } = usePaneSize('openfilm.project.inspectorW', DEFAULT_INSPECTOR, MIN_INSPECTOR);
   const [assetsPaneOpen, setAssetsPaneOpen] = useKeptFlag('openfilm.project.assets');
-  const [assetsWidth, setAssetsWidth] = React.useState(280);
+  const [assetsWidth, setAssetsWidth] = React.useState(248);
   /* the Layers panel (components/LayersPanel), left of the picture, after the assets */
   const [layersPaneOpen, setLayersPaneOpen] = useKeptFlag('openfilm.project.layers', false);
   const [layersWidth, setLayersWidth] = React.useState(240);
@@ -3034,7 +3035,7 @@ export function ProjectView({ projectId, onProject, onLeave }: {
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col" style={{ paddingLeft: DOCK_GAP, paddingRight: DOCK_GAP, paddingBottom: DOCK_GAP }}>
         <div className="relative z-10 grid min-h-0 min-w-0 flex-1" style={{ gridTemplateColumns: 'minmax(0, 1fr)', gridTemplateRows: 'auto minmax(0, 1fr)', gridTemplateAreas: '"bar" "main"' }}>
           {/* ── top bar: the title centered, whatever is on either side ── */}
-          <div data-titlebar className="relative flex h-8 min-w-0 items-center gap-1" style={{ gridArea: 'bar' }}>
+          <div data-titlebar className="relative flex h-8 min-w-0 items-center gap-1 border-b border-[var(--border)] bg-[var(--glass)] backdrop-blur-[18px]" style={{ gridArea: 'bar' }}>
             {inTabs ? null : <div className="pointer-events-none absolute inset-0 flex min-w-0 items-center justify-center">
               <div className="pointer-events-auto flex min-w-0 max-w-full items-center">
                 {renaming ? (
@@ -3542,7 +3543,7 @@ export function ProjectView({ projectId, onProject, onLeave }: {
           panel keeps for itself (the panel goes on below it, so the two read as one) */}
       {hostAssets?.open && hostPanel ? <PanelSeam panel={hostPanel} bottom={hostAssets.bottom} /> : null}
       {hostAssets?.open && hostPanel ? (
-        <div className="fixed z-30 flex min-h-0 min-w-0 flex-col overflow-hidden rounded-t-[7px] bg-[var(--dock-pane)]"
+        <div className="fixed z-30 flex min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--dock-pane)]"
           style={{ top: HOST_PANEL_TOP, right: DOCK_GAP, bottom: hostAssets.bottom, width: Math.max(0, hostPanel.width - 2 * DOCK_GAP) }}>
           {mediaPool()}
         </div>

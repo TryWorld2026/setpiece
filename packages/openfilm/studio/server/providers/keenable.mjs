@@ -28,7 +28,7 @@ export default {
     const base = serviceUrl('KEENABLE', 'https://api.keenable.ai');
     /* the keyed endpoint, or with no key its public one */
     const at = (/** @type {string} */ path) => `${base}${path}${ctx.key ? '' : '/public'}`;
-    const headers = { 'x-keenable-title': 'TryWorld Set', ...(ctx.key ? { 'x-api-key': ctx.key } : {}) };
+    const headers = { 'x-keenable-title': 'Setpiece', ...(ctx.key ? { 'x-api-key': ctx.key } : {}) };
     const cost = ctx.key ? { cost: billedBy(NAME) } : {};
 
     if (verb === 'web-search') {

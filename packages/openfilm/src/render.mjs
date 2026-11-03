@@ -79,7 +79,7 @@ export async function render(args, opts = {}) {
   const started = Date.now();
   const { film: target, at, range } = parseTarget(args);
   if (range && opts.ranges) throw new UsageError('choose a range or ranges, not both');
-  if (at != null) throw new UsageError(`render takes a range (for example ${at}-${at + 2}), not one time; for one frame use twset look ${at}`);
+  if (at != null) throw new UsageError(`render takes a range (for example ${at}-${at + 2}), not one time; for one frame use setpiece look ${at}`);
   /* --subtitles: the project's film drawn around by a page that burns its subtitles in (the export's own, burn.mjs),
      rendered in its place, from the project's folder, named as the film's own render is. Studio burns only the
      project's film, so a page of it is refused */
@@ -129,7 +129,7 @@ export async function render(args, opts = {}) {
   const fps = rate.fps;
   /* a page without a duration has no end: it is rendered by a range */
   const end = meta.duration ?? Infinity;
-  if (!range && !opts.ranges && meta.duration == null) { await probe.close(); await pool?.give(lent); throw new UsageError('this page has no duration, so it has no end: give a range to render, e.g. twset render 0-6'); }
+  if (!range && !opts.ranges && meta.duration == null) { await probe.close(); await pool?.give(lent); throw new UsageError('this page has no duration, so it has no end: give a range to render, e.g. setpiece render 0-6'); }
   let selection = null;
   try { if (opts.ranges) selection = renderSelection(opts.ranges, fps, end); }
   catch (e) { await probe.close(); await pool?.give(lent); throw e; }
@@ -138,7 +138,7 @@ export async function render(args, opts = {}) {
   const f1 = Math.round(to * fps);
   const total = f1 - f0;
   if (total <= 0) { await probe.close(); await pool?.give(lent); throw new UsageError(`nothing to render between ${fmt(from)} and ${fmt(to)}${meta.duration != null ? `: the film is ${fmt(meta.duration)} long` : ''}`); }
-  if (range && range[1] > end) console.error(`twset render: ${fmt(range[0])}-${fmt(range[1])} runs past the film's end (${fmt(meta.duration)}): rendered to there`);
+  if (range && range[1] > end) console.error(`setpiece render: ${fmt(range[0])}-${fmt(range[1])} runs past the film's end (${fmt(meta.duration)}): rendered to there`);
   const scale = opts.scale ?? (opts['4k'] ? 3840 / meta.width : 1);
   const samples = Math.max(1, Number(opts.samples ?? (opts.blur ? 8 : 1)));
   const shutter = Number(opts.shutter ?? 0.5);
@@ -177,7 +177,7 @@ export async function render(args, opts = {}) {
     /* one the browser does not decode then fails its first frame, by its clip (timeline.mjs): never drawn black */
     const failed = (/** @type {string} */ file) => {
       uncopied.push(file);
-      console.error(`twset render: ${shown(file)}: a copy this browser plays could not be made, so it is drawn as it is`);
+      console.error(`setpiece render: ${shown(file)}: a copy this browser plays could not be made, so it is drawn as it is`);
     };
     try {
       copies = await browserCopies(browser, site.url, root, files, { signal: opts.signal, slow: total >= fps * 2, failed });

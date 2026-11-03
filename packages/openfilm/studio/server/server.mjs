@@ -18,6 +18,7 @@ import { basename, extname, isAbsolute, join, normalize, resolve, sep } from 'no
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
 import { pipeline } from 'node:stream';
+import { envValue } from '../../src/env.mjs';
 import { mkdir, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
@@ -157,7 +158,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
   /** The caller holds the key; a browser write must also come from the editor's own origin. */
   function authorize(/** @type {Req} */ req) {
     if (sameKey(/** @type {string | undefined} */ (req.headers['x-studio-key']))) return;
-    if (!sameKey(cookieKey(req))) throw new HttpError(401, 'open Studio from the address `twset open` prints');
+    if (!sameKey(cookieKey(req))) throw new HttpError(401, 'open Studio from the address `setpiece open` prints');
     if (req.method !== 'GET' && req.method !== 'HEAD' && req.headers.origin !== origin) throw new HttpError(403, 'not from Studio');
   }
 
@@ -201,7 +202,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
       return at.pathname + at.search;
     };
     if (path === '/open') {
-      if (!sameKey(url.searchParams.get('key'))) throw new HttpError(403, 'this link is from another Studio launch; use the one `twset open` printed');
+      if (!sameKey(url.searchParams.get('key'))) throw new HttpError(403, 'this link is from another Studio launch; use the one `setpiece open` printed');
       const to = url.searchParams.get('to') ?? '/';
       res.writeHead(302, { location: keyed(/^\/(?!\/)[^\s\\]*$/.test(to) ? to : '/'), 'set-cookie': signIn, 'referrer-policy': 'no-referrer' });
       return res.end();
@@ -227,7 +228,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
       if (whenIdle && exports.busy()) return json(res, 409, { error: 'an export is running' });
       if (whenIdle && making) return json(res, 409, { error: 'media is being made' });
       /* not busy, but kept (423, not 409: the app asks its own Studio whether it is busy this way) */
-      if (stays) return json(res, 423, { error: 'it is the TryWorld Set app\'s, which keeps it' });
+      if (stays) return json(res, 423, { error: 'it is the Setpiece app\'s, which keeps it' });
       json(res, 200, { pages: editorPages.size });
       setImmediate(() => (onQuit ?? (() => { void studio.close(); }))());
       return;
@@ -266,7 +267,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
     if (parts[0] === 'version' && parts.length === 1 && req.method === 'GET') {
       const now = url.searchParams.get('check') === '1';
       const { latest, checkedAt } = await npmOpenfilm({ force: now, waitMs: 4000 });
-      return json(res, 200, { version: VERSION, latest, newer: Boolean(latest && olderThanThis(VERSION, latest)), checkedAt, checking: !process.env.OPENFILM_NO_UPDATE_CHECK && !FROM_SOURCE, source: FROM_SOURCE,
+      return json(res, 200, { version: VERSION, latest, newer: Boolean(latest && olderThanThis(VERSION, latest)), checkedAt, checking: !envValue('NO_UPDATE_CHECK') && !FROM_SOURCE, source: FROM_SOURCE,
         ...(updating ? { update: updating } : {}) });
     }
     /* Settings → Developer's diagnostic report: `openfilm doctor` (src/doctor.mjs), as this Studio sees the computer */
@@ -297,7 +298,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
       if (making) return json(res, 409, { error: 'media is being made', code: 'making' });
       if (updating?.status === 'updating') return json(res, 202, { update: updating });
       const { latest } = await npmOpenfilm({ waitMs: 4000 });
-      if (!latest || !olderThanThis(VERSION, latest)) return json(res, 409, { error: 'this is the newest TryWorld Set', code: 'newest' });
+      if (!latest || !olderThanThis(VERSION, latest)) return json(res, 409, { error: 'this is the newest Setpiece', code: 'newest' });
       updating = runUpdate(latest, (next) => { updating = next; });
       return json(res, 202, { update: updating });
     }
@@ -1086,7 +1087,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
   if (advertise) {
     mkdirSync(studioHome(), { recursive: true });
     /* `supervisor`: the process that starts this one again if it ends unexpectedly (main.mjs), stopped with it */
-    const supervisor = Number(process.env.OPENFILM_STUDIO_SUPERVISOR) || undefined;
+    const supervisor = Number(envValue('STUDIO_SUPERVISOR')) || undefined;
     writeFileSync(runFile(), `${JSON.stringify({ pid: process.pid, ...(supervisor ? { supervisor } : {}), origin, filmOrigin: pages.origin, key })}\n`, { mode: 0o600 });
   }
 
@@ -1122,7 +1123,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
 const FROM_SOURCE = existsSync(new URL('../ui/src', import.meta.url));
 
 /**
- * `npx -y @tryworld/set@<version> update` in the background (its words in logs/update.log), as the person would run it: the
+ * `npx -y setpiece@<version> update` in the background (its words in logs/update.log), as the person would run it: the
  * newest stops this Studio and starts itself in its place. `then` hears it failed later, with its last words, if this
  * Studio is still here to hear it; one that cannot start is said at once.
  * @param {string} version @param {(state: { status: 'failed', version: string, error: string }) => void} then
@@ -1136,8 +1137,8 @@ function runUpdate(version, then) {
   const failed = (/** @type {string} */ error) => then({ status: 'failed', version, error });
   try {
     const out = openSync(file, 'a');
-    const child = spawn('npx', ['-y', `@tryworld/set@${version}`, 'update'], {
-      detached: true, stdio: ['ignore', out, out], windowsHide: true, shell: process.platform === 'win32', env: { ...process.env, OPENFILM_NO_BROWSER: '1' },
+    const child = spawn('npx', ['-y', `setpiece@${version}`, 'update'], {
+      detached: true, stdio: ['ignore', out, out], windowsHide: true, shell: process.platform === 'win32', env: { ...process.env, SETPIECE_NO_BROWSER: '1' },
     });
     child.once('error', (e) => failed(`npx did not start (it comes with Node.js): ${e.message}`));
     child.once('exit', (code) => {
@@ -1186,7 +1187,7 @@ function sendEditor(/** @type {Res} */ res, /** @type {string} */ dir, /** @type
   const page = join(root, 'index.html');
   /* no referrer: the page's address holds the key, and a link it opens must not carry it to another site */
   res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'referrer-policy': 'no-referrer', ...headers });
-  res.end(existsSync(page) ? readFileSync(page) : '<!doctype html><meta charset="utf-8"><title>TryWorld Set Studio</title><p>The editor is not built: run <code>npm run build:ui</code>.</p>');
+  res.end(existsSync(page) ? readFileSync(page) : '<!doctype html><meta charset="utf-8"><title>Setpiece Studio</title><p>The editor is not built: run <code>npm run build:ui</code>.</p>');
 }
 
 /** A file in the system's file manager, selected. */

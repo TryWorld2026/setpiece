@@ -13,6 +13,7 @@
 import { useSyncExternalStore } from 'react';
 
 import type { Switches } from './timeline-edit.ts';
+import { readPreference, writePreference } from './preference-storage.ts';
 
 export type TimelinePrefs = { snap: boolean; magnet: boolean; linkage: boolean };
 type Pref = keyof TimelinePrefs;
@@ -33,7 +34,7 @@ let current: TimelinePrefs | null = null;
 
 function read(pref: Pref): boolean {
   try {
-    const raw = localStorage.getItem(KEY[pref]);
+    const raw = readPreference(KEY[pref]);
     if (raw != null) return raw !== '0';
   } catch { /* no localStorage: this session's choice */ }
   return memory[pref] ?? DEFAULTS[pref];
@@ -51,9 +52,7 @@ export function switchesOf(prefs: Pick<TimelinePrefs, 'magnet' | 'linkage'>): Sw
 
 export function writeTimelinePref(pref: Pref, on: boolean): void {
   memory[pref] = on;
-  try {
-    localStorage.setItem(KEY[pref], on ? '1' : '0');
-  } catch { /* not stored: `memory` has it */ }
+  writePreference(KEY[pref], on ? '1' : '0');
   current = { ...readTimelinePrefs(), [pref]: on };
   for (const fn of listeners) fn();
 }

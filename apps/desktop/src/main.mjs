@@ -1,5 +1,5 @@
 /**
- * OpenFilm for desktop: one window of tabs, a project in each, Studio on the left and a chat on the right, one page
+ * Setpiece for desktop: one window of tabs, a project in each, Studio on the left and a chat on the right, one page
  * per tab (tabs.mjs). A project is picked in Studio's projects window (the tabs' `+`), and its tab opens; with no tab
  * open, the window's page is the projects (HOME).
  *
@@ -36,23 +36,33 @@ import { ensureFfmpeg, ffmpegDir, ffmpegDownloadable, ffmpegIn, ffmpegOnPath } f
 import { PATH_SEP } from './environment.mjs';
 import { firstWindowsApps } from './windows-apps.mjs';
 import { createTabs, projectGone } from './tabs.mjs';
+import { migrateLegacyUserData } from './legacy-user-data.mjs';
 
 const here = (path) => fileURLToPath(new URL(path, import.meta.url));
 const mac = process.platform === 'darwin';
 const windows = process.platform === 'win32';
 /** Windows' window buttons over the top bar: the board's color, and the text's */
-const overlayColours = (t) => ({ color: t === 'dark' ? '#111111' : '#f2f2f2', symbolColor: t === 'dark' ? '#dadada' : '#1f1f1f', height: 32 });
+const overlayColours = (t) => ({ color: t === 'dark' ? '#111213' : '#efefec', symbolColor: t === 'dark' ? '#dadada' : '#1f1f1f', height: 32 });
 
 /* HTML-in-Canvas in Studio's viewer, as in the renderer (the `openfilm` package's src/host.mjs) */
 app.commandLine.appendSwitch('enable-blink-features', 'CanvasDrawElement');
 
 /* each flavour its own name, data folder and single-instance lock (flavor.mjs) */
 app.setName(PRODUCT_NAME);
-app.setPath('userData', IDENTITY.userData ?? join(app.getPath('appData'), PRODUCT_NAME));
+const APP_DATA = app.getPath('appData');
+try {
+  const migrated = migrateLegacyUserData(APP_DATA, PRODUCT_NAME);
+  if (migrated.files) console.log(`Copied ${migrated.files} setting files from ${migrated.from}`);
+} catch (error) {
+  console.error(`Could not copy old desktop settings: ${error.message}`);
+}
+app.setPath('userData', IDENTITY.userData ?? join(APP_DATA, PRODUCT_NAME));
 const DATA = app.getPath('userData');
 const LOGS = join(DATA, 'logs');
 mkdirSync(LOGS, { recursive: true });
 const log = (line) => { try { appendFileSync(join(LOGS, 'studio.log'), line); } catch { /* no log */ } };
+/** The window's name in the language the app is speaking: 造境 in Chinese, Setpiece everywhere else. */
+const windowTitle = (language = appLanguage(state.language, app.getPreferredSystemLanguages())) => language === 'zh-CN' ? '造境' : 'Setpiece';
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -105,7 +115,7 @@ let localAgents = null;
 let roster = null;
 
 /** the board Studio's panes sit on (its --dock-shell), so the window never flashes another color */
-const BACKGROUND = { light: '#f2f2f2', dark: '#111111' };
+const BACKGROUND = { light: '#efefec', dark: '#111213' };
 
 function focusWindow() {
   if (!win) return;
@@ -391,11 +401,11 @@ function tellWorking(/** @type {string[]} */ folders) {
 
 async function runStudio(env) {
   studio = await startWindowStudio({
-    home: env.OPENFILM_HOME,
+    home: env.SETPIECE_HOME,
     port: IDENTITY.studioPort,
     /* Studio serves the window's page as its editor (shell/: its editor with the chat beside it) */
     /* its diagnostic file takes the app's own logs too (Studio's diagnostics.mjs) */
-    env: { ...env, OPENFILM_EDITOR_DIR: here('../shell/dist/'), OPENFILM_APP_LOGS: LOGS },
+    env: { ...env, SETPIECE_EDITOR_DIR: here('../shell/dist/'), SETPIECE_APP_LOGS: LOGS },
     log,
     onOpen: (url) => {
       /* Studio would open a browser for an address of its own: the window already shows Studio */
@@ -423,6 +433,14 @@ async function runStudio(env) {
 }
 
 async function start() {
+  if (mac) {
+    app.setAboutPanelOptions({
+      applicationName: 'Setpiece · 造境',
+      applicationVersion: app.getVersion(),
+      version: app.getVersion(),
+      copyright: 'Copyright © 2026 TryWorld. An independent derivative of OpenFilm (MIT).',
+    });
+  }
   /* updates (updates.mjs): Restart waits while an agent's turn runs or Studio exports, either would be lost */
   updates = startUpdates({
     dataDir: DATA,
@@ -460,14 +478,19 @@ async function start() {
     shell: shellEnv,
     extra: {
       OPENFILM_HOME: IDENTITY.studioHome ?? process.env.OPENFILM_HOME ?? join(app.getPath('home'), '.openfilm'),
-      ...((IDENTITY.library ?? process.env.OPENFILM_LIBRARY) ? { OPENFILM_LIBRARY: IDENTITY.library ?? process.env.OPENFILM_LIBRARY } : {}),
+      SETPIECE_HOME: IDENTITY.studioHome ?? process.env.SETPIECE_HOME ?? process.env.OPENFILM_HOME ?? join(app.getPath('home'), '.openfilm'),
+      ...((IDENTITY.library ?? process.env.SETPIECE_LIBRARY ?? process.env.OPENFILM_LIBRARY)
+        ? { SETPIECE_LIBRARY: IDENTITY.library ?? process.env.SETPIECE_LIBRARY ?? process.env.OPENFILM_LIBRARY }
+        : {}),
       /* a flavour with a home of its own still shares the person's library (src/locations.mjs) */
-      ...(IDENTITY.sharedHome ? { OPENFILM_SHARED_HOME: IDENTITY.sharedHome } : {}),
+      ...(IDENTITY.sharedHome ? { SETPIECE_SHARED_HOME: IDENTITY.sharedHome } : {}),
       /* the app names Studio's home, which would put exports inside it (Studio's rule for a home kept apart): the
          Desktop, where `openfilm` puts them, unless this is a flavour with a home of its own */
-      ...(IDENTITY.studioHome || process.env.OPENFILM_EXPORTS ? {} : { OPENFILM_EXPORTS: app.getPath('desktop') }),
+      ...(IDENTITY.studioHome || process.env.SETPIECE_EXPORTS || process.env.OPENFILM_EXPORTS ? {} : { SETPIECE_EXPORTS: app.getPath('desktop') }),
       /* another examples index (a file, to try one), passed through when run from source */
-      ...(process.env.OPENFILM_EXAMPLES_INDEX ? { OPENFILM_EXAMPLES_INDEX: process.env.OPENFILM_EXAMPLES_INDEX } : {}),
+      ...((process.env.SETPIECE_EXAMPLES_INDEX ?? process.env.OPENFILM_EXAMPLES_INDEX)
+        ? { SETPIECE_EXAMPLES_INDEX: process.env.SETPIECE_EXAMPLES_INDEX ?? process.env.OPENFILM_EXAMPLES_INDEX }
+        : {}),
     },
   });
 
@@ -495,7 +518,7 @@ async function start() {
     minWidth: WINDOW_MIN.width,
     minHeight: WINDOW_MIN.height,
     show: false,
-    title: PRODUCT_NAME,
+    title: windowTitle(),
     backgroundColor: BACKGROUND[theme],
     ...(mac ? { titleBarStyle: 'hiddenInset', trafficLightPosition: { x: 14, y: 10 } } : {}),
     /* Windows: no title bar either; its own buttons drawn over Studio's top bar, at its right, in its colors */
@@ -520,6 +543,7 @@ async function start() {
     if (!fromPage(event) || typeof next !== 'string' || next === state.language) return;
     state = { ...state, language: next.slice(0, 20) };
     try { writeWindowState(DATA, state); } catch { /* kept until next time */ }
+    win?.setTitle(windowTitle(next));
     showMenu();
   });
   ipcMain.handle('desktop:hello', (event) => {
@@ -586,8 +610,11 @@ async function start() {
   /* the agents: Studio's home and library go with them, so the `openfilm` they run finds this window's Studio */
   /* the person's own skills: Skills/ beside this app's projects (~/Movies/OpenFilm/Skills), as its `openfilm` finds them */
   /* which official skills are installed and which skills are off: the prefs.json every OpenFilm here shares (openfilm/skills usableSkills) */
-  const prefsHome = env.OPENFILM_SHARED_HOME || env.OPENFILM_HOME;
-  const mySkills = process.env.OPENFILM_SKILLS || (env.OPENFILM_LIBRARY ? join(dirname(env.OPENFILM_LIBRARY), 'Skills') : (await import('@tryworld/set/skills')).mySkillsDir());
+  const prefsHome = env.SETPIECE_SHARED_HOME || env.SETPIECE_HOME;
+  const library = process.env.SETPIECE_LIBRARY ?? process.env.OPENFILM_LIBRARY
+    ?? env.SETPIECE_LIBRARY ?? env.OPENFILM_LIBRARY;
+  const mySkills = process.env.SETPIECE_SKILLS || process.env.OPENFILM_SKILLS
+    || (library ? join(dirname(library), 'Skills') : (await import('setpiece/skills')).mySkillsDir());
   localAgents = registerLocalAgentIpc(ipcMain, {
     trusted: fromPage,
     log,
@@ -601,9 +628,9 @@ async function start() {
     binDir: installTwsetCommand(DATA, { ffmpeg: ffmpegHere, env: browsers }),
     fallbackDir: ffmpegHere,
     env: {
-      OPENFILM_HOME: env.OPENFILM_HOME,
-      ...(env.OPENFILM_LIBRARY ? { OPENFILM_LIBRARY: env.OPENFILM_LIBRARY } : {}),
-      ...(env.OPENFILM_SHARED_HOME ? { OPENFILM_SHARED_HOME: env.OPENFILM_SHARED_HOME } : {}),
+      SETPIECE_HOME: env.SETPIECE_HOME,
+      ...(env.SETPIECE_LIBRARY ? { SETPIECE_LIBRARY: env.SETPIECE_LIBRARY } : {}),
+      ...(env.SETPIECE_SHARED_HOME ? { SETPIECE_SHARED_HOME: env.SETPIECE_SHARED_HOME } : {}),
     },
     harness: async (id) => roster?.harness(id) ?? null,
     /* Developer mode: an agent whose own record lacks what its model got logs it here (agent-logs.mjs) */
@@ -618,7 +645,7 @@ async function start() {
     dataDir: DATA,
     mine: mySkills,
     prefsHome,
-    oldMine: join(env.OPENFILM_HOME, 'skills'),
+    oldMine: join(env.SETPIECE_HOME, 'skills'),
     reveal: (path) => { void shell.openPath(path); },
     pickFolder: (words) => pickFolder(words),
     refreshSkills: (agent) => localAgents?.refreshSkills(agent),
@@ -715,7 +742,7 @@ async function start() {
     menuLanguage = language;
     Menu.setApplicationMenu(Menu.buildFromTemplate(applicationMenuTemplate({
       language,
-      productName: PRODUCT_NAME,
+      productName: language === 'zh-CN' ? '造境' : 'Setpiece',
       packaged: app.isPackaged,
       toggleChat: () => activeView()?.webContents.send('desktop:toggle-chat'),
       openProject: () => void openProjectFolder(),

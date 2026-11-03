@@ -6,7 +6,7 @@ import {
   rescanMarkdown,
   type MarkdownBlock,
   type MarkdownScan,
-} from '@tryworld/set-shared/markdown';
+} from 'setpiece-shared/markdown';
 import type { StudioRef } from '../app-bridge';
 import { useT } from '@/i18n';
 import { agentRefPill, parseAgentRefs } from '@/lib/agent-refs';

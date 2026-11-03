@@ -142,7 +142,7 @@ export const ja: Words = {
     goneApp: 'Studio が停止しました。TryWorld Set アプリを終了して開き直すと復旧します。',
     copied: 'コピーしました',
     lockedTitle: 'このブラウザーは Studio にサインインしていません',
-    lockedBody: 'Studio は動いていますが、キー付きのアドレスで一度開いたブラウザーしか受け付けません。`twset open`（開発中は `pnpm dev`）が表示した ?key= 付きの完全なアドレスを開いてください。一度開けば、このブラウザーは Studio のアドレスをそのまま使えます。',
+lockedBody: 'Studio は動いていますが、キー付きのアドレスで一度開いたブラウザーしか受け付けません。`setpiece open`（開発中は `pnpm dev`）が表示した ?key= 付きの完全なアドレスを開いてください。一度開けば、このブラウザーは Studio のアドレスをそのまま使えます。',
     lockedHow: 'アドレスをもう一度得るには',
   },
   projects: {
@@ -273,6 +273,14 @@ export const ja: Words = {
     },
   },
   library: {
+    recent: '最近',
+    all: 'すべての作品',
+    sidebar: {
+      library: 'ライブラリ',
+      folders: 'フォルダ',
+      recentlyOpened: '最近開いた項目',
+      local: 'この Mac に保存',
+    },
     noMatches: '検索に一致するプロジェクトはありません',
     searchPlaceholder: '検索',
     sortLabel: '並べ替え',
@@ -1671,7 +1679,7 @@ export const ja: Words = {
       newer: 'TryWorld Set {version} が公開されています。',
       upToDate: '最新の状態です。',
       source: 'ソースから実行中です。git pull で更新します。',
-      off: 'ここではアップデートの確認がオフです（OPENFILM_NO_UPDATE_CHECK）。',
+off: 'ここではアップデートの確認がオフです（SETPIECE_NO_UPDATE_CHECK）。',
       never: 'まだ確認していません。',
       inApp: 'Studio はデスクトップアプリと一緒に更新されます：TryWorld Set → Check for Updates…',
       howTitle: 'アップデート',

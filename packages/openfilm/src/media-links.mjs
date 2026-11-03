@@ -10,9 +10,10 @@
 import { mkdirSync, readFileSync, realpathSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, isAbsolute, join, relative, sep } from 'node:path';
+import { envValue } from './env.mjs';
 
-/** Studio's home: OPENFILM_HOME, else ~/.openfilm (studio/server/projects.mjs studioHome). */
-const home = () => process.env.OPENFILM_HOME || join(homedir(), '.openfilm');
+/** Studio's home: SETPIECE_HOME (OPENFILM_HOME), else ~/.openfilm (studio/server/projects.mjs studioHome). */
+const home = () => envValue('HOME') || join(homedir(), '.openfilm');
 const file = () => join(home(), 'links.json');
 
 /** @type {{ at: string, mtime: number, places: string[] } | null} */

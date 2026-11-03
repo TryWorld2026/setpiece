@@ -4,6 +4,7 @@
  * their words for its codes (i18n/update-dialogs.mjs), in the menu's language.
  */
 import { UPDATE_DIALOG_WORDS } from './i18n/update-dialogs.mjs';
+import { productName as productNameIn } from './i18n/language.mjs';
 
 /**
  * The check takes the menu's language (one of Studio's, i18n/language.mjs `appLanguage`).
@@ -11,15 +12,16 @@ import { UPDATE_DIALOG_WORDS } from './i18n/update-dialogs.mjs';
  *           showMessage: (options: Electron.MessageBoxOptions) => Promise<{ response: number }>, focusWindow: () => void,
  *           productName?: string }} options
  */
-export function createManualUpdateCheck({ controller, showMessage, focusWindow, productName = 'TryWorld Set' }) {
+export function createManualUpdateCheck({ controller, showMessage, focusWindow, productName = 'Setpiece' }) {
   /** one check, one dialog: the menu clicked again while it is open waits on the same one */
   let pending = null;
 
   return function manualCheck(language = 'en') {
     pending ??= (async () => {
       const words = UPDATE_DIALOG_WORDS[language] ?? UPDATE_DIALOG_WORDS.en;
-      /* a version not known yet leaves no gap ("Downloading OpenFilm") */
-      const fill = (text, values = {}) => Object.entries({ name: productName, ...values })
+      const name = productNameIn(language, productName);
+      /* a version not known yet leaves no gap ("Downloading Setpiece") */
+      const fill = (text, values = {}) => Object.entries({ name, ...values })
         .reduce((out, [key, value]) => out.replaceAll(`{${key}}`, value), text).replace(/ {2,}/g, ' ').trim();
       const error = (code) => fill(words.errors[code] ?? words.errors.failed);
       const say = (options) => showMessage({ title: words.title, buttons: [words.ok], defaultId: 0, cancelId: 0, ...options });

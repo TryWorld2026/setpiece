@@ -13,9 +13,9 @@
  *
  * Pure: no React, no bridge, so `node --test` runs it (src/agent-refs.test.mjs).
  */
-import type { PromptReference as StoredPromptReference } from '@tryworld/set-shared';
+import type { PromptReference as StoredPromptReference } from 'setpiece-shared';
 import type { StudioRef } from '../app-bridge';
-import { kindOf, soundRole } from '@tryworld/set/film-doc';
+import { kindOf, soundRole } from 'setpiece/film-doc';
 import { refPill } from '../studio-refs.ts';
 
 export type AgentRefSegment = { kind: 'text'; text: string } | { kind: 'ref'; ref: StudioRef; raw: string };

@@ -1,4 +1,4 @@
-> Upstream OpenFilm README, retained for reference. TryWorld Set's product README is [README.md](README.md).
+> Upstream OpenFilm README, retained for reference. Setpiece's product README is [README.md](README.md).
 >
 <p align="center">
   <br>

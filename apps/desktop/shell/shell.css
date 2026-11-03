@@ -1,6 +1,6 @@
 /* Studio's styles, with Tailwind over both trees (the chat's own styles come scoped, chat/src/chat.css) */
-@import '@tryworld/set/studio-ui/globals.css';
-@source '../node_modules/@tryworld/set/studio/ui/src';
+@import 'setpiece/studio-ui/globals.css';
+@source '../node_modules/setpiece/studio/ui/src';
 @source '../chat/src';
 
 /* the chat's column: beside Studio, under its top bar (bridge.ts places and sizes it); over Studio's panes and its

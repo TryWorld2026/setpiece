@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "Inter Variable";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2");
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      body {
+        position: relative;
+        padding: 54px 58px;
+        background:
+          radial-gradient(circle at 83% 0%, rgba(111, 135, 156, 0.16), transparent 310px),
+          #f6f6f3;
+        color: #1b1c1e;
+        font-family:
+          "Inter Variable", "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", "PingFang SC",
+          "Microsoft YaHei UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        position: absolute;
+        inset: 28px;
+        border: 1px solid rgba(28, 29, 31, 0.08);
+        border-radius: 18px;
+        content: "";
+      }
+
+      .brand {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brand img {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(28, 29, 31, 0.1);
+      }
+
+      .brand-cn {
+        font-size: 18px;
+        font-weight: 680;
+      }
+
+      .brand-rule {
+        width: 1px;
+        height: 18px;
+        background: rgba(28, 29, 31, 0.14);
+      }
+
+      .brand-en {
+        color: #56595d;
+        font-size: 13px;
+        font-weight: 560;
+        letter-spacing: 0.04em;
+      }
+
+      .eyebrow {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 76px 0 17px;
+        color: #7b7f84;
+        font-size: 11px;
+        font-weight: 660;
+        letter-spacing: 0.16em;
+      }
+
+      .eyebrow::before {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #6f879c;
+        box-shadow: 0 0 0 4px rgba(111, 135, 156, 0.14);
+        content: "";
+      }
+
+      h1 {
+        position: relative;
+        z-index: 2;
+        width: 470px;
+        margin: 0;
+        font-size: 78px;
+        font-weight: 650;
+        letter-spacing: -0.065em;
+        line-height: 1;
+      }
+
+      h1 span {
+        color: #4e6a80;
+      }
+
+      .tagline {
+        position: relative;
+        z-index: 2;
+        margin: 22px 0 0;
+        color: #4e6a80;
+        font-size: 20px;
+        font-weight: 480;
+        letter-spacing: -0.025em;
+      }
+
+      .meta {
+        position: absolute;
+        bottom: 56px;
+        left: 62px;
+        color: #7b7f84;
+        font-size: 11px;
+        letter-spacing: 0.05em;
+      }
+
+      .shot {
+        position: absolute;
+        z-index: 1;
+        top: 146px;
+        right: -42px;
+        width: 680px;
+        overflow: hidden;
+        border: 1px solid rgba(28, 29, 31, 0.16);
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 34px 80px rgba(28, 29, 31, 0.2);
+        transform: rotate(-1.2deg);
+      }
+
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        height: 30px;
+        padding: 0 12px;
+        border-bottom: 1px solid rgba(28, 29, 31, 0.1);
+        background: linear-gradient(#fdfdfc, #f8f8f5);
+        color: #7b7f84;
+        font-size: 9px;
+      }
+
+      .lights {
+        width: 34px;
+        height: 7px;
+        border-radius: 5px;
+        background:
+          radial-gradient(circle at 3px 50%, #dfdfdb 0 3px, transparent 3.5px),
+          radial-gradient(circle at 12px 50%, #dfdfdb 0 3px, transparent 3.5px),
+          radial-gradient(circle at 21px 50%, #dfdfdb 0 3px, transparent 3.5px);
+      }
+
+      .shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <img src="../brand/setpiece-icon.svg" alt="" />
+      <span class="brand-cn">造境</span>
+      <span class="brand-rule"></span>
+      <span class="brand-en">Setpiece</span>
+    </div>
+
+    <p class="eyebrow">AI FILM WORKSPACE</p>
+    <h1>把想法，<br /><span>造成现场。</span></h1>
+    <p class="tagline">Bring ideas to the set.</p>
+    <p class="meta">Projects · Media · Layers · Inspector · Timeline · Assistant</p>
+
+    <div class="shot">
+      <div class="bar">
+        <span class="lights"></span>
+        <span>造境 · 编辑工作台</span>
+      </div>
+      <img src="../product/editor-light.webp" alt="" />
+    </div>
+  </body>
+</html>

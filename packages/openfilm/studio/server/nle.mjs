@@ -379,7 +379,7 @@ export function planNleTimeline(film, opts) {
   }
 
   const end = Math.max(total, ...video.flatMap((t) => t.clips.map((c) => c.end)), ...audio.flatMap((t) => t.clips.map((c) => c.end)));
-  return { name: opts.title || 'TryWorld Set', rate, width: stage.w, height: stage.h, durationFrames: end, video, audio, files };
+  return { name: opts.title || 'Setpiece', rate, width: stage.w, height: stage.h, durationFrames: end, video, audio, files };
 }
 
 /**

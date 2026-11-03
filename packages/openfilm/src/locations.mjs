@@ -14,15 +14,16 @@
 import { accessSync, constants, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statfsSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
+import { envValue } from './env.mjs';
 
-/** Studio's own home (its settings and keys, not the person's work): OPENFILM_HOME, else ~/.openfilm. */
-export const studioHomeDir = () => process.env.OPENFILM_HOME || join(homedir(), '.openfilm');
+/** Studio's own home (its settings and keys, not the person's work): SETPIECE_HOME (OPENFILM_HOME), else ~/.openfilm. */
+export const studioHomeDir = () => envValue('HOME') || join(homedir(), '.openfilm');
 
 /**
  * The Studio home whose prefs.json holds what every OpenFilm on this computer shares (where the library is, the skills
  * turned off): OPENFILM_SHARED_HOME, else Studio's own.
  */
-export const sharedHome = () => process.env.OPENFILM_SHARED_HOME || studioHomeDir();
+export const sharedHome = () => envValue('SHARED_HOME') || studioHomeDir();
 
 /** One value of the shared prefs.json (`home`: the home that holds it), or undefined. @param {string} key */
 export function sharedPref(key, home = sharedHome()) {
@@ -47,8 +48,8 @@ export function setSharedPref(key, value, home = sharedHome()) {
   renameSync(`${at}.${process.pid}.tmp`, at);
 }
 
-/** Where new projects go unless the person chose: OPENFILM_LIBRARY, else ~/Movies/OpenFilm/Projects on macOS, ~/Videos/OpenFilm/Projects elsewhere. */
-export const libraryDefault = () => process.env.OPENFILM_LIBRARY
+/** Where new projects go unless the person chose: SETPIECE_LIBRARY (OPENFILM_LIBRARY), else the existing OpenFilm library. */
+export const libraryDefault = () => envValue('LIBRARY')
   || join(homedir(), process.platform === 'darwin' ? 'Movies' : 'Videos', 'OpenFilm', 'Projects');
 
 /**
@@ -56,8 +57,8 @@ export const libraryDefault = () => process.env.OPENFILM_LIBRARY
  * that is set (a Studio kept apart, for work on OpenFilm itself, leaves nothing in the person's own folder), else the
  * Desktop.
  */
-export const exportsDefault = () => process.env.OPENFILM_EXPORTS
-  || (process.env.OPENFILM_HOME ? join(process.env.OPENFILM_HOME, 'exports') : '')
+export const exportsDefault = () => envValue('EXPORTS')
+  || (envValue('HOME') ? join(/** @type {string} */ (envValue('HOME')), 'exports') : '')
   || join(homedir(), 'Desktop');
 
 /**
@@ -65,7 +66,7 @@ export const exportsDefault = () => process.env.OPENFILM_EXPORTS
  * the projects' default folder, `Saved` (~/Movies/OpenFilm/Saved on macOS), else OPENFILM_SAVED. Not moved with the
  * projects folder: what was saved stays where it was found.
  */
-export const savedRoot = () => process.env.OPENFILM_SAVED || join(dirname(libraryDefault()), 'Saved');
+export const savedRoot = () => envValue('SAVED') || join(dirname(libraryDefault()), 'Saved');
 
 /** The folders the person can choose, by their key in prefs.json. */
 export const LOCATION_KEYS = /** @type {const} */ ({ projects: 'projectsFolder' });
@@ -136,7 +137,7 @@ export function usableFolder(value) {
   const path = resolve(value);
   if (dirname(path) === path) throw new Error('Choose a folder on that disk, not the disk itself.');
   for (const home of new Set([resolve(studioHomeDir()), resolve(sharedHome())])) {
-    if (path === home || path.startsWith(home + sep)) throw new Error('TryWorld Set keeps its own settings there: choose another folder.');
+    if (path === home || path.startsWith(home + sep)) throw new Error('Setpiece keeps its own settings there: choose another folder.');
   }
   try {
     mkdirSync(path, { recursive: true });

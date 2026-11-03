@@ -139,7 +139,7 @@ export const ko: Words = {
     goneApp: 'Studio가 멈췄습니다. TryWorld Set 앱을 종료했다가 다시 열면 복구됩니다.',
     copied: '복사됨',
     lockedTitle: '이 브라우저는 Studio에 로그인되어 있지 않습니다',
-    lockedBody: 'Studio는 실행 중이지만, 키가 붙은 주소로 한 번 연 브라우저만 받아들입니다. `twset open`(개발 중에는 `pnpm dev`)이 출력한 ?key= 가 붙은 전체 주소를 여세요. 한 번 열면 이 브라우저는 Studio 주소를 그대로 쓸 수 있습니다.',
+lockedBody: 'Studio는 실행 중이지만, 키가 붙은 주소로 한 번 연 브라우저만 받아들입니다. `setpiece open`(개발 중에는 `pnpm dev`)이 출력한 ?key= 가 붙은 전체 주소를 여세요. 한 번 열면 이 브라우저는 Studio 주소를 그대로 쓸 수 있습니다.',
     lockedHow: '주소를 다시 받으려면 실행',
   },
   projects: {
@@ -270,6 +270,14 @@ export const ko: Words = {
     },
   },
   library: {
+    recent: '최근',
+    all: '모든 작품',
+    sidebar: {
+      library: '라이브러리',
+      folders: '폴더',
+      recentlyOpened: '최근 연 항목',
+      local: '이 컴퓨터에 저장됨',
+    },
     noMatches: '검색과 일치하는 프로젝트가 없습니다',
     searchPlaceholder: '검색',
     sortLabel: '정렬',
@@ -1667,7 +1675,7 @@ export const ko: Words = {
       newer: 'TryWorld Set {version}이(가) 나왔습니다.',
       upToDate: '최신 버전입니다.',
       source: '소스에서 실행 중입니다. git pull로 업데이트하세요.',
-      off: '여기서는 업데이트 확인이 꺼져 있습니다(OPENFILM_NO_UPDATE_CHECK).',
+off: '여기서는 업데이트 확인이 꺼져 있습니다(SETPIECE_NO_UPDATE_CHECK).',
       never: '아직 확인하지 않았습니다.',
       inApp: 'Studio는 데스크톱 앱과 함께 업데이트됩니다: TryWorld Set → Check for Updates…',
       howTitle: '업데이트',

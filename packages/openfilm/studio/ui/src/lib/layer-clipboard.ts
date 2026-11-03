@@ -12,6 +12,7 @@
  * another window and another project of the same Studio paste it too (lib: no React, no DOM, so `node --test` runs it).
  */
 import type { PasteLayer } from './layer-paste.ts';
+import { readPreference, removePreference, writePreference } from './preference-storage.ts';
 
 /** The layers copied from one page clip. */
 export interface CopiedLayers {
@@ -90,7 +91,7 @@ const KEY = 'openfilm.layer-clipboard';
 
 export function readLayerClipboard(): LayerClipboard | null {
   try {
-    const raw = globalThis.localStorage?.getItem(KEY);
+    const raw = readPreference(KEY);
     const v = raw ? JSON.parse(raw) as LayerClipboard : null;
     return v && typeof v.project === 'string' && Array.isArray(v.clips) && v.clips.length && v.clips.every((c) => Array.isArray(c.layers)) ? v : null;
   } catch {
@@ -101,8 +102,8 @@ export function readLayerClipboard(): LayerClipboard | null {
 /** Kept, or (null) emptied: the timeline's clipboard was copied to since. */
 export function writeLayerClipboard(board: LayerClipboard | null): void {
   try {
-    if (board) globalThis.localStorage?.setItem(KEY, JSON.stringify(board));
-    else globalThis.localStorage?.removeItem(KEY);
+    if (board) writePreference(KEY, JSON.stringify(board));
+    else removePreference(KEY);
   } catch { /* storage refused (a private window): the clipboard lives in this window only */ }
 }
 

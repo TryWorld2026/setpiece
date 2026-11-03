@@ -34,6 +34,7 @@ import type { SubtitleEdits } from '@/lib/use-subtitle-edits';
 import { ContextMenu, type ContextMenuEntry } from './ContextMenu';
 import { Tooltip } from './Tooltip';
 import { isTypingTarget } from './typing-target';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 
 export const SUBTITLE_ROW_H = 30;
 /** How wide a cue's edge can be grabbed (px), less on a narrow cue so its middle can still be. */
@@ -57,12 +58,12 @@ const shownListeners = new Set<() => void>();
 let shownNow: boolean | null = null;
 function readShown(): boolean {
   if (shownNow != null) return shownNow;
-  try { shownNow = localStorage.getItem(SHOWN_KEY) !== '0'; } catch { shownNow = true; }
+  shownNow = readPreference(SHOWN_KEY) !== '0';
   return shownNow;
 }
 function setShown(on: boolean): void {
   shownNow = on;
-  try { localStorage.setItem(SHOWN_KEY, on ? '1' : '0'); } catch { /* this session only */ }
+  writePreference(SHOWN_KEY, on ? '1' : '0');
   for (const fn of shownListeners) fn();
 }
 /** "Hide the row", in the row's menus: where it comes back is said under it. */

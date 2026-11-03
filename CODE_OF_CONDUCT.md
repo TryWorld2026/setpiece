@@ -1,6 +1,6 @@
 # Code of conduct
 
-TryWorld Set is made by people from many places, with different backgrounds and levels of experience. We want every one
+Setpiece is made by people from many places, with different backgrounds and levels of experience. We want every one
 of them to feel welcome here: in issues, pull requests, Discussions and anywhere else the project meets.
 
 ## What we ask

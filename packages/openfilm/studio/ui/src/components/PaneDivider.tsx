@@ -6,8 +6,8 @@
  * wider pane or a taller timeline when working on a long edit. A fixed ratio always
  * shortchanges one of them, and only the user knows the trade-off at that moment.
  *
- * The gap between the panes is the seam, and the seam is the handle. Its
- * width must therefore equal the spacing between panes (DOCK_GAP); one pixel off makes it look crooked.
+ * The panes touch across a single hairline like a native macOS workspace. The seam is still the handle:
+ * a 14px grab area sits invisibly over that line, so resizing stays easy without drawing a heavy gutter.
  *
  * With a mouse the seam draws nothing. Hovering already turns the cursor into a resize arrow,
  * and while dragging the panes widen under the hand, which is the most direct feedback there
@@ -22,11 +22,12 @@
  * one-off action; having to drag it again for every film would defeat the point.
  */
 import React from 'react';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 
-/** Gap between panes (px); the workspace's outer margin uses the same value so the seams line up. */
-export const DOCK_GAP = 6;
+/** Hairline between panes (px); the workspace's outer edge uses the same value so the seams line up. */
+export const DOCK_GAP = 1;
 
-/** A 6px seam is too thin to grab with a mouse, so the grab area is widened to 14px using negative margins, without taking layout space. */
+/** A hairline is too thin to grab with a mouse, so the grab area is widened to 14px using negative margins, without taking layout space. */
 const GRAB = 14;
 const BLEED = (GRAB - DOCK_GAP) / 2;
 
@@ -47,7 +48,7 @@ export const MIN_VIEWER = 280;
  * a cramped column, and people do not think to drag it wider; they assume that is how the
  * panel looks. Users who have resized it are unaffected: usePaneSize stores their own value.
  */
-export const DEFAULT_INSPECTOR = 300;
+export const DEFAULT_INSPECTOR = 280;
 
 /**
  * Height limits for the pane below the viewer (the timeline).
@@ -90,7 +91,7 @@ export function usePaneSize(storageKey: string, fallback = 420, min = 0) {
 
   React.useEffect(() => {
     let stored = NaN;
-    try { stored = Number(localStorage.getItem(storageKey)); } catch { /* unreadable: treat as never stored */ }
+    try { stored = Number(readPreference(storageKey)); } catch { /* unreadable: treat as never stored */ }
     const has = Number.isFinite(stored) && stored > 0;
     setSaved(has);
     setWidth(Math.max(min, has ? stored : fallback));
@@ -100,7 +101,7 @@ export function usePaneSize(storageKey: string, fallback = 420, min = 0) {
     setSaved(true);
     setWidth(next);
     try {
-      localStorage.setItem(storageKey, String(Math.round(next)));
+      writePreference(storageKey, String(Math.round(next)));
     } catch {
       // Writes fail in private mode. Not worth surfacing an error for a width; it works for this session.
     }
@@ -197,7 +198,7 @@ export function PaneDivider({
     >
       <div
         style={{ width: DOCK_GAP }}
-        className="pointer-events-none rounded-full bg-[var(--text-faint)] opacity-0 transition-opacity duration-150 group-focus-visible:opacity-40"
+        className="pointer-events-none bg-[var(--border)] opacity-100 transition-colors duration-150 group-focus-visible:bg-[var(--accent)]"
       />
     </div>
   );
@@ -285,7 +286,7 @@ export function DockPaneDivider({
     >
       <div
         style={{ height: DOCK_GAP }}
-        className="pointer-events-none w-full rounded-full bg-[var(--text-faint)] opacity-0 transition-opacity duration-150 group-focus-visible:opacity-40"
+        className="pointer-events-none w-full bg-[var(--border)] opacity-100 transition-colors duration-150 group-focus-visible:bg-[var(--accent)]"
       />
     </div>
   );

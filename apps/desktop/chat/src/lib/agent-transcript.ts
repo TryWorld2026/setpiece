@@ -9,7 +9,7 @@
  *
  * This layer has no filtering and should not: tool names, inputs, command lines and reasoning are
  * already left out of the events on the server (see agent-activity and public-stream in
- * @tryworld/set-shared). Filtering again on the client would leave the raw fields in the network panel:
+ * setpiece-shared). Filtering again on the client would leave the raw fields in the network panel:
  * hidden, not absent.
  */
 import {
@@ -22,7 +22,7 @@ import {
   type PublicGenerationEvent,
   type PublicProgressSnapshot,
   type PublicTimelineStep,
-} from '@tryworld/set-shared';
+} from 'setpiece-shared';
 import type { AgentActivityItem } from '@/components/AgentActivityRow';
 
 export interface TranscriptItem {

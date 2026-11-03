@@ -3,7 +3,8 @@
  * path in neither comes back as itself, so a typo shows on screen instead of an empty label. Placeholders (`{n}`) are
  * filled by the caller.
  *
- * The language is the person's choice in Settings → General, kept in localStorage `openfilm.language`, or the
+ * The language is the person's choice in Settings → General, kept in localStorage `setpiece.language` (falling back
+ * to `openfilm.language`), or the
  * system's ("system", the default: the first of the browser's languages there is a table for, else English). It is
  * shown as `<html lang>`, which an app embedding Studio reads to match it.
  */
@@ -13,6 +14,7 @@ import { es } from './es.ts';
 import { ja } from './ja.ts';
 import { ko } from './ko.ts';
 import { zhCN } from './zh-CN.ts';
+import { isPreferenceEvent, readPreference, writePreference } from '../lib/preference-storage.ts';
 
 export const LANGUAGES = [
   { code: 'en', name: 'English', words: en },
@@ -25,7 +27,7 @@ export const LANGUAGES = [
 export type Language = (typeof LANGUAGES)[number]['code'];
 export type LanguageChoice = Language | 'system';
 
-const KEY = 'openfilm.language';
+const KEY = 'setpiece.language';
 
 function node(table: unknown, path: string): unknown {
   let cur = table;
@@ -69,10 +71,8 @@ export function languageFor(asked: readonly string[]): Language {
 }
 
 function savedChoice(): LanguageChoice {
-  try {
-    const value = localStorage.getItem(KEY);
-    return LANGUAGES.some((l) => l.code === value) ? value as Language : 'system';
-  } catch { return 'system'; }
+  const value = readPreference(KEY);
+  return LANGUAGES.some((l) => l.code === value) ? value as Language : 'system';
 }
 
 function current(): Language {
@@ -84,7 +84,16 @@ function current(): Language {
 /** The path in `language`'s table, else in English's, else the path itself. */
 export function lookup(path: string, language: Language = current()): string {
   const words = LANGUAGES.find((l) => l.code === language)?.words;
-  return (words && language !== 'en' ? find(words, path) : null) ?? find(en, path) ?? path;
+  const text = (words && language !== 'en' ? find(words, path) : null) ?? find(en, path) ?? path;
+  const branded = language === 'zh-CN'
+    ? text.replaceAll('试界片场', '造境').replaceAll('TryWorld Set', '造境')
+    : text.replaceAll('TryWorld Set', 'Setpiece');
+  return branded.replaceAll('OPENFILM_NO_UPDATE_CHECK', 'SETPIECE_NO_UPDATE_CHECK');
+}
+
+/** The product's name in the language shown: 造境 in Chinese, Setpiece everywhere else. */
+export function brandName(language: Language = current()): string {
+  return language === 'zh-CN' ? '造境' : 'Setpiece';
 }
 
 const listeners = new Set<() => void>();
@@ -99,14 +108,12 @@ if (typeof window !== 'undefined') {
   apply();
   window.addEventListener('languagechange', () => { if (savedChoice() === 'system') apply(); });
   /* another tab of Studio changed it */
-  window.addEventListener('storage', (e) => { if (e.key === KEY) apply(); });
+  window.addEventListener('storage', (e) => { if (isPreferenceEvent(e.key, KEY)) apply(); });
 }
 
 export function setLanguageChoice(choice: LanguageChoice) {
-  try {
-    if (choice === 'system') localStorage.removeItem(KEY);
-    else localStorage.setItem(KEY, choice);
-  } catch { /* not kept past this page */ }
+  if (choice === 'system') writePreference(KEY, 'system');
+  else writePreference(KEY, choice);
   apply();
 }
 
@@ -115,6 +122,10 @@ const subscribe = (on: () => void) => { listeners.add(on); return () => { listen
 /** The language shown now; a change draws again whoever uses it. */
 export function useLanguage(): Language {
   return React.useSyncExternalStore(subscribe, () => shown, () => 'en' as Language);
+}
+
+export function useBrandName(): string {
+  return brandName(useLanguage());
 }
 
 /** The person's choice (or "system") and a way to change it. */

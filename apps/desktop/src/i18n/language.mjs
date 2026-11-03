@@ -20,3 +20,8 @@ export function appLanguage(saved, system = []) {
   }
   return 'en';
 }
+
+/** The product name as the app shows it in `language`: 造境 in Simplified Chinese, Setpiece elsewhere. */
+export function productName(language, name = 'Setpiece') {
+  return language === 'zh-CN' ? name.replace(/^Setpiece/, '造境') : name;
+}

@@ -71,7 +71,7 @@ test("Claude Code: OpenFilm's skills as a plugin; the person's own skills and MC
   const s = await sessionSkills('claude', { cwd: w.project, home: w.home, dataDir: w.dataDir, mine: join(w.openfilmHome, 'skills'), allowed: ['research'], mcpAllowed: ['notes'] });
   assert.equal(s.claude.plugins[0].type, 'local');
   const dir = s.claude.plugins[0].path;
-  assert.deepEqual(JSON.parse(readFileSync(join(dir, '.claude-plugin', 'plugin.json'), 'utf8')).name, 'twset');
+  assert.deepEqual(JSON.parse(readFileSync(join(dir, '.claude-plugin', 'plugin.json'), 'utf8')).name, 'setpiece');
   assert.equal(realpathSync(join(dir, 'skills', 'brand')), realpathSync(join(w.project, 'skills', 'brand')), 'linked to the skill\'s own folder');
   assert.ok(existsSync(join(dir, '.agents', 'skills', 'lyric-pv', 'SKILL.md')), 'and readable as a skills folder');
   assert.deepEqual(s.claude.settings.skillOverrides, { 'team-style': 'off', 'chatcut-voice': 'off' }, 'by its folder\'s name, as Claude Code names it; the one let in left on');
@@ -142,9 +142,11 @@ test("OpenFilm's own skill for terminal agents is known, never offered, and alwa
   const w = world();
   skill(join(w.home, '.claude', 'skills', 'openfilm'), 'openfilm', 'Make videos as web pages with OpenFilm.');
   skill(join(w.home, '.claude', 'skills', 'twset'), 'twset', 'Make videos as web pages with TryWorld Set.');
+  skill(join(w.home, '.claude', 'skills', 'setpiece'), 'setpiece', 'Make videos as web pages with Setpiece.');
   const own = await ownSkills('claude', { cwd: w.project, home: w.home });
   assert.equal(own.find((s) => s.name === 'openfilm')?.ours, true);
   assert.equal(own.find((s) => s.name === 'twset')?.ours, true);
+  assert.equal(own.find((s) => s.name === 'setpiece')?.ours, true);
   assert.equal(own.find((s) => s.name === 'research')?.ours, undefined);
   const s = await sessionSkills('claude', { cwd: w.project, home: w.home, dataDir: w.dataDir, mine: join(w.openfilmHome, 'skills'), allowed: ['openfilm', 'research'] });
   assert.equal(s.claude.settings.skillOverrides.openfilm, 'off', 'off even when it was let in');

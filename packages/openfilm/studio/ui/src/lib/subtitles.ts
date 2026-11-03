@@ -29,6 +29,7 @@ import type {
   FilmSubtitleStyle,
 } from '../../../server/film-subtitle.mjs';
 import type { SourceCue } from './subtitle-cues.ts';
+import { readPreference, writePreference } from './preference-storage.ts';
 
 export {
   FILM_SUBTITLE_KARAOKE_DEFAULT,
@@ -138,7 +139,7 @@ const STORE_KEY = 'openfilm.subtitles';
 /** The look used last, switched on: the switch belongs to each film (subtitles off in one do not hide another's). */
 export function readLastSubtitleStyle(): SubtitleStyle | null {
   try {
-    const raw = localStorage.getItem(STORE_KEY);
+    const raw = readPreference(STORE_KEY);
     return raw ? { ...parseFilmSubtitleStyle(JSON.parse(raw)), on: true } : null;
   } catch {
     return null;
@@ -146,9 +147,7 @@ export function readLastSubtitleStyle(): SubtitleStyle | null {
 }
 
 export function writeLastSubtitleStyle(style: SubtitleStyle): void {
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(style));
-  } catch { /* private mode */ }
+  writePreference(STORE_KEY, JSON.stringify(style));
 }
 
 /* ── Studio's API (studio/server/captions.mjs) ───────────────────────────── */

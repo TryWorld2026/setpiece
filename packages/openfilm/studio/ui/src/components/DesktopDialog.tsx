@@ -55,12 +55,12 @@ const DARK: React.CSSProperties = {
   '--border': 'rgba(255, 255, 255, 0.08)',
   '--dock-shell': '#121414',
   '--tl-playhead': '#ffffff',
-  '--tl-accent': '#45c2b4',
-  '--tl-wave': 'rgba(12, 168, 164, 0.9)',
+  '--tl-accent': '#8da7ba',
+  '--tl-wave': 'rgba(141, 167, 186, 0.9)',
   background: [
-    'radial-gradient(90% 70% at 0% 0%, color-mix(in srgb, #5ecb92 34%, transparent), transparent 70%)',
-    'radial-gradient(80% 60% at 100% 100%, color-mix(in srgb, #7fd3e4 26%, transparent), transparent 70%)',
-    '#0d1110',
+    'radial-gradient(90% 70% at 0% 0%, color-mix(in srgb, #6f879c 24%, transparent), transparent 70%)',
+    'radial-gradient(80% 60% at 100% 100%, color-mix(in srgb, #4e6a80 20%, transparent), transparent 70%)',
+    '#111213',
   ].join(', '),
 } as React.CSSProperties;
 
@@ -174,7 +174,7 @@ export function DesktopDialog({ open, onClose }: { open: boolean; onClose: () =>
                   <span className="flex items-center gap-2.5">
                     <span
                       className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px]"
-                      style={{ background: 'color-mix(in srgb, var(--brand-wind-mid) 14%, transparent)', color: 'var(--brand-wind-from)' }}
+                      style={{ background: 'color-mix(in srgb, var(--brand-fog) 14%, transparent)', color: 'var(--brand-fog-deep)' }}
                     >
                       {icon}
                     </span>
@@ -230,7 +230,7 @@ function AppPicture() {
           <div className="flex aspect-[16/10] items-center justify-center rounded-[6px] bg-[var(--surface)]">
             <div
               className="flex aspect-video w-[78%] flex-col justify-end rounded-[4px] p-[8%]"
-              style={{ background: 'linear-gradient(135deg, #5ecb92, #7fd3e4)' }}
+              style={{ background: 'linear-gradient(135deg, #4e6a80, #8da7ba)' }}
             >
               <span className="openfilm-desktop-pulse h-[7px] w-[58%] rounded-full bg-white/90" />
               <span className="mt-[4px] h-[4px] w-[36%] rounded-full bg-white/60" />
@@ -244,7 +244,7 @@ function AppPicture() {
                 <span className="h-[10px] w-[34%] rounded-[2px] bg-white/[0.13]" />
               </div>
               <div className="flex gap-[3px] pl-[18%]">
-                <span className="h-[10px] w-[48%] rounded-[2px] bg-[color-mix(in_srgb,#66d8b8_40%,transparent)]" />
+                <span className="h-[10px] w-[48%] rounded-[2px] bg-[color-mix(in_srgb,var(--tl-accent)_34%,transparent)]" />
               </div>
               <span className="h-[8px] w-[92%] rounded-[2px] bg-[color-mix(in_srgb,var(--tl-wave)_55%,transparent)]" />
             </div>

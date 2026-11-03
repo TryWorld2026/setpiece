@@ -1,5 +1,5 @@
 /**
- * Run the app from this repository: `pnpm --filter @tryworld/set-desktop start`.
+ * Run the app from this repository: `pnpm --filter setpiece-desktop start`.
  *
  * It is the `dev` flavour (src/flavor.mjs): on macOS a renamed copy of Electron.app with its own name, bundle id and
  * data folder, so it never shares a Dock icon, a lock or a Studio with an installed OpenFilm. The window's page
@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { launcherEnvironment, loginShellEnvironment } from '../src/environment.mjs';
 import { FLAVORS } from '../src/flavor.mjs';
 
-process.env.OPENFILM_DESKTOP_FLAVOR = 'dev';
+process.env.SETPIECE_DESKTOP_FLAVOR = 'dev';
 const identity = FLAVORS.dev;
 const require = createRequire(import.meta.url);
 const desktop = resolve(dirname(fileURLToPath(import.meta.url)), '..');

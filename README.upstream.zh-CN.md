@@ -1,4 +1,4 @@
-> OpenFilm 上游 README，保留作参考。TryWorld Set 的产品说明见 [README.md](README.md)。
+> OpenFilm 上游 README，保留作参考。Setpiece 的产品说明见 [README.md](README.md)。
 >
 <p align="center">
   <br>

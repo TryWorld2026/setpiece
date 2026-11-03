@@ -1,7 +1,7 @@
 /**
- * Studio, inside the app: an Electron utility process running the open-source Studio (the `@tryworld/set` package's
+ * Studio, inside the app: an Electron utility process running the open-source Studio (the `setpiece` package's
  * `startStudio`), serving the window's page (shell/) as its editor. It is the machine's Studio (`advertise`): an
- * agent's `twset open` finds it and shows its project in the app's window, not in a browser.
+ * agent's `setpiece open` finds it and shows its project in the app's window, not in a browser.
  *
  * Talks to the main process over `process.parentPort`:
  *   → { type: 'ready', origin, filmOrigin, key }   listening
@@ -15,8 +15,8 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
-import { startStudio } from '@tryworld/set/studio';
-import { launch } from '@tryworld/set/host';
+import { startStudio } from 'setpiece/studio';
+import { launch } from 'setpiece/host';
 
 const parent = process.parentPort;
 const send = (message) => parent.postMessage(message);
@@ -36,17 +36,18 @@ parent.on('message', ({ data }) => {
   if (data?.type === 'working' && Array.isArray(data.folders)) working = data.folders.filter((f) => typeof f === 'string');
 });
 
-const port = Number(process.env.OPENFILM_STUDIO_PORT);
+const port = Number(process.env.SETPIECE_STUDIO_PORT || process.env.OPENFILM_STUDIO_PORT);
+const editorDir = process.env.SETPIECE_EDITOR_DIR || process.env.OPENFILM_EDITOR_DIR;
 try {
   studio = await startStudio({
     port: Number.isInteger(port) ? port : 0,
     advertise: true,
     openBrowser: (url) => send({ type: 'open', url }),
-    /* another app (or `twset open`) asked this Studio to stop: the window still needs it, so it stays and says so */
+    /* another app (or `setpiece open`) asked this Studio to stop: the window still needs it, so it stays and says so */
     stays: true,
     working: () => working,
     /* the window's page, Studio's editor with the chat beside it (shell/), in place of the editor alone */
-    ...(process.env.OPENFILM_EDITOR_DIR ? { editorDir: process.env.OPENFILM_EDITOR_DIR } : {}),
+    ...(editorDir ? { editorDir } : {}),
   });
   send({ type: 'ready', origin: studio.origin, filmOrigin: studio.filmOrigin, key: studio.key });
 } catch (e) {
@@ -64,7 +65,7 @@ try {
   if (!/Executable doesn't exist/.test(e?.message ?? '')) send({ type: 'browser', state: 'failed', message: e?.message ?? String(e) });
   else {
     send({ type: 'browser', state: 'downloading' });
-    const twset = dirname(createRequire(import.meta.url).resolve('@tryworld/set/package.json'));
+    const twset = dirname(createRequire(import.meta.url).resolve('setpiece/package.json'));
     const cli = join(dirname(createRequire(join(twset, 'package.json')).resolve('playwright-core/package.json')), 'cli.js');
     const child = spawn(process.execPath, [cli, 'install', 'chromium-headless-shell'], { env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, stdio: 'ignore', windowsHide: true });
     child.once('exit', (code) => send(code === 0 ? { type: 'browser', state: 'ready' } : { type: 'browser', state: 'failed', message: `the download stopped (${code})` }));

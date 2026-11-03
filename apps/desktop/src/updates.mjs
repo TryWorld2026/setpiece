@@ -19,6 +19,7 @@ import { clearPendingUpdate, installLanguage, installWords, pendingUpdate, ready
 import { UPDATE_CHANNELS, readUpdateChannel, useUpdateChannel, writeUpdateChannel } from './update-channel.mjs';
 import { createManualUpdateCheck } from './update-menu.mjs';
 import { scheduleUpdateChecks } from './update-schedule.mjs';
+import { productName as productNameIn } from './i18n/language.mjs';
 
 const { autoUpdater } = electronUpdater;
 
@@ -114,10 +115,12 @@ export function startUpdates({ dataDir, productName, getWindow, onState, prepare
       const nothing = { installing: false, dismiss: () => {} };
       const version = process.platform === 'darwin' ? pendingUpdate(dataDir, app.getVersion()) : null;
       if (!version) return nothing;
-      const words = installWords(installLanguage(language, app.getPreferredSystemLanguages()), { name: productName, version });
+      const shownLanguage = installLanguage(language, app.getPreferredSystemLanguages());
+      const shownName = productNameIn(shownLanguage, productName);
+      const words = installWords(shownLanguage, { name: shownName, version });
       const shown = new BrowserWindow({
         width: 380, height: 120, show: false, frame: false, resizable: false, maximizable: false, minimizable: false, fullscreenable: false,
-        title: productName, backgroundColor: nativeTheme.shouldUseDarkColors ? '#111111' : '#f2f2f2',
+        title: shownName, backgroundColor: nativeTheme.shouldUseDarkColors ? '#111111' : '#f2f2f2',
         webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false },
       });
       shown.once('ready-to-show', () => shown.show());

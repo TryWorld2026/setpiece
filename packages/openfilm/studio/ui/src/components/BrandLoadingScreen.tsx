@@ -14,7 +14,7 @@
  * that project loads. Both look identical, so the handoff has no visible seam; the user sees
  * one loading screen that stays lit throughout, not two that flash in turn.
  */
-import { useT } from '@/i18n';
+import { useBrandName, useT } from '@/i18n';
 import { BrandLogo } from './BrandLogo';
 
 export function BrandLoadingScreen({
@@ -24,6 +24,7 @@ export function BrandLoadingScreen({
   labelKey?: string;
 }) {
   const t = useT();
+  const brand = useBrandName();
   return (
     <div
       role="status"
@@ -39,9 +40,10 @@ export function BrandLoadingScreen({
       {/* Kept small: an enlarged logo in the middle of the screen looks like a splash ad, while
           this screen only means "one moment". The bar below is what moves. */}
       <span className="text-[var(--text)]"><BrandLogo size={34} /></span>
+      <p className="mt-4 text-[13px] font-semibold tracking-[-0.01em] text-[var(--text)]">{brand}</p>
 
       {labelKey ? (
-        <p className="mt-6 text-[14px] font-medium tracking-[-0.01em] text-[var(--text)]">
+        <p className="mt-2 text-[12.5px] font-medium tracking-[-0.01em] text-[var(--text-muted)]">
           {t(labelKey)}
         </p>
       ) : null}

@@ -143,7 +143,7 @@ export const en = {
     goneApp: 'Studio has stopped. Quit and reopen the TryWorld Set app to bring it back.',
     copied: 'Copied',
     lockedTitle: 'This browser isn’t signed in to Studio',
-    lockedBody: 'Studio is running, but it only lets in a browser that opened it once with its key. Open the full address `twset open` (or `pnpm dev`) printed, the one with ?key= in it; after that, this browser can use Studio’s address as it is.',
+lockedBody: 'Studio is running, but it only lets in a browser that opened it once with its key. Open the full address `setpiece open` (or `pnpm dev`) printed, the one with ?key= in it; after that, this browser can use Studio’s address as it is.',
     lockedHow: 'To get it again, run',
   },
   projects: {
@@ -274,6 +274,14 @@ export const en = {
     },
   },
   library: {
+    recent: 'Recent',
+    all: 'All projects',
+    sidebar: {
+      library: 'Library',
+      folders: 'Folders',
+      recentlyOpened: 'Recently opened',
+      local: 'Stored locally',
+    },
     noMatches: 'No projects match your search',
     searchPlaceholder: 'Search',
     sortLabel: 'Sort',
@@ -1672,7 +1680,7 @@ export const en = {
       newer: 'TryWorld Set {version} is out.',
       upToDate: 'Up to date.',
       source: 'Running from source: git pull updates it.',
-      off: 'Update checks are off here (OPENFILM_NO_UPDATE_CHECK).',
+off: 'Update checks are off here (SETPIECE_NO_UPDATE_CHECK).',
       never: 'Not checked yet.',
       inApp: 'Updates come with the desktop app: TryWorld Set → Check for Updates…',
       howTitle: 'Update',

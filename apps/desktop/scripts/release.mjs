@@ -1,33 +1,33 @@
 /**
- * Build the app people install: `pnpm --filter @tryworld/set-desktop release` (`--arch=x64` for Intel Macs, default this
+ * Build the app people install: `pnpm --filter setpiece-desktop release` (`--arch=x64` for Intel Macs, default this
  * Mac's; `--unsigned` for a local try; `--platform=win --arch=x64|arm64` for the Windows installer, built here too;
- * `--official` for the project's own build; `--preview` for "TryWorld Set Preview", an app of its own to try a build in).
+ * `--official` for the project's own build; `--preview` for "Setpiece Preview", an app of its own to try a build in).
  *
- * Which build it is comes from the `@tryworld/set` package's product files: a build of this source uses product.json,
+ * Which build it is comes from the `setpiece` package's product files: a build of this source uses product.json,
  * empty in the repository (no update feed: the app never looks for updates); `--official` uses product.official.json
  * (the update feed under its `desktop.updates`).
  *
  *   1. the window's page (shell/: Studio's editor with the chat beside it) and Studio's editor on its own (the
- *      `@tryworld/set` package's UI) are built (the chat's `@tryworld/set-shared` is bundled into the page);
- *   2. a stage folder gets the app's own files and a plain npm install of what it needs at run time: the `@tryworld/set`
+ *      `setpiece` package's UI) are built (the chat's `setpiece-shared` is bundled into the page);
+ *   2. a stage folder gets the app's own files and a plain npm install of what it needs at run time: the `setpiece`
  *      package as `npm pack` makes it (what npm would publish), the agents' ACP adapters
  *      and the updater. Optional dependencies are left out: the adapters would bring the makers' own Claude Code and
  *      Codex programs (200–330 MB each), and the app uses the person's own installation instead (src/agents.mjs).
- *      The staged `@tryworld/set` package gets the build's product.json;
+ *      The staged `setpiece` package gets the build's product.json;
  *   2b. the programs the app needs that are not node modules, for the platform and chip built for, in the app's
  *      resources (runtime/; src/main.mjs puts them to use): ffmpeg and ffprobe with their license (src/ffmpeg-runtime.mjs),
- *      and the headless browser Studio and `twset` draw pages in (Playwright's, the revision the staged
+ *      and the headless browser Studio and `setpiece` draw pages in (Playwright's, the revision the staged
  *      playwright-core takes). People never download either: on a slow or blocked connection the first start used to
  *      fail there;
  *   3. electron-builder makes the .dmg (to download) and the .zip (for updates), signed with the Developer ID
- *      OPENFILM_SIGN_IDENTITY ("Name (TEAMID)") and notarized (APPLE_TEAM_ID, the `openfilm-notary` keychain profile or
- *      OPENFILM_NOTARY_PROFILE), with the update feed written in (none without one). Without OPENFILM_SIGN_IDENTITY
+ *      SETPIECE_SIGN_IDENTITY ("Name (TEAMID)") and notarized (APPLE_TEAM_ID, the `setpiece-notary` keychain profile or
+ *      SETPIECE_NOTARY_PROFILE), with the update feed written in (none without one). Without SETPIECE_SIGN_IDENTITY
  *      and APPLE_TEAM_ID the build is unsigned, as with --unsigned.
  *
  *   4. the .dmg is signed and notarized too, so the download itself opens without a warning.
  *
- * Windows: an NSIS installer (TryWorld-Set-Setup-<version>-<arch>.exe, per user, no admin) and its feed (latest.yml). It is
- * built on this Mac: the program's icon and version are written into TryWorld Set.exe with resedit (rcedit would need
+ * Windows: an NSIS installer (Setpiece-Setup-<version>-<arch>.exe, per user, no admin) and its feed (latest.yml). It is
+ * built on this Mac: the program's icon and version are written into Setpiece.exe with resedit (rcedit would need
  * wine). Not code-signed yet (no Windows certificate): SmartScreen asks once, "More info" → "Run anyway".
  *
  * Output: .release/<arch>/out (git-ignored). Nothing is uploaded: official builds are published by the project's
@@ -43,8 +43,8 @@ import { lockedOverrides, versionsOffLock } from './locked-versions.mjs';
 
 const require = createRequire(import.meta.url);
 const desktop = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-/* the `@tryworld/set` package (Studio, the CLI), where node finds it */
-const protocol = dirname(require.resolve('@tryworld/set/package.json'));
+/* the `setpiece` package (Studio, the CLI), where node finds it */
+const protocol = dirname(require.resolve('setpiece/package.json'));
 const asked = process.argv.find((a) => a.startsWith('--arch='))?.slice('--arch='.length);
 const arch = asked === 'x64' || asked === 'arm64' ? asked : process.arch === 'arm64' ? 'arm64' : 'x64';
 const win = process.argv.includes('--platform=win');
@@ -52,26 +52,26 @@ const work = join(desktop, '.release', win ? `win-${arch}` : arch);
 const stage = join(work, 'app');
 const out = join(work, 'out');
 /* the Developer ID ("Name (TEAMID)") and its team, from the environment (the release pipeline's secrets) */
-const IDENTITY = process.env.OPENFILM_SIGN_IDENTITY?.trim() || '';
+const IDENTITY = (process.env.SETPIECE_SIGN_IDENTITY ?? process.env.OPENFILM_SIGN_IDENTITY)?.trim() || '';
 const TEAM_ID = process.env.APPLE_TEAM_ID?.trim() || '';
 const unsigned = process.argv.includes('--unsigned') || (!win && (!IDENTITY || !TEAM_ID));
 if (unsigned && !win && !process.argv.includes('--unsigned')) {
-  console.warn('OPENFILM_SIGN_IDENTITY and APPLE_TEAM_ID are not set: building an unsigned app (not notarized). Official builds are signed by the release pipeline.');
+  console.warn('SETPIECE_SIGN_IDENTITY and APPLE_TEAM_ID are not set: building an unsigned app (not notarized). Official builds are signed by the release pipeline.');
 }
 
 /* this build's product: its update feed (see the header) */
 const official = process.argv.includes('--official');
-/* --preview: "TryWorld Set Preview", to try a build in apart from an installed TryWorld Set: its own name and bundle, data
-   folder, Studio home, port and projects (src/flavor.mjs `preview`, from the package's `openfilmFlavor`); no updates */
+/* --preview: "Setpiece Preview", to try a build in apart from an installed Setpiece: its own name and bundle, data
+   folder, Studio home, port and projects (src/flavor.mjs `preview`, from the package's `setpieceFlavor`); no updates */
 const preview = process.argv.includes('--preview');
 if (preview && official) throw new Error('--preview is never the official build');
-const NAME = preview ? 'TryWorld Set Preview' : 'TryWorld Set';
+const NAME = preview ? 'Setpiece Preview' : 'Setpiece';
 const productFile = join(protocol, official ? 'product.official.json' : 'product.json');
 const product = JSON.parse(readFileSync(productFile, 'utf8'));
 const updates = typeof product.desktop?.updates === 'string' ? product.desktop.updates.trim().replace(/\/+$/, '') : '';
 /** Where the packaged app looks for updates (the release's files are uploaded there), or null: it never looks. */
 export const FEED = updates ? `${updates}/${win ? 'win' : 'mac'}/${arch}` : null;
-const NOTARY_PROFILE = process.env.OPENFILM_NOTARY_PROFILE || 'openfilm-notary';
+const NOTARY_PROFILE = process.env.SETPIECE_NOTARY_PROFILE || process.env.OPENFILM_NOTARY_PROFILE || 'setpiece-notary';
 
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: 'inherit', ...opts });
 const pkg = JSON.parse(readFileSync(join(desktop, 'package.json'), 'utf8'));
@@ -88,13 +88,13 @@ mkdirSync(stage, { recursive: true });
 cpSync(join(desktop, 'src'), join(stage, 'src'), { recursive: true, filter: (from) => !from.endsWith('.test.mjs') });
 cpSync(join(desktop, 'shell/dist'), join(stage, 'shell/dist'), { recursive: true });
 const pack = (dir) => execFileSync('npm', ['pack', '--ignore-scripts', '--pack-destination', work, '--silent'], { cwd: dir, encoding: 'utf8' }).trim().split('\n').pop();
-const dependencies = { ...pkg.dependencies, '@tryworld/set': `file:../${pack(protocol)}` };
+const dependencies = { ...pkg.dependencies, setpiece: `file:../${pack(protocol)}` };
 /* npm takes the versions pnpm's lockfile has (locked-versions.mjs): what the tests ran with, not the latest */
 const lockedTree = JSON.parse(execFileSync('pnpm', ['list', '--prod', '--depth', 'Infinity', '--json'], { cwd: desktop, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }))[0];
 writeFileSync(join(stage, 'package.json'), `${JSON.stringify({
-  name: '@tryworld/set-desktop',
+  name: 'setpiece-desktop',
   productName: NAME,
-  ...(preview ? { openfilmFlavor: 'preview' } : {}),
+  ...(preview ? { setpieceFlavor: 'preview' } : {}),
   version: pkg.version,
   description: pkg.description,
   author: 'TryWorld',
@@ -111,7 +111,7 @@ if (offLock.length) {
   throw new Error(`The installer's packages are not the lockfile's:\n${offLock.map((p) => `  ${p.name} ${p.version} (locked: ${p.locked.join(', ')})`).join('\n')}`);
 }
 /* the build's product file */
-cpSync(productFile, join(stage, 'node_modules/@tryworld/set/product.json'));
+cpSync(productFile, join(stage, 'node_modules/setpiece/product.json'));
 
 /* 2b. ffmpeg and the headless browser, for the platform and chip built for */
 const runtime = join(work, 'runtime');
@@ -156,13 +156,13 @@ await builder.build({
       deleteAppDataOnUninstall: false,
       artifactName: `${NAME.replace(' ', '-')}-Setup-\${arch}.\${ext}`,
     },
-    appId: preview ? 'com.tryworld.set.preview' : 'com.tryworld.set',
+    appId: preview ? 'com.tryworld.setpiece.preview' : 'com.tryworld.setpiece',
     productName: NAME,
     copyright: 'Copyright © 2026 TryWorld',
     electronVersion,
     asar: true,
     /* run by Electron as Node from outside the archive: the CLI the agents run, the agents' adapters */
-    asarUnpack: ['node_modules/@tryworld/set/**', 'node_modules/@agentclientprotocol/**', 'node_modules/playwright-core/**'],
+    asarUnpack: ['node_modules/setpiece/**', 'node_modules/@agentclientprotocol/**', 'node_modules/playwright-core/**'],
     files: ['src/**/*', 'shell/dist/**/*', 'package.json', 'node_modules/**/*'],
     /* ffmpeg and the headless browser (2b), as files of their own beside the archive: they run as programs */
     extraResources: [{ from: runtime, to: 'runtime' }],
@@ -222,7 +222,7 @@ function adHocSign(context) {
   execFileSync('codesign', ['--force', '--deep', '--sign', '-', join(context.appOutDir, `${NAME}.app`)], { stdio: 'inherit' });
 }
 
-/** TryWorld Set.exe's icon and version, as rcedit would write them. */
+/** Setpiece.exe's icon and version, as rcedit would write them. */
 async function windowsResources(context) {
   const ResEdit = await import('resedit');
   const PE = await import('pe-library');
@@ -236,8 +236,8 @@ async function windowsResources(context) {
   info.setFileVersion(major, minor, patch, 0, 1033);
   info.setProductVersion(major, minor, patch, 0, 1033);
   info.setStringValues({ lang: 1033, codepage: 1200 }, {
-    ProductName: 'TryWorld Set', FileDescription: 'TryWorld Set', CompanyName: 'TryWorld', OriginalFilename: 'TryWorld Set.exe',
-    InternalName: 'TryWorld Set', LegalCopyright: 'Copyright © 2026 TryWorld', FileVersion: pkg.version, ProductVersion: pkg.version,
+    ProductName: NAME, FileDescription: NAME, CompanyName: 'TryWorld', OriginalFilename: `${NAME}.exe`,
+    InternalName: NAME, LegalCopyright: 'Copyright © 2026 TryWorld', FileVersion: pkg.version, ProductVersion: pkg.version,
   });
   info.outputToResourceEntries(res.entries);
   res.outputResource(exe);

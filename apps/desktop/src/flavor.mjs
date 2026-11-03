@@ -1,14 +1,14 @@
 /**
- * Which TryWorld Set this process is. Two apps, each with its own name, bundle id, data folder and Studio home, so the
+ * Which Setpiece this process is. Two apps, each with its own name, bundle id, data folder and Studio home, so the
  * one run from this repository never shares a window, a lock or a Studio with the installed one. Projects are the
  * person's, so every app but the bench shares one library: the one ~/.openfilm says (`sharedHome`; by default
  * ~/Movies/OpenFilm/Projects, or OPENFILM_LIBRARY):
  *
  *   · release — the packaged app. Its Studio is the machine's Studio (~/.openfilm), the one `openfilm open` finds.
- *   · preview — a packaged app built with `release --preview`, "TryWorld Set Preview", to try a build in: its own data
+ *   · preview — a packaged app built with `release --preview`, "Setpiece Preview", to try a build in: its own data
  *               folder, Studio home and port, so it never meets an installed OpenFilm (its package says so:
  *               `openfilmFlavor`).
- *   · dev     — `pnpm --filter @tryworld/set-desktop start`: this repository's code, with its own Studio home.
+ *   · dev     — `pnpm --filter setpiece-desktop start`: this repository's code, with its own Studio home.
  *   · bench   — `node bench/run.mjs`: this repository's code, everything (data, Studio home, projects) in the throwaway
  *               folder the benchmark names in OPENFILM_BENCH_DIR, so a run never touches a person's dev or installed app.
  *
@@ -22,34 +22,36 @@ import { fileURLToPath } from 'node:url';
 const packaged = Boolean(process.versions.electron) && !process.defaultApp;
 
 export const FLAVORS = Object.freeze({
-  release: { productName: 'TryWorld Set', bundleId: 'com.tryworld.set', studioPort: 4747, studioHome: null, library: null, sharedHome: null },
+  release: { productName: 'Setpiece', bundleId: 'com.tryworld.setpiece', studioPort: 4747, studioHome: null, library: null, sharedHome: null },
   preview: {
-    productName: 'TryWorld Set Preview', bundleId: 'com.tryworld.set.preview', studioPort: 4777,
+    productName: 'Setpiece Preview', bundleId: 'com.tryworld.setpiece.preview', studioPort: 4777,
     studioHome: join(homedir(), '.openfilm-preview'), library: null, sharedHome: join(homedir(), '.openfilm'),
   },
   dev: {
-    productName: 'TryWorld Set Dev', bundleId: 'com.tryworld.set.dev', studioPort: 4757,
+    productName: 'Setpiece Dev', bundleId: 'com.tryworld.setpiece.dev', studioPort: 4757,
     studioHome: join(homedir(), '.openfilm-dev'), library: null, sharedHome: join(homedir(), '.openfilm'),
   },
 });
 
-const benchDir = process.env.OPENFILM_BENCH_DIR ?? '';
+const benchDir = process.env.SETPIECE_BENCH_DIR ?? process.env.OPENFILM_BENCH_DIR ?? '';
 const BENCH = Object.freeze({
-  productName: 'TryWorld Set Bench', bundleId: 'com.tryworld.set.bench', studioPort: 4767,
+  productName: 'Setpiece Bench', bundleId: 'com.tryworld.setpiece.bench', studioPort: 4767,
   studioHome: join(benchDir, 'home'), library: join(benchDir, 'projects'), sharedHome: null, userData: join(benchDir, 'data'),
 });
 
-/** What the app's package says it was built as (`release --preview` writes `openfilmFlavor`). */
+/** What the app's package says it was built as (`release --preview` writes `setpieceFlavor`). */
 function builtFlavor() {
   try {
-    return JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'), 'utf8')).openfilmFlavor ?? null;
+    const pkg = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'), 'utf8'));
+    return pkg.setpieceFlavor ?? pkg.openfilmFlavor ?? null;
   } catch { return null; }
 }
 
 export function flavorName(env = process.env, isPackaged = packaged, built = isPackaged ? builtFlavor() : null) {
   if (isPackaged) return built === 'preview' ? 'preview' : 'release';
-  if (env.OPENFILM_DESKTOP_FLAVOR === 'dev') return 'dev';
-  if (env.OPENFILM_DESKTOP_FLAVOR === 'bench' && env.OPENFILM_BENCH_DIR) return 'bench';
+  const flavor = env.SETPIECE_DESKTOP_FLAVOR ?? env.OPENFILM_DESKTOP_FLAVOR;
+  if (flavor === 'dev') return 'dev';
+  if (flavor === 'bench' && (env.SETPIECE_BENCH_DIR ?? env.OPENFILM_BENCH_DIR)) return 'bench';
   return 'release';
 }
 

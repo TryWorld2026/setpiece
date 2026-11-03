@@ -34,11 +34,11 @@ const NAV: Array<{ group: 'settings' | 'help'; sections: SettingsSection[] }> = 
   { group: 'help', sections: ['shortcuts', 'advanced', 'developer'] },
 ];
 
-/** where TryWorld Set lives, linked at the foot of the nav */
+/** where Setpiece lives, linked at the foot of the nav */
 const LINKS = [
-  { label: 'settings.links.github', href: 'https://github.com/TryWorld2026/tryworld-set' },
+  { label: 'settings.links.github', href: 'https://github.com/TryWorld2026/setpiece' },
   { label: 'settings.links.examples', href: 'https://github.com/openfilm/examples' },
-  { label: 'settings.links.site', href: 'https://tryworld.com.cn' },
+  { label: 'settings.links.site', href: 'https://set.tryworld.com.cn' },
 ];
 
 const SECTION_ICON: Record<SettingsSection, React.ReactNode> = {
@@ -127,7 +127,7 @@ export function SettingsModal({ open, onClose, section: opening }: SettingsModal
   return createPortal(
     <div
       className="fixed inset-0 z-[10050] grid place-items-center p-6"
-      style={{ background: 'rgba(0,0,0,0.5)', opacity: shown ? 1 : 0, transition: 'opacity 160ms ease' }}
+      style={{ background: 'rgba(0,0,0,0.28)', opacity: shown ? 1 : 0, transition: 'opacity 160ms ease', backdropFilter: 'blur(8px)' }}
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
@@ -135,11 +135,11 @@ export function SettingsModal({ open, onClose, section: opening }: SettingsModal
         role="dialog"
         aria-modal="true"
         aria-labelledby="settings-title"
-        className="relative flex h-[min(800px,90vh)] w-full max-w-[1120px] overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--dock-pane)] shadow-[0_24px_64px_-12px_rgba(0,0,0,0.5),0_4px_16px_rgba(0,0,0,0.14)]"
+        className="relative flex h-[min(800px,90vh)] w-full max-w-[1120px] overflow-hidden rounded-[12px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-lg)]"
         style={{ opacity: shown ? 1 : 0, transform: shown ? 'scale(1)' : 'scale(0.98)', transition: 'opacity 160ms ease, transform 200ms ease' }}
       >
-        <nav aria-label={t('settings.title')} className="flex w-[264px] shrink-0 flex-col overflow-y-auto border-r border-[var(--border)] px-3 pb-4 pt-3">
-          <label className="mb-3 flex h-10 shrink-0 items-center gap-2.5 rounded-[9px] border border-[var(--border)] px-3 text-[var(--text-muted)] transition focus-within:border-[var(--text-muted)]">
+        <nav aria-label={t('settings.title')} className="flex w-[240px] shrink-0 flex-col overflow-y-auto border-r border-[var(--border)] bg-[var(--surface-2)]/45 px-3 pb-4 pt-3">
+          <label className="mb-3 flex h-[34px] shrink-0 items-center gap-2.5 rounded-[6px] border border-[var(--border)] bg-[var(--surface)] px-3 text-[var(--text-muted)] transition focus-within:border-[var(--border-strong)]">
             <Search size={17} strokeWidth={1.75} className="shrink-0" aria-hidden />
             <input
               ref={search}
@@ -147,12 +147,12 @@ export function SettingsModal({ open, onClose, section: opening }: SettingsModal
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('settings.search')}
               aria-label={t('settings.search')}
-              className="min-w-0 flex-1 bg-transparent text-[15px] text-[var(--text)] outline-none placeholder:text-[var(--text-faint)]"
+              className="min-w-0 flex-1 bg-transparent text-[13.5px] text-[var(--text)] outline-none placeholder:text-[var(--text-faint)]"
             />
           </label>
           {nav.map((group) => (
             <div key={group.group} className="mt-3 flex flex-col gap-0.5">
-              <div className="px-2.5 pb-1.5 text-[13px] text-[var(--text-faint)]">{t(group.group === 'help' ? 'settings.groups.help' : 'settings.title')}</div>
+              <div className="px-2.5 pb-1.5 text-[11px] font-medium text-[var(--text-faint)]">{t(group.group === 'help' ? 'settings.groups.help' : 'settings.title')}</div>
               {group.sections.map((id) => {
                 const active = showing === id;
                 return (
@@ -161,7 +161,7 @@ export function SettingsModal({ open, onClose, section: opening }: SettingsModal
                     type="button"
                     aria-current={active ? 'page' : undefined}
                     onClick={() => setSection(id)}
-                    className={`flex h-10 min-w-0 items-center gap-3 rounded-[8px] px-2.5 text-left text-[15px] transition ${
+                    className={`flex h-9 min-w-0 items-center gap-3 rounded-[6px] px-2.5 text-left text-[13.5px] transition-colors duration-150 ${
                       active ? 'bg-[var(--bg-active)] text-[var(--text)]' : 'text-[var(--text-dim)] hover:bg-[var(--bg-hover)] hover:text-[var(--text)]'
                     }`}
                   >
@@ -336,7 +336,7 @@ function AdvancedSection() {
 }
 
 /**
- * This Studio's version and whether npm has a newer openfilm. In the desktop app, Studio comes with the app and is
+ * This Studio's version and whether npm has a newer setpiece. In the desktop app, Studio comes with the app and is
  * updated with it; anywhere else the person (or their agent) runs the latest, and the CLI restarts Studio on it.
  */
 function AboutGroup() {
@@ -365,7 +365,7 @@ function AboutGroup() {
   return (
     <SettingsGroup title={t('settings.about.group')}>
       <SettingsItem
-        title={info ? `TryWorld Set ${info.version}` : 'TryWorld Set'}
+        title={info ? `Setpiece · 造境 ${info.version}` : 'Setpiece · 造境'}
         description={status}
         control={inApp || !info?.checking ? null : (
           <SettingsButton disabled={state === 'checking'} onClick={check}>{t('settings.about.check')}</SettingsButton>
@@ -382,7 +382,7 @@ function AboutGroup() {
             : t('settings.about.how')}
           control={(
             <>
-              <code className="select-all rounded-md bg-[var(--surface-2)] px-2 py-1 font-mono text-[12px] text-[var(--text)]">npx -y @tryworld/set@latest update</code>
+              <code className="select-all rounded-md bg-[var(--surface-2)] px-2 py-1 font-mono text-[12px] text-[var(--text)]">npx -y setpiece@latest update</code>
               <SettingsButton variant="primary" disabled={!web.update || web.update.status === 'updating'} onClick={web.start}>
                 {web.update?.status === 'updating' ? <Loader2 size={14} className="animate-spin" aria-hidden /> : null}
                 {t('update.webUpdate')}
@@ -463,7 +463,7 @@ function AppAboutGroup() {
   return (
     <SettingsGroup title={t('settings.about.group')}>
       <SettingsItem
-        title={`TryWorld Set ${s?.version ?? ''}`.trim()}
+        title={`Setpiece · 造境 ${s?.version ?? ''}`.trim()}
         badge={s?.channel === 'beta' ? <span className="rounded-full bg-[var(--fill-tsp)] px-2 py-0.5 text-[11.5px] text-[var(--text-muted)]">beta</span> : null}
         description={description}
         control={control}

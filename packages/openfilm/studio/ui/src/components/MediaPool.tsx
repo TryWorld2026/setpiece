@@ -76,6 +76,7 @@ import { retryImage } from '@/lib/retry-image';
 import { boxBetween, boxHits, boxPick, moveTargets, pickItem, type Box } from '@/lib/media-selection';
 import { barLayout, type BarWords } from '@/lib/media-bar';
 import { byName, folderFaces } from '@/lib/media-folders';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 
 type Filter = 'all' | 'video' | 'image' | 'audio' | 'page' | 'other';
 type SortKey = 'name' | 'time' | 'duration' | 'type';
@@ -102,8 +103,8 @@ const viewKey = (projectId: string) => `openfilm.media.v2.${projectId}`;
 const oldViewKey = (projectId: string) => `openfilm.media.${projectId}`;
 function loadView(projectId: string): ViewState {
   try {
-    const kept = window.localStorage.getItem(viewKey(projectId));
-    const raw = JSON.parse(kept ?? window.localStorage.getItem(oldViewKey(projectId)) ?? 'null') as Partial<ViewState> | null;
+    const kept = readPreference(viewKey(projectId));
+    const raw = JSON.parse(kept ?? readPreference(oldViewKey(projectId)) ?? 'null') as Partial<ViewState> | null;
     return {
       sort: kept && SORTS.includes(raw?.sort as SortKey) ? raw!.sort as SortKey : 'time',
       filter: FILTERS.includes(raw?.filter as Filter) ? raw!.filter as Filter : 'all',
@@ -265,7 +266,7 @@ export function MediaPool({
     anchor.current = selectedPath ?? null;
   }, [selectedPath]);
   React.useEffect(() => {
-    try { window.localStorage.setItem(viewKey(projectId), JSON.stringify(view)); } catch { /* per-viewer only */ }
+    writePreference(viewKey(projectId), JSON.stringify(view));
   }, [projectId, view]);
 
   const root = media?.dir ?? 'assets';

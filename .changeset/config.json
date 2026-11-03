@@ -1,12 +1,12 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "TryWorld2026/tryworld-set" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "TryWorld2026/setpiece" }],
   "commit": false,
   "fixed": [
     [
-      "@tryworld/set",
-      "@tryworld/set-desktop",
-      "@tryworld/set-shared"
+      "setpiece",
+      "setpiece-desktop",
+      "setpiece-shared"
     ]
   ],
   "linked": [],

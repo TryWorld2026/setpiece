@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * `pnpm check:pack`: packs the package npm gets (`@tryworld/set`) as the release publishes it,
+ * `pnpm check:pack`: packs the package npm gets (`setpiece`) as the release publishes it,
  * lists every file in each tarball, and fails when one holds what it must not or lacks what it needs.
  *
  * It packs with `pnpm pack`, not `npm pack --dry-run`: the release publishes with `pnpm publish` (changesets uses the
@@ -8,7 +8,7 @@
  *
  *   every package   no tests, fixtures, tsconfigs, dev state or scripts; no `workspace:` range; not private; every
  *                   file its package.json points at (main, types, bin, exports) is in the tarball
- *   @tryworld/set   product.json is the official one (prepack), and the checkout's own is back afterwards (postpack);
+ *   setpiece        product.json is the official one (prepack), and the checkout's own is back afterwards (postpack);
  *                   Studio's built editor is in
  *
  *   node scripts/check-pack.mjs
@@ -21,11 +21,28 @@ import { join } from 'node:path';
 
 const ROOT = join(import.meta.dirname, '..');
 const PACKAGES = [
-  { name: '@tryworld/set', dir: 'packages/openfilm' },
+  { name: 'setpiece', dir: 'packages/openfilm' },
 ];
-const PNPM = process.env.npm_execpath && /pnpm/i.test(process.env.npm_execpath)
-  ? { file: process.execPath, prefix: [process.env.npm_execpath] }
-  : { file: 'pnpm', prefix: [] };
+function pnpmInvocation() {
+  const execPath = process.env.npm_execpath;
+  if (!execPath || !/pnpm/i.test(execPath)) {
+    return {
+      file: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
+      prefix: [],
+      shell: process.platform === 'win32',
+    };
+  }
+  if (/\.[cm]?js$/i.test(execPath)) {
+    return { file: process.execPath, prefix: [execPath], shell: false };
+  }
+  return {
+    file: execPath,
+    prefix: [],
+    shell: process.platform === 'win32' && /\.(?:cmd|bat)$/i.test(execPath),
+  };
+}
+
+const PNPM = pnpmInvocation();
 
 /** What a published package never holds. */
 const FORBIDDEN = [
@@ -58,10 +75,10 @@ const tmp = mkdtempSync(join(tmpdir(), 'check-pack-'));
 try {
   for (const { name, dir } of PACKAGES) {
     const pkgDir = join(ROOT, dir);
-    const productBefore = name === '@tryworld/set' ? readFileSync(join(pkgDir, 'product.json')) : null;
+    const productBefore = name === 'setpiece' ? readFileSync(join(pkgDir, 'product.json')) : null;
     const dest = join(tmp, name.replace(/[@/]/g, '_'));
     execFileSync(PNPM.file, [...PNPM.prefix, 'pack', '--pack-destination', dest], {
-      cwd: pkgDir, stdio: ['ignore', 'ignore', 'inherit'], shell: PNPM.file === 'pnpm' && process.platform === 'win32',
+      cwd: pkgDir, stdio: ['ignore', 'ignore', 'inherit'], shell: PNPM.shell,
     });
     const tgz = join(dest, readdirSync(dest).find((f) => f.endsWith('.tgz')));
     const files = tar(['-tzf', tgz]).trim().split(/\r?\n/).map((f) => f.replace(/^package\//, ''));
@@ -83,7 +100,7 @@ try {
     const listed = new Set(files);
     for (const file of pointedAt(manifest)) if (!listed.has(file)) problem(name, `package.json points at ${file}, which is not in the package`);
 
-    if (name === '@tryworld/set') {
+    if (name === 'setpiece') {
       const packed = JSON.parse(read('product.json'));
       const official = JSON.parse(readFileSync(join(pkgDir, 'product.official.json'), 'utf8'));
       if (!isDeepStrictEqual(packed, official)) problem(name, 'product.json in the package is not product.official.json');

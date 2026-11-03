@@ -27,7 +27,7 @@ export function locate(target = '.', base = undefined) {
       if (existsSync(join(up, FILM_FILE))) { file = join(up, FILM_FILE); break; }
     }
   }
-  if (!existsSync(file)) throw new Error(`${target}: no ${FILM_FILE} here or above, and no index.html ('twset open' makes a project)`);
+  if (!existsSync(file)) throw new Error(`${target}: no ${FILM_FILE} here or above, and no index.html ('setpiece open' makes a project)`);
   const dir = dirname(file);
   const root = base !== undefined && file.startsWith(resolve(base) + sep) ? resolve(base) : projectOf(dir);
   const entry = relative(root, file).split(sep).join('/');

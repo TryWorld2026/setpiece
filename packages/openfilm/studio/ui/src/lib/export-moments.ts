@@ -7,6 +7,7 @@
  */
 import { FILM_DOC_FILE } from './film.ts';
 import { frameAt, frameMs } from './timecode.ts';
+import { readPreference, writePreference } from './preference-storage.ts';
 
 export type MomentsKind = 'images' | 'slides' | 'frames';
 
@@ -91,7 +92,7 @@ type Store = Record<string, Partial<Record<MomentsKind, number[]>>>;
 
 function readStore(): Store {
   try {
-    const raw = JSON.parse(localStorage.getItem(STORE_KEY) ?? 'null') as unknown;
+    const raw = JSON.parse(readPreference(STORE_KEY) ?? 'null') as unknown;
     return raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Store) : {};
   } catch {
     return {};
@@ -118,7 +119,7 @@ export function saveMoments(projectId: string, kind: MomentsKind, list: readonly
     store[projectId] = mine;
     const ids = Object.keys(store);
     for (const id of ids.slice(0, Math.max(0, ids.length - PROJECTS_KEPT))) delete store[id];
-    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    writePreference(STORE_KEY, JSON.stringify(store));
   } catch { /* storage off (private window) */ }
 }
 

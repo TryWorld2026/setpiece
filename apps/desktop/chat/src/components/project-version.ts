@@ -1,4 +1,4 @@
-import type { PromptDisplay, TurnAttachment } from '@tryworld/set-shared';
+import type { PromptDisplay, TurnAttachment } from 'setpiece-shared';
 import type { FileChange } from '@/lib/file-changes';
 import type { Balance } from '@/lib/balance';
 

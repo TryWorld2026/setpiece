@@ -4,12 +4,13 @@
  * results land, word timings, WAV and picture sizes, and subtitle translation's prompt and answer.
  */
 import { basename, extname } from 'node:path';
+import { envValue } from '../../../src/env.mjs';
 
 /** @typedef {import('./contract.mjs').RunContext} RunContext */
 
-/** A service's address: the public one, or `OPENFILM_<NAME>_URL` (a test server, a proxy). */
+/** A service's address: the public one, or `SETPIECE_<NAME>_URL` / `OPENFILM_<NAME>_URL` (a test server, a proxy). */
 export const serviceUrl = (/** @type {string} */ name, /** @type {string} */ fallback) =>
-  (process.env[`OPENFILM_${name}_URL`]?.trim() || fallback).replace(/\/+$/, '');
+  (envValue(`${name}_URL`)?.trim() || fallback).replace(/\/+$/, '');
 
 /**
  * `fetch` that answers only when the service said yes. Otherwise it throws a sentence naming the service and its
@@ -29,7 +30,7 @@ export async function call(service, url, init, ctx) {
   /* with no key (a keyless provider) there is nothing to blank out */
   const reason = (ctx.key ? reasonOf(text).split(ctx.key).join('•••') : reasonOf(text)).slice(0, 500);
   if (PAID_PLAN.test(text)) throw new Error(`${service} needs a paid plan for this (${res.status})${reason ? `: ${reason}` : ''}`);
-  if (res.status === 401 || res.status === 403) throw new Error(`${service} did not accept your key (${res.status}). Check it in Studio: Settings (the TryWorld Set logo at the top left) → Providers.`);
+  if (res.status === 401 || res.status === 403) throw new Error(`${service} did not accept your key (${res.status}). Check it in Studio: Settings (the Setpiece logo at the top left) → Providers.`);
   throw new Error(`${service} answered ${res.status}${reason ? `: ${reason}` : ''}`);
 }
 

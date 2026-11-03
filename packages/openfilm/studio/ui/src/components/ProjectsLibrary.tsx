@@ -19,7 +19,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { Loader2 } from 'lucide-react';
 import { api, ApiError, LIBRARY_EVENT } from '@/api';
-import { useT } from '@/i18n';
+import { useBrandName, useT } from '@/i18n';
 import { folderApi, folderCounts, folderTrail, newProjectIn, type ProjectFolder } from '@/lib/project-folders';
 import { stillThere } from '@/lib/project-delete';
 import { studioHost } from '@/lib/host';
@@ -31,6 +31,8 @@ import { ProjectsView, type LibraryProject } from './ProjectsView';
 import { FolderBrowserDialog, GitHubDialog } from './ProjectSources';
 import { ExamplesGallery, TitleSwitch } from './ExamplesGallery';
 import { ProjectCoverContext, posterUrl, useProjectCover } from './ProjectCover';
+import { LibrarySidebar } from './LibrarySidebar';
+import type { LibraryScope } from './ProjectsView';
 
 
 /* each card's picture: its own cover, else the film's middle frame, drawn by Studio (cached until film.html changes);
@@ -255,13 +257,16 @@ export function ProjectsPopover({
   onClose?: () => void;
 }) {
   const t = useT();
+  const brand = useBrandName();
   const lib = useProjectLibrary(open);
   const { flash } = lib;
   const cover = useProjectCover(lib.coverChanged, React.useCallback(() => flash(t('projects.coverFailed')), [flash, t]));
   /* each time it opens: the projects (the examples are a switch away) */
   const [view, setView] = React.useState<LauncherView>('projects');
-  React.useEffect(() => { if (open) setView('projects'); }, [open]);
-  const showView = setView;
+  const [scope, setScope] = React.useState<LibraryScope>('recent');
+  const [folderId, setFolderId] = React.useState<string | null>(null);
+  React.useEffect(() => { if (open) { setView('projects'); setScope('recent'); setFolderId(null); } }, [open]);
+  const counts = React.useMemo(() => folderCounts(lib.projects, lib.folders), [lib.projects, lib.folders]);
   const [pendingDelete, setPendingDelete] = React.useState<string[] | null>(null);
   const [pendingFolder, setPendingFolder] = React.useState<ProjectFolder | null>(null);
   const [busy, setBusy] = React.useState<'creating' | 'opening' | null>(null);
@@ -434,32 +439,54 @@ export function ProjectsPopover({
 
   const content = (
     <>
-      <div className="fixed inset-0 z-[10040] bg-black/60" onMouseDown={close} />
       <div
         role="dialog"
         aria-label={t('project.projects')}
         aria-modal="true"
-        className="fixed left-1/2 top-1/2 z-[10050] flex -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--app-content-bg)] shadow-[0_24px_64px_rgba(0,0,0,0.35)]"
-        style={{
-          width: 'min(1080px, calc(100vw - 64px))',
-          height: 'min(760px, calc(100vh - 96px))',
-        }}
+        className="fixed inset-0 z-[10050] flex overflow-hidden bg-[var(--app-content-bg)]"
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+        <LibrarySidebar
+          view={view}
+          scope={scope}
+          folderId={folderId}
+          projects={lib.projects}
+          folders={lib.folders}
+          counts={counts}
+          currentProjectId={currentProjectId}
+          creating={busy !== null}
+          onClose={onClose}
+          onNewProject={() => void newProject(folderId)}
+          onProjects={(next) => { setView('projects'); setScope(next); setFolderId(null); }}
+          onExamples={() => setView('examples')}
+          onFolder={(id) => { setView('projects'); setScope('all'); setFolderId(id); }}
+          onOpenProject={(project) => { void openListed(project); }}
+          onOpenFolder={() => void openFolder()}
+          onGetFromGitHub={() => setGithub({})}
+        />
+        <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[var(--app-content-bg)]">
           {cover.picker}
           {view === 'examples' ? (
             <ExamplesGallery
               mode="start"
-              heading={<LauncherSwitch view={view} onView={showView} />}
-              onClose={onClose}
+              heading={<div className="mr-auto min-w-0"><div className="mb-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-[var(--text-faint)]">{brand}</div><h2 className="text-[18px] font-semibold tracking-[-0.015em] text-[var(--text)]">{t('launcher.examples')}</h2></div>}
               onStart={(example) => setGithub({ url: example.url, start: true, title: example.title })}
             />
           ) : lib.loaded ? (
             <ProjectCoverContext.Provider value={cover.actions}>
             <ProjectsView
-              heading={<LauncherSwitch view={view} onView={showView} />}
+              heading={
+                <div className="mr-auto min-w-0">
+                  <div className="mb-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-[var(--text-faint)]">{brand}</div>
+                  <h2 className="truncate text-[18px] font-semibold tracking-[-0.015em] text-[var(--text)]">
+                    {t(scope === 'recent' ? 'library.recent' : 'library.all')}
+                  </h2>
+                </div>
+              }
+              scope={scope}
+              folderId={folderId}
+              onFolderChange={setFolderId}
               projects={lib.projects}
               creating={busy !== null}
               onNewProject={(folderId) => void newProject(folderId)}
@@ -486,7 +513,6 @@ export function ProjectsPopover({
               }}
               onMoveToFolder={lib.moveProject}
               onMoveFolder={lib.moveFolder}
-              onClose={onClose}
             />
             </ProjectCoverContext.Provider>
           ) : lib.loadFailed ? (
@@ -505,19 +531,19 @@ export function ProjectsPopover({
               <Loader2 size={18} className="animate-spin" />
             </div>
           )}
-        </div>
-        {busy ? (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--app-content-bg)]/70">
-            <div className="flex items-center gap-2 rounded-lg bg-[var(--surface)] px-4 py-3 text-sm shadow-lg">
-              <Loader2 size={16} className="animate-spin" />{t(busy === 'creating' ? 'projects.creating' : 'projects.opening')}
+          {busy ? (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--app-content-bg)]/70">
+              <div className="flex items-center gap-2 rounded-[8px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm shadow-[var(--shadow-popover)]">
+                <Loader2 size={16} className="animate-spin" />{t(busy === 'creating' ? 'projects.creating' : 'projects.opening')}
+              </div>
             </div>
-          </div>
-        ) : null}
-        {lib.error ? (
-          <div role="alert" className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 rounded-full border border-[var(--err)]/40 bg-[var(--surface)] px-4 py-2 text-[12.5px] font-medium text-[var(--err)] shadow-[var(--shadow-lg)]">
-            {lib.error}
-          </div>
-        ) : null}
+          ) : null}
+          {lib.error ? (
+            <div role="alert" className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 rounded-[6px] border border-[var(--err)]/40 bg-[var(--surface)] px-4 py-2 text-[12.5px] font-medium text-[var(--err)] shadow-[var(--shadow-popover)]">
+              {lib.error}
+            </div>
+          ) : null}
+        </div>
       </div>
       <ConfirmDialog
         open={!!pendingDelete}

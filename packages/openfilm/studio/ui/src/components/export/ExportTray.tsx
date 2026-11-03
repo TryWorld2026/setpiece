@@ -12,6 +12,7 @@ import React from 'react';
 import { projectEvents, studioConnection } from '@/api';
 import { useT } from '@/i18n';
 import { studioHost } from '@/lib/host';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 import {
   basenameOf,
   cancelExport,
@@ -34,12 +35,12 @@ function closedOf(projectId: string): Set<string> {
   const known = closedByProject.get(projectId);
   if (known) return known;
   let ids: string[] = [];
-  try { ids = JSON.parse(sessionStorage.getItem(`${CLOSED_KEY}.${projectId}`) ?? '[]'); } catch { /* nothing kept */ }
+  try { ids = JSON.parse(readPreference(`${CLOSED_KEY}.${projectId}`, 'session') ?? '[]'); } catch { /* nothing kept */ }
   return new Set(Array.isArray(ids) ? ids.filter((id) => typeof id === 'string') : []);
 }
 function keepClosed(projectId: string, ids: Set<string>) {
   closedByProject.set(projectId, ids);
-  try { sessionStorage.setItem(`${CLOSED_KEY}.${projectId}`, JSON.stringify([...ids])); } catch { /* kept for this page only */ }
+  writePreference(`${CLOSED_KEY}.${projectId}`, JSON.stringify([...ids]), 'session');
 }
 
 export interface ExportTrayHandle {

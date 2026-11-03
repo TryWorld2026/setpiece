@@ -8,6 +8,7 @@
 import React from 'react';
 import { Pipette, X } from 'lucide-react';
 import { useT } from '@/i18n';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 
 type Hsv = { h: number; s: number; v: number; a: number };
 
@@ -40,7 +41,7 @@ const STARTERS = ['#ffffff', '#111111', '#e5432d', '#ff7a1a', '#ffd166', '#2f9f6
 
 function readRecent(): string[] {
   try {
-    const kept = JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]');
+    const kept = JSON.parse(readPreference(RECENT_KEY) ?? '[]');
     if (Array.isArray(kept) && kept.length) return kept.filter((x) => typeof x === 'string').slice(0, 16);
   } catch { /* private mode: the starters */ }
   return STARTERS;
@@ -49,7 +50,7 @@ function readRecent(): string[] {
 function rememberColor(hex: string) {
   try {
     const next = [hex.toLowerCase(), ...readRecent().filter((x) => x.toLowerCase() !== hex.toLowerCase())].slice(0, 16);
-    localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+    writePreference(RECENT_KEY, JSON.stringify(next));
   } catch { /* nothing to keep */ }
 }
 

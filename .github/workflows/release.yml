@@ -31,10 +31,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build the macOS apps
         run: |
-          pnpm --filter @tryworld/set-desktop release --arch=arm64 --unsigned
-          pnpm --filter @tryworld/set-desktop release --arch=x64 --unsigned
+          pnpm --filter setpiece-desktop release --arch=arm64 --unsigned
+          pnpm --filter setpiece-desktop release --arch=x64 --unsigned
       - name: Build the Windows installer
-        run: pnpm --filter @tryworld/set-desktop release --platform=win --arch=x64 --unsigned
+        run: pnpm --filter setpiece-desktop release --platform=win --arch=x64 --unsigned
       - uses: actions/upload-artifact@v4
         with:
           name: desktop-installers
@@ -75,6 +75,6 @@ jobs:
             gh release create "$tag" "${files[@]}" \
               --draft \
               --generate-notes \
-              --title "TryWorld Set $tag" \
+              --title "Setpiece $tag" \
               -R "$GITHUB_REPOSITORY"
           fi

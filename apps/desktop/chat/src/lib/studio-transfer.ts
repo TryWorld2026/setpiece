@@ -2,8 +2,8 @@
  * Studio's things carried into the composer, dropped or pasted: what Studio drags out (STUDIO_REF_TYPE, a JSON array
  * of references) and a file dragged from its media pane (RESOURCE_DRAG_TYPE), which becomes a reference to that file.
  */
-import { STUDIO_REF_TYPE } from '@tryworld/set/studio-ui/lib/host.ts';
-import { RESOURCE_DRAG_TYPE, readResourceDragData } from '@tryworld/set/studio-ui/lib/resource-drag.ts';
+import { STUDIO_REF_TYPE } from 'setpiece/studio-ui/lib/host.ts';
+import { RESOURCE_DRAG_TYPE, readResourceDragData } from 'setpiece/studio-ui/lib/resource-drag.ts';
 import type { StudioRef } from '@/app-bridge';
 
 const KINDS = new Set(['clip', 'layer', 'region', 'time', 'range', 'track', 'file', 'subtitle']);

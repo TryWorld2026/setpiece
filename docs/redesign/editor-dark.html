@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Setpiece · 片场 · Dark</title>
+  <link rel="stylesheet" href="setpiece-preview.css" />
+</head>
+<body data-theme="dark">
+  <div class="app-window">
+    <header class="titlebar editor-titlebar">
+      <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+      <button class="editor-brand brand-lockup" type="button" aria-label="造境设置">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="3.25" y="4.25" width="14.25" height="15.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.55"/>
+            <circle cx="19.15" cy="8.3" r="2.05" fill="var(--accent)"/>
+          </svg>
+        </span>
+      </button>
+      <span class="titlebar-divider" aria-hidden="true"></span>
+      <div class="editor-tabs">
+        <button class="editor-tab is-active" type="button">
+          <span class="tab-name">夜航</span>
+          <svg class="icon icon-sm tab-close"><use href="icons.svg#x"></use></svg>
+        </button>
+        <button class="editor-tab" type="button">
+          <span class="tab-name">无声之地</span>
+          <svg class="icon icon-sm tab-close"><use href="icons.svg#x"></use></svg>
+        </button>
+        <button class="icon-button tab-add" type="button" aria-label="打开项目库">
+          <svg class="icon icon-sm"><use href="icons.svg#plus"></use></svg>
+        </button>
+      </div>
+      <div class="editor-title-actions">
+        <span class="saved-state"><span class="dot"></span><span>已保存</span></span>
+        <button class="icon-button" type="button" aria-label="撤销">
+          <svg class="icon icon-sm"><use href="icons.svg#undo"></use></svg>
+        </button>
+        <button class="icon-button" type="button" aria-label="重做">
+          <svg class="icon icon-sm"><use href="icons.svg#redo"></use></svg>
+        </button>
+        <button class="icon-button" type="button" aria-label="分享">
+          <svg class="icon icon-sm"><use href="icons.svg#share"></use></svg>
+        </button>
+        <button class="primary-button editor-export" type="button">
+          <svg class="icon"><use href="icons.svg#download"></use></svg>
+          <span>导出</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="editor-body">
+      <main class="editor-workspace">
+        <div class="workspace-main">
+          <aside class="pane media-pane">
+            <div class="pane-head">
+              <span class="pane-title">素材<span class="dim">14</span></span>
+              <div class="pane-actions">
+                <button class="icon-button" type="button" aria-label="搜索素材">
+                  <svg class="icon icon-sm"><use href="icons.svg#search"></use></svg>
+                </button>
+                <button class="icon-button" type="button" aria-label="导入素材">
+                  <svg class="icon icon-sm"><use href="icons.svg#plus"></use></svg>
+                </button>
+                <button class="icon-button" type="button" aria-label="更多">
+                  <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+                </button>
+              </div>
+            </div>
+            <div class="media-tabs">
+              <button class="media-tab is-active" type="button">项目</button>
+              <button class="media-tab" type="button">已保存</button>
+            </div>
+            <div class="media-content">
+              <label class="field media-search">
+                <svg class="icon icon-sm"><use href="icons.svg#search"></use></svg>
+                <input type="search" placeholder="筛选当前作品" aria-label="筛选当前作品" />
+              </label>
+
+              <div class="media-section-head"><span>视频</span><span class="count">5</span><span class="spacer"></span><svg class="icon icon-sm"><use href="icons.svg#chevron-down"></use></svg></div>
+              <div class="media-grid">
+                <div class="media-card">
+                  <div class="media-thumb is-selected">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&amp;fit=crop&amp;w=500&amp;q=82" alt="" />
+                    <span class="media-kind"><svg class="icon"><use href="icons.svg#film"></use></svg></span>
+                  </div>
+                  <span class="media-name">星空延时 02</span>
+                </div>
+                <div class="media-card">
+                  <div class="media-thumb">
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&amp;fit=crop&amp;w=500&amp;q=82" alt="" />
+                    <span class="media-kind"><svg class="icon"><use href="icons.svg#film"></use></svg></span>
+                  </div>
+                  <span class="media-name">山口远景</span>
+                </div>
+                <div class="media-card">
+                  <div class="media-thumb">
+                    <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=500&amp;q=82" alt="" />
+                    <span class="media-kind"><svg class="icon"><use href="icons.svg#image"></use></svg></span>
+                  </div>
+                  <span class="media-name">湖面暗部</span>
+                </div>
+                <div class="media-card">
+                  <div class="media-thumb">
+                    <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&amp;fit=crop&amp;w=500&amp;q=82" alt="" />
+                    <span class="media-kind"><svg class="icon"><use href="icons.svg#film"></use></svg></span>
+                  </div>
+                  <span class="media-name">摄影机细节</span>
+                </div>
+              </div>
+
+              <div class="media-section-head"><span>音频</span><span class="count">3</span><span class="spacer"></span><svg class="icon icon-sm"><use href="icons.svg#chevron-down"></use></svg></div>
+              <div class="media-list">
+                <div class="media-row">
+                  <svg class="icon icon-sm"><use href="icons.svg#music"></use></svg>
+                  <span class="name">Night Passage</span>
+                  <span class="time">02:08</span>
+                </div>
+                <div class="media-row">
+                  <svg class="icon icon-sm"><use href="icons.svg#mic"></use></svg>
+                  <span class="name">旁白 · 第二稿</span>
+                  <span class="time">01:34</span>
+                </div>
+                <div class="media-row">
+                  <svg class="icon icon-sm"><use href="icons.svg#volume"></use></svg>
+                  <span class="name">风声 · 低频</span>
+                  <span class="time">00:42</span>
+                </div>
+              </div>
+
+              <div class="media-section-head"><span>图形</span><span class="count">6</span><span class="spacer"></span><svg class="icon icon-sm"><use href="icons.svg#chevron-down"></use></svg></div>
+              <div class="media-list">
+                <div class="media-row is-selected">
+                  <svg class="icon icon-sm"><use href="icons.svg#type"></use></svg>
+                  <span class="name">片名 · 夜航</span>
+                </div>
+                <div class="media-row">
+                  <svg class="icon icon-sm"><use href="icons.svg#layers"></use></svg>
+                  <span class="name">字幕 · 细体</span>
+                </div>
+              </div>
+            </div>
+            <div class="media-foot">
+              <button class="tonal-button media-import" type="button">
+                <svg class="icon icon-sm"><use href="icons.svg#plus"></use></svg>
+                <span>导入素材</span>
+              </button>
+              <button class="icon-button" type="button" aria-label="打开文件夹">
+                <svg class="icon icon-sm"><use href="icons.svg#folder-open"></use></svg>
+              </button>
+            </div>
+          </aside>
+
+          <section class="pane stage-pane">
+            <div class="stage-toolbar">
+              <span class="stage-scene"><strong>场景 07</strong>&nbsp; / &nbsp;夜航</span>
+              <div class="stage-toolgroup">
+                <button class="icon-button" type="button" aria-label="选择工具">
+                  <svg class="icon icon-sm"><use href="icons.svg#pointer"></use></svg>
+                </button>
+                <button class="icon-button" type="button" aria-label="裁剪">
+                  <svg class="icon icon-sm"><use href="icons.svg#crop"></use></svg>
+                </button>
+                <button class="icon-button is-active" type="button" aria-label="安全区域">
+                  <svg class="icon icon-sm"><use href="icons.svg#scan"></use></svg>
+                </button>
+                <button class="icon-button" type="button" aria-label="缩放">
+                  <svg class="icon icon-sm"><use href="icons.svg#zoom-in"></use></svg>
+                </button>
+              </div>
+            </div>
+            <div class="stage-canvas">
+              <div class="film-frame">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&amp;fit=crop&amp;w=1600&amp;q=90" alt="星空与山脊" />
+                <div class="film-title-card">
+                  夜航
+                  <small>Night Passage</small>
+                </div>
+                <div class="viewer-controls">
+                  <button class="icon-button viewer-play" type="button" aria-label="播放">
+                    <svg class="icon"><use href="icons.svg#play"></use></svg>
+                  </button>
+                  <span class="timecode">00:41:19 <span class="muted">/ 02:08:06</span></span>
+                  <span class="viewer-spacer"></span>
+                  <button class="icon-button" type="button" aria-label="音量">
+                    <svg class="icon"><use href="icons.svg#volume"></use></svg>
+                  </button>
+                  <span class="speed-pill">1×</span>
+                  <button class="icon-button" type="button" aria-label="全屏">
+                    <svg class="icon"><use href="icons.svg#maximize"></use></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="pane inspector-pane">
+            <div class="pane-head">
+              <span class="pane-title">检查器</span>
+              <div class="pane-actions">
+                <button class="icon-button" type="button" aria-label="检查器选项">
+                  <svg class="icon icon-sm"><use href="icons.svg#sliders"></use></svg>
+                </button>
+                <button class="icon-button" type="button" aria-label="更多">
+                  <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+                </button>
+              </div>
+            </div>
+            <div class="inspector-scroll">
+              <div class="selection-card">
+                <div class="selection-thumb" style="display:grid;place-items:center;background:#25282a;color:#f1f1ef">
+                  <svg class="icon icon-lg"><use href="icons.svg#type"></use></svg>
+                </div>
+                <div class="selection-copy">
+                  <strong>片名 · 夜航</strong>
+                  <span>文字 · 图层 V3</span>
+                </div>
+                <button class="icon-button" type="button" aria-label="图层菜单">
+                  <svg class="icon icon-sm"><use href="icons.svg#more-vertical"></use></svg>
+                </button>
+              </div>
+
+              <section class="inspector-section">
+                <button class="inspector-section-head" type="button">
+                  <svg class="icon"><use href="icons.svg#chevron-down"></use></svg>
+                  <span>字体</span>
+                  <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+                </button>
+                <div class="inspector-section-body">
+                  <div class="select-field">
+                    <span>SF Pro Display · Semibold</span>
+                    <svg class="icon"><use href="icons.svg#chevron-down"></use></svg>
+                  </div>
+                  <div class="property-grid" style="margin-top:6px">
+                    <div class="property"><label>T</label><input value="88" aria-label="字号" /></div>
+                    <div class="property"><label>↕</label><input value="1.0" aria-label="行高" /></div>
+                    <div class="property"><label>A</label><input value="0" aria-label="字距" /></div>
+                    <div class="property"><label>色</label><input value="#F1F1EF" aria-label="文字颜色" /></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="inspector-section">
+                <button class="inspector-section-head" type="button">
+                  <svg class="icon"><use href="icons.svg#chevron-down"></use></svg>
+                  <span>变换</span>
+                  <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+                </button>
+                <div class="inspector-section-body">
+                  <div class="property-grid">
+                    <div class="property"><label>X</label><input value="960 px" aria-label="X" /></div>
+                    <div class="property"><label>Y</label><input value="512 px" aria-label="Y" /></div>
+                    <div class="property"><label>W</label><input value="自动" aria-label="宽" /></div>
+                    <div class="property"><label>H</label><input value="自动" aria-label="高" /></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="inspector-section">
+                <button class="inspector-section-head" type="button">
+                  <svg class="icon"><use href="icons.svg#chevron-down"></use></svg>
+                  <span>外观</span>
+                  <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+                </button>
+                <div class="inspector-section-body">
+                  <div class="property-slider">
+                    <label>不透明度</label>
+                    <div class="slider-track"></div>
+                    <output>92%</output>
+                  </div>
+                  <div class="property-slider">
+                    <label>发光</label>
+                    <div class="slider-track"></div>
+                    <output>12%</output>
+                  </div>
+                </div>
+              </section>
+
+              <section class="inspector-section">
+                <button class="inspector-section-head" type="button">
+                  <svg class="icon"><use href="icons.svg#chevron-right"></use></svg>
+                  <span>动画与出场</span>
+                  <svg class="icon icon-sm"><use href="icons.svg#chevron-right"></use></svg>
+                </button>
+              </section>
+
+              <section class="inspector-section">
+                <div class="inspector-section-head">
+                  <svg class="icon icon-sm"><use href="icons.svg#sparkles"></use></svg>
+                  <span>AI 建议</span>
+                </div>
+                <div class="inspector-section-body">
+                  <div class="inspector-empty-row">
+                    <svg class="icon icon-sm"><use href="icons.svg#circle-check"></use></svg>
+                    <span>当前层级与字幕对比度良好</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </aside>
+        </div>
+
+        <section class="timeline">
+          <div class="timeline-toolbar">
+            <button class="icon-button is-active" type="button" aria-label="选择工具">
+              <svg class="icon icon-sm"><use href="icons.svg#pointer"></use></svg>
+            </button>
+            <button class="icon-button" type="button" aria-label="剃刀工具">
+              <svg class="icon icon-sm"><use href="icons.svg#scissors"></use></svg>
+            </button>
+            <button class="icon-button is-active" type="button" aria-label="吸附">
+              <svg class="icon icon-sm"><use href="icons.svg#magnet"></use></svg>
+            </button>
+            <span class="tool-separator"></span>
+            <button class="icon-button" type="button" aria-label="上一剪辑点">
+              <svg class="icon icon-sm"><use href="icons.svg#arrow-left"></use></svg>
+            </button>
+            <span class="timeline-time">00:41:19:08 &nbsp;<span class="faint">/ 02:08:06:00</span></span>
+            <span class="timeline-toolspacer"></span>
+            <div class="zoom-control">
+              <svg class="icon"><use href="icons.svg#minus"></use></svg>
+              <span class="zoom-track"></span>
+              <svg class="icon"><use href="icons.svg#plus"></use></svg>
+            </div>
+            <button class="icon-button" type="button" aria-label="时间线设置">
+              <svg class="icon icon-sm"><use href="icons.svg#sliders"></use></svg>
+            </button>
+          </div>
+
+          <div class="timeline-body">
+            <div class="timeline-heads">
+              <div class="timeline-ruler-head"></div>
+              <div class="track-head">
+                <svg class="icon icon-sm"><use href="icons.svg#type"></use></svg>
+                <span class="label">片名与标题</span>
+                <span class="badge">V3</span>
+                <span class="head-actions">
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#volume"></use></svg></span>
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+                </span>
+              </div>
+              <div class="track-head">
+                <svg class="icon icon-sm"><use href="icons.svg#film"></use></svg>
+                <span class="label">场景</span>
+                <span class="badge">V2</span>
+                <span class="head-actions">
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#volume"></use></svg></span>
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+                </span>
+              </div>
+              <div class="track-head">
+                <svg class="icon icon-sm"><use href="icons.svg#image"></use></svg>
+                <span class="label">叠加画面</span>
+                <span class="badge">V1</span>
+                <span class="head-actions">
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#volume"></use></svg></span>
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+                </span>
+              </div>
+              <div class="track-head">
+                <svg class="icon icon-sm"><use href="icons.svg#music"></use></svg>
+                <span class="label">音乐与氛围</span>
+                <span class="badge">A1</span>
+                <span class="head-actions">
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#volume"></use></svg></span>
+                  <span class="icon-button"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+                </span>
+              </div>
+            </div>
+
+            <div class="timeline-lanes">
+              <div class="timeline-ruler">
+                <span style="left:1%">00:00</span>
+                <span style="left:18%">00:15</span>
+                <span style="left:35%">00:30</span>
+                <span style="left:52%">00:45</span>
+                <span style="left:69%">01:00</span>
+                <span style="left:86%">01:15</span>
+              </div>
+              <div class="timeline-lane">
+                <div class="clip caption is-selected" style="left:12%;width:20%"><span>夜航</span><i class="clip-handle left"></i><i class="clip-handle right"></i></div>
+                <div class="clip caption" style="left:65%;width:15%"><span>Night Passage</span></div>
+              </div>
+              <div class="timeline-lane">
+                <div class="clip scene" style="left:0%;width:26%"><span>山口远景 01</span></div>
+                <div class="clip video" style="left:26%;width:29%"><span>星空延时 02</span></div>
+                <div class="clip scene" style="left:55%;width:27%"><span>湖面暗部</span></div>
+                <div class="clip video" style="left:82%;width:16%"><span>片尾空镜</span></div>
+              </div>
+              <div class="timeline-lane">
+                <div class="clip scene" style="left:14%;width:42%"><span>片名字幕</span></div>
+                <div class="clip video" style="left:60%;width:27%"><span>叠加层</span></div>
+              </div>
+              <div class="timeline-lane">
+                <div class="clip music" style="left:0%;width:98%"><svg class="icon"><use href="icons.svg#music"></use></svg><span>Night Passage</span><span class="clip-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+              </div>
+              <div class="playhead" style="left:44%"></div>
+            </div>
+          </div>
+
+          <div class="timeline-footer">
+            <span>4 条轨道</span>
+            <span>·</span>
+            <span>24 fps</span>
+            <span class="spacer"></span>
+            <span>显示：音频波形</span>
+          </div>
+        </section>
+      </main>
+
+      <aside class="assistant">
+        <div class="assistant-head">
+          <h2>AI 助理</h2>
+          <span class="assistant-status"><span class="dot"></span><span>在线</span></span>
+          <span class="spacer"></span>
+          <button class="model-chip" type="button"><span class="glyph">C</span><span>Codex</span><svg class="icon icon-sm"><use href="icons.svg#chevron-down"></use></svg></button>
+          <button class="icon-button" type="button" aria-label="收起助理">
+            <svg class="icon icon-sm"><use href="icons.svg#panel-right"></use></svg>
+          </button>
+          <button class="icon-button" type="button" aria-label="更多">
+            <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+          </button>
+        </div>
+
+        <div class="assistant-thread">
+          <div class="context-row">
+            <span class="context-label">上下文</span>
+            <span class="context-pill"><svg class="icon"><use href="icons.svg#film"></use></svg><span>夜航</span></span>
+            <span class="context-pill"><svg class="icon"><use href="icons.svg#type"></use></svg><span>片名 · 夜航</span></span>
+            <span class="context-pill"><svg class="icon"><use href="icons.svg#clock"></use></svg><span>00:41:19</span></span>
+          </div>
+
+          <div class="message message-user">
+            <div class="bubble">这段字幕太多了，帮我压成两行，但不要丢掉最后的停顿。</div>
+          </div>
+
+          <div class="message message-agent">
+            <span class="agent-avatar" aria-hidden="true">
+              <span class="brand-mark">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3.25" y="4.25" width="14.25" height="15.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.55"/>
+                  <circle cx="19.15" cy="8.3" r="2.05" fill="var(--accent)"/>
+                </svg>
+              </span>
+            </span>
+            <div class="agent-copy">
+              <p>我把这段拆成两行，并将最后一句延后 <strong>0.6 秒</strong>，让停顿落在画面变暗之前。</p>
+              <p>当前字号和对比度没有改动。</p>
+              <div class="action-preview">
+                <div class="action-preview-head">
+                  <svg class="icon"><use href="icons.svg#sparkles"></use></svg>
+                  <span>字幕调整</span>
+                  <span class="spacer"></span>
+                  <span>3 处变化</span>
+                </div>
+                <div class="action-preview-body">
+                  <span class="mini-icon"><svg class="icon"><use href="icons.svg#type"></use></svg></span>
+                  <span class="action-preview-copy"><strong>拆成 2 行 · 延后 0.6s</strong><span>不修改文字内容 · 保持现有字体样式</span></span>
+                  <button class="primary-button apply-button" type="button">应用</button>
+                </div>
+              </div>
+              <div class="agent-note"><svg class="icon"><use href="icons.svg#circle-check"></use></svg><span>应用后仍可逐条撤销。</span></div>
+            </div>
+          </div>
+
+          <div class="message message-agent">
+            <span class="agent-avatar" aria-hidden="true">
+              <span class="brand-mark">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3.25" y="4.25" width="14.25" height="15.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.55"/>
+                  <circle cx="19.15" cy="8.3" r="2.05" fill="var(--accent)"/>
+                </svg>
+              </span>
+            </span>
+            <div class="agent-copy">
+              <p>另外发现 A1 音乐轨在 00:58 有一次轻微削波，需要我把它降 <strong>1.2 dB</strong> 吗？</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="composer">
+            <textarea aria-label="给 AI 助理的消息">描述你想修改的镜头…</textarea>
+            <div class="composer-foot">
+              <button class="icon-button composer-tool" type="button" aria-label="添加上下文">
+                <svg class="icon icon-sm"><use href="icons.svg#plus"></use></svg>
+              </button>
+              <button class="icon-button composer-tool" type="button" aria-label="添加附件">
+                <svg class="icon icon-sm"><use href="icons.svg#paperclip"></use></svg>
+              </button>
+              <button class="icon-button composer-tool" type="button" aria-label="工具">
+                <svg class="icon icon-sm"><use href="icons.svg#sliders"></use></svg>
+              </button>
+              <span class="spacer"></span>
+              <button class="composer-send" type="button" aria-label="发送">
+                <svg class="icon"><use href="icons.svg#arrow-up"></use></svg>
+              </button>
+            </div>
+          </div>
+          <div class="composer-hint">AI 助理可以修改作品，所有操作都可以撤销</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>

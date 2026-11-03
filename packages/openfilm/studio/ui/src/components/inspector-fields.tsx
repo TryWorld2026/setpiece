@@ -17,6 +17,7 @@ import { useT } from '@/i18n';
 import { applyFieldInput, parseFieldInput, type FieldContext } from '@/lib/field-input';
 import { scrubFromDrag } from '@/lib/inspect-scrub';
 import { MIXED, type Mixed } from '@/lib/mixed';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 import { metricCss, parseMetric, showMetric, stepMetric, type Metric, type MetricKind } from '@/lib/type-metrics';
 import { Tooltip } from './Tooltip';
 import { Popover } from './Popover';
@@ -49,7 +50,7 @@ let closedCache: Record<string, boolean> | null = null;
 function readClosed(): Record<string, boolean> {
   if (closedCache) return closedCache;
   try {
-    const raw = JSON.parse(localStorage.getItem(CLOSED_KEY) ?? '{}') as unknown;
+    const raw = JSON.parse(readPreference(CLOSED_KEY) ?? '{}') as unknown;
     closedCache = raw && typeof raw === 'object' ? raw as Record<string, boolean> : {};
   } catch {
     closedCache = {};
@@ -59,7 +60,7 @@ function readClosed(): Record<string, boolean> {
 
 function writeClosed(id: string, closed: boolean): void {
   closedCache = { ...readClosed(), [id]: closed };
-  try { localStorage.setItem(CLOSED_KEY, JSON.stringify(closedCache)); } catch { /* private window: this session only */ }
+  writePreference(CLOSED_KEY, JSON.stringify(closedCache));
   for (const fn of closedListeners) fn();
 }
 
@@ -781,7 +782,7 @@ type TimeUnit = 'timecode' | 'seconds';
 const timeListeners = new Set<() => void>();
 
 function readTimeUnit(): TimeUnit {
-  try { return localStorage.getItem(TIME_KEY) === 'seconds' ? 'seconds' : 'timecode'; } catch { return 'timecode'; }
+  return readPreference(TIME_KEY) === 'seconds' ? 'seconds' : 'timecode';
 }
 
 /** How times show in the inspector: a timecode (as the player shows it) or seconds; one choice for every field. */
@@ -792,7 +793,7 @@ export function useTimeUnit(): [TimeUnit, (next: TimeUnit) => void] {
     () => 'timecode' as const,
   );
   return [unit, (next) => {
-    try { localStorage.setItem(TIME_KEY, next); } catch { /* this session only */ }
+    writePreference(TIME_KEY, next);
     for (const fn of timeListeners) fn();
   }];
 }

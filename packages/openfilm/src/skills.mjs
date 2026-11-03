@@ -27,6 +27,7 @@ import { randomUUID } from 'node:crypto';
 import { moveToTrash } from '../studio/server/trash.mjs';
 import { pictureType } from '../studio/server/cover.mjs';
 import { libraryDefault, setSharedPref, sharedPref } from './locations.mjs';
+import { envValue } from './env.mjs';
 
 const mkdirSyncSafe = (/** @type {string} */ dir) => mkdirSync(dir, { recursive: true });
 /** a folder moved to another place: renamed, else (another disk) copied and then removed */
@@ -49,15 +50,15 @@ export const SKILL_SOURCES = /** @type {const} */ (['project', 'mine', 'official
  * The official skills, released with this package (a copy of openfilm/skills: `pnpm skills:sync`).
  * OPENFILM_OFFICIAL_SKILLS names another folder of them: a checkout's skills/, while they are being changed.
  */
-export const officialSkillsDir = () => process.env.OPENFILM_OFFICIAL_SKILLS || join(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
+export const officialSkillsDir = () => envValue('OFFICIAL_SKILLS') || join(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
 /**
  * The person's own skills: OPENFILM_SKILLS, else `Skills/` beside the default projects library (OPENFILM_LIBRARY, else
  * ~/Movies/OpenFilm/Projects on macOS, ~/Videos/OpenFilm/Projects elsewhere: locations.mjs libraryDefault). They stay
  * there when new projects are set to go elsewhere.
  */
-export const mySkillsDir = () => process.env.OPENFILM_SKILLS || join(dirname(libraryDefault()), 'Skills');
+export const mySkillsDir = () => envValue('SKILLS') || join(dirname(libraryDefault()), 'Skills');
 /** Where the person's own skills were kept before: `skills/` in Studio's home. */
-export const oldSkillsDir = () => join(process.env.OPENFILM_HOME || join(homedir(), '.openfilm'), 'skills');
+export const oldSkillsDir = () => join(envValue('HOME') || join(homedir(), '.openfilm'), 'skills');
 
 /** A note left where the skills were, saying where they went. */
 const MOVED_NOTE = 'README.txt';
@@ -83,7 +84,7 @@ export function migrateMySkills({ from = oldSkillsDir(), to = mySkillsDir() } = 
     try { renameSyncSafe(skill.folder, target); moved.push(skill.name); } catch { kept.push(basename(skill.folder)); }
   }
   try {
-    writeFileSync(join(from, MOVED_NOTE), `Your TryWorld Set skills are kept in ${to} now.
+    writeFileSync(join(from, MOVED_NOTE), `Your Setpiece skills are kept in ${to} now.
 ${kept.length ? `These stayed here, as a skill of the same name is there: ${kept.join(', ')}.
 ` : ''}`);
   } catch { /* the note is only a courtesy */ }

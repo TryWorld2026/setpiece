@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 // @ts-check
 /**
- * `npm run dev`: Studio from this checkout, beside an installed TryWorld Set. Its state and exports are in .dev/
- * (git-ignored), its projects in the same library as every TryWorld Set's (the one ~/.openfilm says, by default
- * ~/Movies/OpenFilm/Projects on macOS), and it listens on port 4848 (OPENFILM_STUDIO_PORT for another). The editor is rebuilt when
+ * `npm run dev`: Studio from this checkout, beside an installed Setpiece. Its state and exports are in .dev/
+ * (git-ignored), its projects in the same library as every Setpiece's (the one ~/.openfilm says, by default
+ * ~/Movies/OpenFilm/Projects on macOS), and it listens on port 4848 (SETPIECE_STUDIO_PORT for another). The editor is rebuilt when
  * studio/ui changes (reload the page); Studio restarts when studio/server or src change. It opens a sample project in
- * your browser (OPENFILM_NO_BROWSER=1: it only prints the address). Ctrl+C stops it all.
+ * your browser (SETPIECE_NO_BROWSER=1: it only prints the address). Ctrl+C stops it all.
  *
- * It also writes .dev/bin/twset (and twset.cmd on Windows): this checkout's command on this Studio, for your own
- * agent to try your changes with.
+ * It also writes .dev/bin/setpiece (and .cmd on Windows), with twset as a compatibility alias: this checkout's command
+ * on this Studio, for your own agent to try your changes with.
  */
 import { spawn } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, readFileSync, rmSync, watch, writeFileSync } from 'node:fs';
@@ -23,15 +23,16 @@ const DEV = join(ROOT, '.dev');
 const SKILLS = join(ROOT, '..', '..', '..', 'skills', 'skills');
 const env = {
   ...process.env,
-  ...(existsSync(SKILLS) && !process.env.OPENFILM_OFFICIAL_SKILLS ? { OPENFILM_OFFICIAL_SKILLS: SKILLS } : {}),
-  OPENFILM_HOME: join(DEV, 'home'),
-  OPENFILM_EXPORTS: join(DEV, 'exports'),
+  ...(existsSync(SKILLS) && !process.env.SETPIECE_OFFICIAL_SKILLS && !process.env.OPENFILM_OFFICIAL_SKILLS
+    ? { SETPIECE_OFFICIAL_SKILLS: SKILLS } : {}),
+  SETPIECE_HOME: join(DEV, 'home'),
+  SETPIECE_EXPORTS: join(DEV, 'exports'),
   /* the person's library, wherever they chose to keep it (src/locations.mjs) */
-  OPENFILM_SHARED_HOME: process.env.OPENFILM_SHARED_HOME || join(homedir(), '.openfilm'),
-  OPENFILM_STUDIO_PORT: process.env.OPENFILM_STUDIO_PORT || '4848',
-  OPENFILM_NO_UPDATE_CHECK: '1',
+  SETPIECE_SHARED_HOME: process.env.SETPIECE_SHARED_HOME || process.env.OPENFILM_SHARED_HOME || join(homedir(), '.openfilm'),
+  SETPIECE_STUDIO_PORT: process.env.SETPIECE_STUDIO_PORT || process.env.OPENFILM_STUDIO_PORT || '4848',
+  SETPIECE_NO_UPDATE_CHECK: '1',
   /* Studio itself, without the supervisor `openfilm open` gives it: this script starts it again when its code changes */
-  OPENFILM_STUDIO_WORKER: '1',
+  SETPIECE_STUDIO_WORKER: '1',
 };
 
 /* one `pnpm dev` per checkout: two would share .dev/home and fight over the port, the loser taking another one and
@@ -50,19 +51,24 @@ process.on('exit', () => {
   try { if (Number(readFileSync(LOCK, 'utf8').trim()) === process.pid) rmSync(LOCK); } catch { /* gone already */ }
 });
 
-/* this checkout's `twset` on this Studio, for your agent: the same environment, and it names itself in the manual */
+/* this checkout's `setpiece` on this Studio, for your agent: the same environment, and it names itself in the manual */
 const BIN = join(DEV, 'bin');
 mkdirSync(BIN, { recursive: true });
 const CLI = join(ROOT, 'bin', 'twset.mjs');
-const SHARED = ['OPENFILM_HOME', 'OPENFILM_LIBRARY', 'OPENFILM_SHARED_HOME', 'OPENFILM_EXPORTS', 'OPENFILM_STUDIO_PORT', 'OPENFILM_NO_UPDATE_CHECK', 'OPENFILM_OFFICIAL_SKILLS'].filter((k) => env[k]);
-const sh = join(BIN, 'twset');
-writeFileSync(sh, `#!/bin/sh\n${SHARED.map((k) => `export ${k}='${env[k]}'`).join('\n')}\nTWSET_RUN="${sh}" exec '${process.execPath}' '${CLI}' "$@"\n`);
+const SHARED = ['SETPIECE_HOME', 'SETPIECE_LIBRARY', 'SETPIECE_SHARED_HOME', 'SETPIECE_EXPORTS', 'SETPIECE_STUDIO_PORT', 'SETPIECE_NO_UPDATE_CHECK', 'SETPIECE_OFFICIAL_SKILLS'].filter((k) => env[k]);
+const sh = join(BIN, 'setpiece');
+writeFileSync(sh, `#!/bin/sh\n${SHARED.map((k) => `export ${k}='${env[k]}'`).join('\n')}\nexec '${process.execPath}' '${CLI}' "$@"\n`);
 chmodSync(sh, 0o755);
+const alias = join(BIN, 'twset');
+writeFileSync(alias, `#!/bin/sh\nexec "${sh}" "$@"\n`);
+chmodSync(alias, 0o755);
 if (process.platform === 'win32') {
-  writeFileSync(join(BIN, 'twset.cmd'), `@echo off\r\n${SHARED.map((k) => `set "${k}=${env[k]}"`).join('\r\n')}\r\nset "TWSET_RUN=%~f0"\r\n"${process.execPath}" "${CLI}" %*\r\n`);
+  const cmd = `@echo off\r\n${SHARED.map((k) => `set "${k}=${env[k]}"`).join('\r\n')}\r\n"${process.execPath}" "${CLI}" %*\r\n`;
+  writeFileSync(join(BIN, 'setpiece.cmd'), cmd);
+  writeFileSync(join(BIN, 'twset.cmd'), cmd);
 }
 
-const command = process.platform === 'win32' ? join(BIN, 'twset.cmd') : sh;
+const command = process.platform === 'win32' ? join(BIN, 'setpiece.cmd') : sh;
 
 /* a small film to open: one page, drawn by frame(t) */
 const SAMPLE = join(DEV, 'sample');
@@ -78,7 +84,7 @@ if (!existsSync(join(SAMPLE, 'film.html'))) {
   body { margin: 0; width: 1920px; height: 1080px; background: #0b0d12; display: grid; place-items: center; }
   h1 { font: 700 120px system-ui, sans-serif; color: #fff; }
 </style>
-<h1 id="title">Hello, TryWorld Set</h1>
+<h1 id="title">Hello, Setpiece</h1>
 <script type="module">
 const title = document.getElementById('title');
 window.film = {
@@ -122,19 +128,19 @@ const restart = (/** @type {string | null} */ file) => {
 for (const dir of ['studio/server', 'src']) watch(join(ROOT, dir), { recursive: true }, (_, file) => restart(file && `${dir}/${file}`));
 
 /* once Studio says where it listens (run.json), open the sample in it */
-const runFile = join(env.OPENFILM_HOME, 'run.json');
+const runFile = join(env.SETPIECE_HOME, 'run.json');
 for (const end = Date.now() + 30_000; Date.now() < end; await new Promise((r) => setTimeout(r, 250))) {
   let up;
   try { up = JSON.parse(readFileSync(runFile, 'utf8')); } catch { continue; }
   if (up.pid !== server.pid) continue;
-  const quiet = Boolean(process.env.OPENFILM_NO_BROWSER);
+  const quiet = Boolean(process.env.SETPIECE_NO_BROWSER ?? process.env.OPENFILM_NO_BROWSER);
   const res = await fetch(`${up.origin}/api/open`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-studio-key': up.key },
     body: JSON.stringify({ path: SAMPLE, now: !quiet, fallback: 0 }),
   }).catch((e) => ({ ok: false, json: async () => ({ error: e.message }) }));
   const said = await res.json();
-  console.log(res.ok ? `\nStudio (dev)  ${said.url}\nhome          ${env.OPENFILM_HOME}\nyour agent    tell it to run ${command}: this checkout, on this Studio\n` : `\ncould not open the sample: ${said.error}\n`);
+  console.log(res.ok ? `\nStudio (dev)  ${said.url}\nhome          ${env.SETPIECE_HOME}\nyour agent    tell it to run ${command}: this checkout, on this Studio\n` : `\ncould not open the sample: ${said.error}\n`);
   break;
 }
 

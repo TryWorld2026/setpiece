@@ -15,6 +15,7 @@ import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { basename, extname, join } from 'node:path';
 import { promisify } from 'node:util';
+import { envValue } from '../../src/env.mjs';
 
 const run = promisify(execFile);
 /** macOS's own command for the Trash (macOS 15 and later). */
@@ -32,8 +33,8 @@ function freeName(/** @type {string} */ dir, /** @type {string} */ name) {
 /** @param {string} path an absolute path */
 export async function moveToTrash(path) {
   /* tests (and anyone who wants deletes kept elsewhere) name the folder that stands for the trash */
-  if (process.env.OPENFILM_TRASH_DIR) {
-    const dir = process.env.OPENFILM_TRASH_DIR;
+  if (envValue('TRASH_DIR')) {
+    const dir = /** @type {string} */ (envValue('TRASH_DIR'));
     await mkdir(dir, { recursive: true });
     await rename(path, join(dir, freeName(dir, basename(path))));
     return;

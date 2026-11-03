@@ -143,7 +143,7 @@ export const zhCN: Words = {
     goneApp: 'Studio 已停止运行。退出并重新打开试界片场应用即可恢复。',
     copied: '已复制',
     lockedTitle: '这个浏览器还没有登录 Studio',
-    lockedBody: 'Studio 正在运行，但只接受用带 key 的地址打开过一次的浏览器。请打开 `twset open`（开发时是 `pnpm dev`）打印的完整地址，也就是带 ?key= 的那个；打开一次之后，这个浏览器就能直接用 Studio 的地址了。',
+lockedBody: 'Studio 正在运行，但只接受用带 key 的地址打开过一次的浏览器。请打开 `setpiece open`（开发时是 `pnpm dev`）打印的完整地址，也就是带 ?key= 的那个；打开一次之后，这个浏览器就能直接用 Studio 的地址了。',
     lockedHow: '想重新拿到地址，运行',
   },
   projects: {
@@ -274,6 +274,14 @@ export const zhCN: Words = {
     },
   },
   library: {
+    recent: '最近',
+    all: '全部作品',
+    sidebar: {
+      library: '资料库',
+      folders: '文件夹',
+      recentlyOpened: '最近打开',
+      local: '本机片场 · 已保存',
+    },
     noMatches: '没有符合搜索条件的项目',
     searchPlaceholder: '搜索',
     sortLabel: '排序',
@@ -1672,7 +1680,7 @@ export const zhCN: Words = {
       newer: '试界片场 {version} 已发布。',
       upToDate: '已是最新版本。',
       source: '从源码运行：用 git pull 更新。',
-      off: '这里关闭了更新检查（OPENFILM_NO_UPDATE_CHECK）。',
+off: '这里关闭了更新检查（SETPIECE_NO_UPDATE_CHECK）。',
       never: '还没有检查过。',
       inApp: 'Studio 随桌面端一起更新：试界片场 → Check for Updates…',
       howTitle: '更新',

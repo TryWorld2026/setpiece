@@ -10,7 +10,7 @@
  */
 import React from 'react';
 import { X } from 'lucide-react';
-import { useT } from '@/i18n';
+import { useBrandName, useT } from '@/i18n';
 import { studioHost } from '@/lib/host';
 import {
   ACTIONS, BUILT_IN_SCHEMES, comboCaps, comboOf, conflictOf, copyOf, CUSTOM_SLOTS, editable, FIXED_KEYS, isBuiltIn, KEY_TABS,
@@ -21,8 +21,6 @@ import { SettingsSelect } from './SettingsSelect';
 import { SettingsButton, SettingsPage, SettingsSegmented, settingsError } from './ui';
 
 /** The built-in schemes are named for the app whose keys they give. */
-const SCHEME_NAMES: Record<(typeof BUILT_IN_SCHEMES)[number], string> = { openfilm: 'TryWorld Set', premiere: 'Premiere Pro', fcp: 'Final Cut Pro X' };
-
 /** A row: its words and keys; `held`: combinations pressed while another is held (K, then J). */
 type Row = { id: string; label: string; keys: readonly string[]; action?: ActionId; held?: readonly (readonly string[])[] };
 
@@ -56,6 +54,7 @@ function KeyList({ keys, none }: { keys: readonly string[]; none: string }) {
 
 export function ShortcutsSection() {
   const t = useT();
+  const brand = useBrandName();
   const saved = useKeyPrefs();
   const [draft, setDraft] = React.useState<KeyPrefs>(saved);
   const [tab, setTab] = React.useState<KeyTab>('timeline');
@@ -70,7 +69,9 @@ export function ShortcutsSection() {
   dirtyRef.current = dirty;
   React.useEffect(() => { if (!dirtyRef.current) setDraft(saved); }, [saved]);
 
-  const schemeName = React.useCallback((id: SchemeId) => (isBuiltIn(id) ? SCHEME_NAMES[id] : t('settings.shortcuts.customName').replace('{n}', id.slice(-1))), [t]);
+  const schemeName = React.useCallback((id: SchemeId) => (isBuiltIn(id)
+    ? id === 'openfilm' ? brand : id === 'premiere' ? 'Premiere Pro' : 'Final Cut Pro X'
+    : t('settings.shortcuts.customName').replace('{n}', id.slice(-1))), [brand, t]);
   const actionName = React.useCallback((id: ActionId) => t(`settings.shortcuts.actions.${id}`), [t]);
   const keymap = React.useMemo(() => keymapFor(draft, draft.scheme, MAC), [draft]);
   const custom = isBuiltIn(draft.scheme) ? null : draft.scheme as CustomSlot;

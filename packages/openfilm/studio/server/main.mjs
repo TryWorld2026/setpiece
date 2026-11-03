@@ -15,6 +15,7 @@ import { fstatSync, openSync, readFileSync } from 'node:fs';
 import { devNull, setPriority } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { envValue } from '../../src/env.mjs';
 
 /* fds 0–2 open before anything else is: a launcher that closed one (a detached shell, a service) would make every
    spawn of ffmpeg, ffprobe or git fail with EBADF from then on, while the page still says Studio is up */
@@ -30,7 +31,7 @@ for (const level of /** @type {const} */ (['log', 'warn', 'error'])) {
   console[level] = (...args) => write(new Date().toISOString(), ...args);
 }
 
-if (process.env.OPENFILM_STUDIO_WORKER !== '1') await supervise();
+if (envValue('STUDIO_WORKER') !== '1') await supervise();
 
 const { startStudio } = await import('./server.mjs');
 const { closePageFrames } = await import('./pageframes.mjs');
@@ -51,7 +52,7 @@ process.on('unhandledRejection', (e) => {
   recordProblem({ area: 'studio', step: 'unhandled rejection', what: String(/** @type {any} */ (e)?.message ?? e) });
 });
 
-const given = process.env.OPENFILM_STUDIO_PORT;
+const given = envValue('STUDIO_PORT');
 const port = given != null && given !== '' && Number.isInteger(Number(given)) ? Number(given) : 4747;
 /** @type {Awaited<ReturnType<typeof startStudio>> | undefined} */
 let studio;
@@ -69,7 +70,7 @@ try {
   studio = await startStudio({ port, advertise: true, onQuit: stop }).catch((e) => {
     if (!port || !taken(e)) throw e;
     /* started again after an end: another Studio took the port meanwhile, and it is the one to use */
-    if (process.env.OPENFILM_STUDIO_RESTARTED === '1') {
+    if (envValue('STUDIO_RESTARTED') === '1') {
       console.error(`port ${port} is taken by another Studio now; this one stops`);
       process.exit(0);
     }
@@ -80,7 +81,7 @@ try {
   console.error(e);
   process.exit(1);
 }
-console.log(`TryWorld Set Studio · ${studio.origin}`);
+console.log(`Setpiece Studio · ${studio.origin}`);
 process.on('SIGINT', stop);
 process.on('SIGTERM', stop);
 
@@ -98,8 +99,12 @@ async function supervise() {
   let stopping = false;
   const start = (/** @type {boolean} */ restarted) => {
     /** @type {NodeJS.ProcessEnv} */
-    const env = { ...process.env, OPENFILM_STUDIO_WORKER: '1', OPENFILM_STUDIO_SUPERVISOR: String(process.pid) };
-    if (restarted) env.OPENFILM_STUDIO_RESTARTED = '1';
+    const env = {
+      ...process.env,
+      SETPIECE_STUDIO_WORKER: '1',
+      SETPIECE_STUDIO_SUPERVISOR: String(process.pid),
+      ...(restarted ? { SETPIECE_STUDIO_RESTARTED: '1' } : {}),
+    };
     const worker = spawn(process.execPath, [fileURLToPath(import.meta.url)], { env, stdio: 'inherit', windowsHide: true });
     child = worker;
     worker.once('exit', (code, signal) => {

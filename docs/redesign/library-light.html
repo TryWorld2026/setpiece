@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Setpiece · 项目库 · Light</title>
+  <link rel="stylesheet" href="setpiece-preview.css" />
+</head>
+<body data-theme="light">
+  <div class="app-window">
+    <header class="titlebar">
+      <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="titlebar-center">项目库</div>
+      <div class="titlebar-spacer"></div>
+      <div class="titlebar-actions">
+        <button class="icon-button" type="button" aria-label="设置">
+          <svg class="icon icon-sm"><use href="icons.svg#settings"></use></svg>
+        </button>
+        <button class="icon-button" type="button" aria-label="帮助">
+          <svg class="icon icon-sm"><use href="icons.svg#help"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="library-shell">
+      <aside class="library-sidebar">
+        <div class="library-sidebar-head">
+          <div class="brand-lockup">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3.25" y="4.25" width="14.25" height="15.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.55"/>
+                <circle cx="19.15" cy="8.3" r="2.05" fill="var(--accent)"/>
+              </svg>
+            </span>
+            <span>
+              <span class="brand-name">造境</span>
+              <span class="brand-sub">Setpiece</span>
+            </span>
+          </div>
+          <button class="primary-button library-new" type="button">
+            <svg class="icon"><use href="icons.svg#plus"></use></svg>
+            <span>新建作品</span>
+            <kbd>⌘N</kbd>
+          </button>
+        </div>
+
+        <nav class="library-nav" aria-label="项目库">
+          <section class="nav-section">
+            <div class="nav-label">资料库</div>
+            <button class="nav-row is-active" type="button">
+              <svg class="icon icon-sm"><use href="icons.svg#clock"></use></svg>
+              <span class="label">最近</span>
+              <span class="count">12</span>
+            </button>
+            <button class="nav-row" type="button">
+              <svg class="icon icon-sm"><use href="icons.svg#grid"></use></svg>
+              <span class="label">全部作品</span>
+              <span class="count">18</span>
+            </button>
+            <button class="nav-row" type="button">
+              <svg class="icon icon-sm"><use href="icons.svg#sparkles"></use></svg>
+              <span class="label">示例</span>
+            </button>
+          </section>
+
+          <section class="nav-section">
+            <div class="nav-label">文件夹</div>
+            <button class="nav-row" type="button">
+              <span class="folder-dot" style="background:#6f879c"></span>
+              <span class="label">进行中</span>
+              <span class="count">6</span>
+            </button>
+            <button class="nav-row" type="button">
+              <span class="folder-dot" style="background:#9185a0"></span>
+              <span class="label">品牌短片</span>
+              <span class="count">4</span>
+            </button>
+            <button class="nav-row" type="button">
+              <span class="folder-dot" style="background:#7d9087"></span>
+              <span class="label">产品影像</span>
+              <span class="count">3</span>
+            </button>
+            <button class="nav-row" type="button">
+              <span class="folder-dot" style="background:#a68b75"></span>
+              <span class="label">个人实验</span>
+              <span class="count">5</span>
+            </button>
+          </section>
+
+          <section class="nav-section">
+            <div class="nav-label">最近打开</div>
+            <button class="nav-row" type="button">
+              <svg class="icon icon-sm"><use href="icons.svg#film"></use></svg>
+              <span class="label">往高处走</span>
+            </button>
+            <button class="nav-row" type="button">
+              <svg class="icon icon-sm"><use href="icons.svg#film"></use></svg>
+              <span class="label">冬夜来信</span>
+            </button>
+            <button class="nav-row" type="button">
+              <svg class="icon icon-sm"><use href="icons.svg#film"></use></svg>
+              <span class="label">潮汐之间</span>
+            </button>
+          </section>
+        </nav>
+
+        <div class="library-sidebar-foot">
+          <button class="library-foot-row" type="button">
+            <svg class="icon icon-sm"><use href="icons.svg#folder-plus"></use></svg>
+            <span>新建文件夹</span>
+          </button>
+          <button class="library-foot-row" type="button">
+            <svg class="icon icon-sm"><use href="icons.svg#github"></use></svg>
+            <span>从 GitHub 获取</span>
+          </button>
+          <div class="local-note"><span class="dot"></span><span>本机片场 · 已保存</span></div>
+        </div>
+      </aside>
+
+      <main class="library-main">
+        <div class="library-topbar">
+          <div class="breadcrumb"><strong>项目库</strong><span>/</span><span>最近</span></div>
+          <label class="field library-search">
+            <svg class="icon icon-sm"><use href="icons.svg#search"></use></svg>
+            <input type="search" placeholder="搜索作品、文件夹" aria-label="搜索作品、文件夹" />
+            <kbd>⌘K</kbd>
+          </label>
+          <button class="icon-button" type="button" aria-label="更多">
+            <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+          </button>
+        </div>
+
+        <div class="library-scroll">
+          <header class="library-heading">
+            <div class="library-heading-copy">
+              <p class="eyebrow">Setpiece · 造境</p>
+              <h1>最近</h1>
+              <p>继续你的片场工作，或从一个新想法开始。</p>
+            </div>
+            <div class="library-heading-actions">
+              <button class="soft-button" type="button">
+                <span>上次编辑</span>
+                <svg class="icon icon-sm"><use href="icons.svg#chevron-down"></use></svg>
+              </button>
+              <div class="segmented" aria-label="显示方式">
+                <button class="is-active" type="button" aria-label="网格视图">
+                  <svg class="icon icon-sm"><use href="icons.svg#grid"></use></svg>
+                </button>
+                <button type="button" aria-label="列表视图">
+                  <svg class="icon icon-sm"><use href="icons.svg#list"></use></svg>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <article class="featured-project">
+            <img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&amp;fit=crop&amp;w=1800&amp;q=88" alt="" />
+            <div class="featured-content">
+              <div class="featured-copy">
+                <div class="featured-meta"><span class="dot"></span><span>继续创作</span><span>·</span><span>2 小时前</span></div>
+                <h2>潮汐之间</h2>
+                <p>场景 04 · 海岸空镜正在等待下一步剪辑</p>
+              </div>
+              <div class="featured-actions">
+                <button class="soft-button featured-open" type="button">
+                  <svg class="icon icon-sm"><use href="icons.svg#play"></use></svg>
+                  <span>打开片场</span>
+                </button>
+                <button class="icon-button featured-more" type="button" aria-label="作品菜单">
+                  <svg class="icon icon-sm"><use href="icons.svg#more"></use></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <div class="section-head">
+            <h2>最近编辑</h2>
+            <span class="caption">8 个作品</span>
+            <span class="spacer"></span>
+            <button class="text-action" type="button">
+              <span>查看全部</span>
+              <svg class="icon icon-sm"><use href="icons.svg#chevron-right"></use></svg>
+            </button>
+          </div>
+
+          <section class="project-grid" aria-label="最近编辑的作品">
+            <button class="project-tile" type="button">
+              <div class="project-cover">
+                <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="" />
+                <span class="project-duration">01:16</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>往高处走</h3>
+                  <p><span>今天 14:36</span><span class="divider-dot"></span><span>品牌短片</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover is-abstract" style="--cover-base:#252a2d">
+                <div class="cover-title">冬夜来信<span>Winter Letters</span></div>
+                <span class="project-duration">00:42</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>冬夜来信</h3>
+                  <p><span>今天 11:08</span><span class="divider-dot"></span><span>进行中</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="" />
+                <span class="project-badge"><span class="pulse"></span>AI 助理正在整理字幕</span>
+                <span class="project-duration">02:34</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>夜航</h3>
+                  <p><span>昨天 22:17</span><span class="divider-dot"></span><span>进行中</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover">
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="" />
+                <span class="project-duration">00:58</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>林间回声</h3>
+                  <p><span>昨天 18:45</span><span class="divider-dot"></span><span>产品影像</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover">
+                <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="" />
+                <span class="project-duration">01:09</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>海面以下</h3>
+                  <p><span>11 月 1 日</span><span class="divider-dot"></span><span>个人实验</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover">
+                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="" />
+                <span class="project-duration">00:34</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>山的另一侧</h3>
+                  <p><span>10 月 30 日</span><span class="divider-dot"></span><span>草稿</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover">
+                <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="" />
+                <span class="project-duration">00:21</span>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>镜头测试 07</h3>
+                  <p><span>10 月 29 日</span><span class="divider-dot"></span><span>个人实验</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+
+            <button class="project-tile" type="button">
+              <div class="project-cover is-abstract" style="--cover-base:#3b3a36">
+                <div class="cover-title">未命名片场<span>Untitled Set</span></div>
+              </div>
+              <div class="project-info">
+                <div class="project-copy">
+                  <h3>未命名片场</h3>
+                  <p><span>10 月 28 日</span><span class="divider-dot"></span><span>空白作品</span></p>
+                </div>
+                <span class="icon-button project-more"><svg class="icon icon-sm"><use href="icons.svg#more"></use></svg></span>
+              </div>
+            </button>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -394,7 +394,7 @@ test('Studio: GET /api/get lists what can be got, never who makes it; a video ru
 
 const freePort = () => new Promise((done) => { const probe = netServer().listen(0, '127.0.0.1', () => { const { port } = probe.address(); probe.close(() => done(port)); }); });
 
-test('twset get: what can be got here, connected, partly or not at all; wrong commands exit 2', { timeout: 60_000 }, async () => {
+test('setpiece get: what can be got here, connected, partly or not at all; wrong commands exit 2', { timeout: 60_000 }, async () => {
   const bin = fileURLToPath(new URL('../../bin/twset.mjs', import.meta.url));
   const env = { ...process.env, OPENFILM_STUDIO_PORT: String(await freePort()) };
   const get = (cwd, ...args) => spawnSync(process.execPath, [bin, 'get', ...args], { cwd, env, encoding: 'utf8' });
@@ -402,7 +402,7 @@ test('twset get: what can be got here, connected, partly or not at all; wrong co
   const root = project();
   /* the listing as the CLI prints it: the verbs' names padded to the longest shown */
   const listing = (verbs, width = Math.max(...verbs.map((v) => v.length))) => [
-    'twset get <what> [--option value …]   media for this project, saved under assets/',
+    'setpiece get <what> [--option value …]   media for this project, saved under assets/',
     '  --yes              the person already agreed to what it spends',
     '',
     ...verbs.flatMap((verb) => {
@@ -437,8 +437,8 @@ test('twset get: what can be got here, connected, partly or not at all; wrong co
     assert.equal(nothing.status, 0, nothing.stderr);
     assert.equal(nothing.stdout, 'Nothing is connected for media here: each kind works only once the person connects a service that makes it (below). '
       + 'Until then, make sound and pictures in code, or use a service the person has a key for (with its API docs), and save them under assets/. '
-      + `\`twset get <what> --help\` shows what one kind takes (${media.join(', ')}).\n\n${services()}\n`);
-    assert.match(services(), /^Media services, each used with the person's own key: Brave Search \(web search\), Doubao \(transcripts\), ElevenLabs \(voice-over, sound effects, music, transcripts\), fal\.ai \(images, video, music, sound effects\), .*, Microsoft Azure \(voice-over\), .*, Tavily \(web search\), Xiaomi MiMo \(voice-over, transcripts\)\. In Studio, the TryWorld Set logo at the top left opens Settings/);
+      + `\`setpiece get <what> --help\` shows what one kind takes (${media.join(', ')}).\n\n${services()}\n`);
+    assert.match(services(), /^Media services, each used with the person's own key: Brave Search \(web search\), Doubao \(transcripts\), ElevenLabs \(voice-over, sound effects, music, transcripts\), fal\.ai \(images, video, music, sound effects\), .*, Microsoft Azure \(voice-over\), .*, Tavily \(web search\), Xiaomi MiMo \(voice-over, transcripts\)\. In Studio, the Setpiece logo at the top left opens Settings/);
 
     /* partly: what is connected, then one line for the rest with the services that make each, then the services there
        are; never who makes what is connected */
@@ -459,7 +459,7 @@ test('twset get: what can be got here, connected, partly or not at all; wrong co
       + 'Until then, make it in code, or use a service the person has a key for (with its API docs), and save it under assets/.\n');
 
     assert.equal(get(scratch, 'tts', '--out', 'x').status, 2, 'not in a project');
-    assert.match(get(scratch, 'tts').stdout, /is not in a project; `twset open` makes one/);
+    assert.match(get(scratch, 'tts').stdout, /is not in a project; `setpiece open` makes one/);
     const wrong = get(root, 'tts', '--out', 'a/b', '--text', 'hi', '--voice', 'v');
     assert.equal(wrong.status, 2);
     assert.match(wrong.stdout, /--out is a simple name/);

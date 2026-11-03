@@ -1,4 +1,4 @@
-import type { Turn, LibraryVideo, PromptDisplay, TurnAttachment } from '@tryworld/set-shared';
+import type { Turn, LibraryVideo, PromptDisplay, TurnAttachment } from 'setpiece-shared';
 import { readFileChanges, type FileChange, type TurnFileChanges } from './file-changes.ts';
 import { readBalance, type Balance, type TurnBalance } from './balance.ts';
 

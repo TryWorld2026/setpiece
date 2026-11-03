@@ -28,6 +28,7 @@ import { Tooltip } from './Tooltip';
 export type LibraryProject = Project & { poster?: string; duration?: number; createdAt?: number; folderId?: string };
 
 type LibraryViewMode = 'cards' | 'list';
+export type LibraryScope = 'recent' | 'all';
 
 export function ProjectsView({
   projects,
@@ -51,6 +52,9 @@ export function ProjectsView({
   onMoveFolder,
   onClose,
   heading,
+  scope = 'all',
+  folderId: shownFolderId,
+  onFolderChange,
 }: {
   projects: LibraryProject[];
   /** A project is being created or opened; "New project" does not take a second click meanwhile. */
@@ -90,6 +94,11 @@ export function ProjectsView({
   onClose?: () => void;
   /** The title row's left, in place of "Projects" (the launcher's switch between the projects and the examples). */
   heading?: React.ReactNode;
+  /** The Finder sidebar's section: the latest work, or everything. */
+  scope?: LibraryScope;
+  /** The folder chosen in the Finder sidebar (controlled). */
+  folderId?: string | null;
+  onFolderChange?: (folderId: string | null) => void;
 }) {
   const t = useT();
   /* recently opened first: someone coming back to the list most likely wants the one they just had */
@@ -101,7 +110,12 @@ export function ProjectsView({
   /** The card being renamed in place. One at a time; clicking the cover still opens the project. */
   const [renamingId, setRenamingId] = React.useState<string | null>(null);
   /* folders: the one being looked at (null = all), the project a folder is being picked for, the folder being named */
-  const [folderId, setFolderId] = React.useState<string | null>(null);
+  const [ownFolderId, setOwnFolderId] = React.useState<string | null>(null);
+  const folderId = shownFolderId === undefined ? ownFolderId : shownFolderId;
+  const setFolderId = React.useCallback((next: string | null) => {
+    if (onFolderChange) onFolderChange(next);
+    else setOwnFolderId(next);
+  }, [onFolderChange]);
   /* what the folder picker moves: a project, or a folder of the list */
   const [moving, setMoving] = React.useState<{ project: LibraryProject } | { folder: ProjectFolder } | null>(null);
   const [renamingFolderId, setRenamingFolderId] = React.useState<string | null>(null);
@@ -114,9 +128,10 @@ export function ProjectsView({
     () => visibleProjects(projects, { query, folderId, sort, folders, titleOf: (p) => titleOf(p, t) }),
     [projects, query, folderId, sort, folders, t],
   );
+  const shown = React.useMemo(() => (scope === 'recent' && !query.trim() && folderId === null ? visible.slice(0, 12) : visible), [scope, visible]);
   /* folder cards only at the top level and not while searching: inside a folder is its content, a search its results */
   /* the folders here: the top level's, or those inside the folder open (a search shows projects only) */
-  const showFolders = !query.trim();
+  const showFolders = !query.trim() && scope !== 'recent';
   const levelFolders = React.useMemo(() => folders.filter((f) => parentOf(f, folders) === folderId), [folders, folderId]);
   const currentFolder = folders.find((f) => f.id === folderId) ?? null;
   const trail = React.useMemo(() => folderTrail(folders, folderId), [folders, folderId]);
@@ -149,7 +164,7 @@ export function ProjectsView({
     };
   }
 
-  const selectableIds = React.useMemo(() => visible.map((project) => project.id), [visible]);
+  const selectableIds = React.useMemo(() => shown.map((project) => project.id), [shown]);
   const selectedCount = selectedIds.size;
   const allVisibleSelected = selectableIds.length > 0 && selectableIds.every((id) => selectedIds.has(id));
 
@@ -306,7 +321,7 @@ export function ProjectsView({
       {/* the one scroll area; the scrollbar gutter is reserved so cards keep their width either way */}
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable]">
         <div className="w-full flex-1 px-6 pb-6">
-          {visible.length === 0 && !showNew && !(showFolders && levelFolders.length > 0) ? (
+          {shown.length === 0 && !showNew && !(showFolders && levelFolders.length > 0) ? (
             <div className="flex min-h-[42vh] items-center justify-center text-[14px] text-[var(--text-muted)]">
               {t('library.noMatches')}
             </div>
@@ -314,13 +329,13 @@ export function ProjectsView({
             <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4">
               {showNew ? <NewProjectCard creating={creating} onNewProject={() => onNewProject(folderId)} {...(folderId === null ? { onOpenFolder, onGetFromGitHub } : {})} /> : null}
               {showFolders ? levelFolders.map((folder) => <FolderCard key={`folder:${folder.id}`} {...folderProps(folder)} />) : null}
-              {visible.map((project) => <ProjectCard key={project.id} {...itemProps(project)} />)}
+              {shown.map((project) => <ProjectCard key={project.id} {...itemProps(project)} />)}
             </div>
           ) : (
             <div className="flex flex-col divide-y divide-[var(--border)]">
               {showNew ? <NewProjectListRow creating={creating} onNewProject={() => onNewProject(folderId)} {...(folderId === null ? { onOpenFolder, onGetFromGitHub } : {})} /> : null}
               {showFolders ? levelFolders.map((folder) => <FolderListRow key={`folder:${folder.id}`} {...folderProps(folder)} />) : null}
-              {visible.map((project) => <ProjectListRow key={project.id} {...itemProps(project)} />)}
+              {shown.map((project) => <ProjectListRow key={project.id} {...itemProps(project)} />)}
             </div>
           )}
           {starts.examples && onOpenExample ? (
@@ -1573,9 +1588,11 @@ function titleOf(project: LibraryProject, t: (key: string) => string): string {
 function gradientForId(id: string): string {
   let hash = 0;
   for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
-  const hue = hash % 360;
-  const next = (hue + 48 + (hash % 42)) % 360;
-  return `linear-gradient(135deg, hsl(${hue} 58% 34%), hsl(${next} 62% 20%))`;
+  const hue = 202 + (hash % 18);
+  const saturation = 9 + ((hash >>> 8) % 7);
+  const start = 29 + ((hash >>> 16) % 9);
+  const end = start - 10 - ((hash >>> 24) % 5);
+  return `linear-gradient(135deg, hsl(${hue} ${saturation}% ${start}%), hsl(${hue + 5} ${saturation - 2}% ${end}%))`;
 }
 
 function formatDuration(seconds: number): string {

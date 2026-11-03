@@ -46,7 +46,7 @@
  */
 import { randomUUID } from 'node:crypto';
 import { join } from 'node:path';
-import { recordProblem, problemsFile } from '@tryworld/set/problems';
+import { recordProblem, problemsFile } from 'setpiece/problems';
 import { LOG_SETTLE_MS } from './agent-logs.mjs';
 import { RECORDED_AGENTS, agentRecordCalls, compactCalls, recordedModel } from './agent-records.mjs';
 import { skillStore } from './agent-skills.mjs';
@@ -154,7 +154,8 @@ export function registerLocalAgentIpc(ipcMain, { trusted, binDir = null, fallbac
   const harnessFor = async (agent) => (HARNESS_AGENTS.includes(agent) ? harness(agent) : undefined);
   const skillRecord = skills ? skillStore(skills.dataDir) : null;
   /* what went wrong, kept in Studio's home with Studio's own problems (openfilm's problems.mjs), for its report */
-  const problems = env.OPENFILM_HOME ? problemsFile(env.OPENFILM_HOME) : undefined;
+  const home = env.SETPIECE_HOME ?? env.OPENFILM_HOME;
+  const problems = home ? problemsFile(home) : undefined;
   const noteProblem = (entry, step, e, turnId = null) => recordProblem(agentProblem(entry, step, e, turnId), { file: problems });
   /** a session's skills and MCP servers: OpenFilm's, and of the person's own those let in (agent-skills.mjs) */
   const skillsFor = (agent) => (skills && skillRecord ? { ...skills, allowed: skillRecord.allowed(agent), mcpAllowed: skillRecord.mcpAllowed(agent) } : null);

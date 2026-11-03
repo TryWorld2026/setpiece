@@ -9,9 +9,9 @@ You need Node 22.18 or later (the tests run TypeScript directly), pnpm 9 (`corep
 this repository names in package.json), ffmpeg on the PATH, and git.
 
 ```sh
-git clone https://github.com/TryWorld2026/tryworld-set && cd tryworld-set
+git clone https://github.com/TryWorld2026/setpiece && cd setpiece
 pnpm install                 # also builds Studio's editor (packages/openfilm: build:ui)
-pnpm --filter @tryworld/set exec playwright-core install chromium-headless-shell
+pnpm --filter setpiece exec playwright-core install chromium-headless-shell
 pnpm dev                     # Studio from this checkout, with a sample film
 pnpm test
 ```
@@ -20,37 +20,37 @@ From the root:
 
 | Command | What it does |
 | --- | --- |
-| `pnpm dev` | Studio from source (packages/openfilm's `dev`), apart from an installed TryWorld Set |
-| `pnpm dev:desktop` | the desktop app from source, as "TryWorld Set Dev" |
+| `pnpm dev` | Studio from source (packages/openfilm's `dev`), apart from an installed Setpiece |
+| `pnpm dev:desktop` | the desktop app from source, as "Setpiece Dev" |
 | `pnpm test` | every package's tests |
 | `pnpm typecheck` | every package's types |
 | `pnpm build` | Studio's editor and the desktop app's window |
 | `pnpm audit:public` | what must not be in a public repository: secrets (gitleaks), home folders, paths out of the repository, prose in another language than English outside the translations, dependencies outside this workspace |
-| `pnpm check:pack` | packs `@tryworld/set` as npm would get it, lists its files and checks them |
+| `pnpm check:pack` | packs `setpiece` as npm would get it, lists its files and checks them |
 | `pnpm changeset` | adds a changeset to your pull request (below, Releases) |
 
-`pnpm --filter <package> <script>` runs one package's script; the packages are `@tryworld/set`, `@tryworld/set-shared`
-and `@tryworld/set-desktop`.
+`pnpm --filter <package> <script>` runs one package's script; the packages are `setpiece`, `setpiece-shared`
+and `setpiece-desktop`.
 
 ## Layout
 
 ```
-packages/openfilm/   npm `@tryworld/set`: the format, the CLI and Studio
-  SPEC.md, MANUAL.md   the film format; the manual `twset` prints for agents
-  bin/                 the `twset` command
+packages/openfilm/   npm `setpiece`: the format, the CLI and Studio
+  SPEC.md, MANUAL.md   the film format; the manual `setpiece` prints for agents
+  bin/                 the `setpiece` command
   src/                 reading film.html, the host that draws frames in a headless browser, look and render
   studio/server/       Studio's server: projects, edits, history, exports, media providers
   studio/ui/           Studio's editor (React, built with Vite into studio/ui/dist, which the server serves)
   studio/client.mjs    how the command finds or starts Studio
   test/                pages the tests draw
   scripts/             `pnpm dev`; product.mjs (which build the package is, below)
-packages/shared/     `@tryworld/set-shared`: what the desktop app's chat shares with its main process (not published)
+packages/shared/     `setpiece-shared`: what the desktop app's chat shares with its main process (not published)
 apps/desktop/        the desktop app (Electron)
   src/                 the main process: windows, Studio, the agents, updates
   shell/               the window's page: Studio's editor (from packages/openfilm) with the chat beside it
   chat/                the chat (React)
   scripts/             start (from source) and release (a build)
-skills/              the skill that points coding agents to the manual (`twset`)
+skills/              the skill that points coding agents to the manual (`setpiece`)
 scripts/             the public audit, the package check
 docs/                pictures for the README
 ```
@@ -58,10 +58,10 @@ docs/                pictures for the README
 ## packages/openfilm: the format, the CLI and Studio
 
 `pnpm dev` runs Studio on port 4848, with its state and exports in `packages/openfilm/.dev/` (git-ignored), beside a
-TryWorld Set you have installed; its projects are in the library every TryWorld Set shares. It opens a sample film in your browser, rebuilds the editor
+Setpiece you have installed; its projects are in the library every Setpiece shares. It opens a sample film in your browser, rebuilds the editor
 when `studio/ui` changes (reload the page), and restarts Studio when `studio/server` or `src` change. Ctrl+C stops it.
 
-`pnpm --filter @tryworld/set test` runs its tests and `pnpm --filter @tryworld/set typecheck` checks the server's and the
+`pnpm --filter setpiece test` runs its tests and `pnpm --filter setpiece typecheck` checks the server's and the
 editor's types. One file, or one test in it, from `packages/openfilm`:
 
 ```sh
@@ -71,42 +71,42 @@ node --test --test-name-pattern="split" studio/server/film.test.mjs
 
 ### Trying a change with a coding agent
 
-While `pnpm dev` runs, `packages/openfilm/.dev/bin/twset` (`twset.cmd` on Windows) is your checkout's command
+While `pnpm dev` runs, `packages/openfilm/.dev/bin/setpiece` (`setpiece.cmd` on Windows) is your checkout's command
 on that Studio. Ask Codex, Claude Code or any coding agent for a film and tell it to run that command instead of the
-skill's `npx -y @tryworld/set@latest` (the release); the manual names the same command, so it keeps using it. Your films
+skill's `npx -y setpiece@latest` (the release); the manual names the same command, so it keeps using it. Your films
 appear in the Studio `pnpm dev` opened. Its state is in `packages/openfilm/.dev/` and its port is its own, so an
-installed TryWorld Set, its Studio on port 4747 and `~/.openfilm` are left alone; projects are the one thing they share:
-every TryWorld Set uses the same library, the one Studio's Settings chose (kept in `~/.openfilm/prefs.json`, which
+installed Setpiece, its Studio on port 4747 and `~/.openfilm` are left alone; projects are the one thing they share:
+every Setpiece uses the same library, the one Studio's Settings chose (kept in `~/.openfilm/prefs.json`, which
 `OPENFILM_SHARED_HOME` points it at), by default `~/Movies/OpenFilm/Projects` on macOS. A test that must stay apart
 sets `OPENFILM_LIBRARY` and leaves `OPENFILM_SHARED_HOME` unset.
 
-To make your checkout the `twset` your agents use everywhere, `npm link` in `packages/openfilm` (`npm unlink -g
-@tryworld/set` undoes it). That one shares `~/.openfilm` and port 4747 with an installed TryWorld Set; of two Studios, the
+To make your checkout the `setpiece` your agents use everywhere, `npm link` in `packages/openfilm` (`npm unlink -g
+setpiece` undoes it). That one shares `~/.openfilm` and port 4747 with an installed Setpiece; of two Studios, the
 newer version replaces the older.
 
 ## packages/shared: what the clients share
 
-`@tryworld/set-shared` holds what the desktop app's chat reads: a chat turn and its events, how an agent's activity
+`setpiece-shared` holds what the desktop app's chat reads: a chat turn and its events, how an agent's activity
 reads, prompt references, title limits and Markdown parsing.
 
-`pnpm --filter @tryworld/set-shared test`, `pnpm --filter @tryworld/set-shared typecheck`. It is not published: the
+`pnpm --filter setpiece-shared test`, `pnpm --filter setpiece-shared typecheck`. It is not published: the
 workspace reads its TypeScript in `src/` as it is, and the desktop app bundles it.
 
 ## apps/desktop: the desktop app
 
 ```sh
-pnpm dev:desktop                              # builds the window's page, then runs the app as "TryWorld Set Dev"
-pnpm --filter @tryworld/set-desktop test
-pnpm --filter @tryworld/set-desktop typecheck
+pnpm dev:desktop                              # builds the window's page, then runs the app as "Setpiece Dev"
+pnpm --filter setpiece-desktop test
+pnpm --filter setpiece-desktop typecheck
 ```
 
-Run from source, the app is its own "TryWorld Set Dev": its own name, data folder, Studio home and port, so it never
-shares a window or a Studio with an installed TryWorld Set. Its projects are in the same library as every TryWorld Set's.
+Run from source, the app is its own "Setpiece Dev": its own name, data folder, Studio home and port, so it never
+shares a window or a Studio with an installed Setpiece. Its projects are in the same library as every Setpiece's.
 Its renamed copy of Electron lives in `apps/desktop/.dev/` (git-ignored), signed only for this machine: you need no
 certificate to run or change it. Its window's page imports Studio's editor
 from `packages/openfilm` as source, so a change to Studio shows in the app at its next start.
 
-`pnpm --filter @tryworld/set-desktop release` builds an installable app into `apps/desktop/.release/` (git-ignored),
+`pnpm --filter setpiece-desktop release` builds an installable app into `apps/desktop/.release/` (git-ignored),
 unsigned unless `OPENFILM_SIGN_IDENTITY` and `APPLE_TEAM_ID` are set. A build you make is yours to try; before you
 distribute one, read [TRADEMARK.md](TRADEMARK.md): a fork published as its own needs its own name and icon.
 
@@ -120,13 +120,13 @@ Settings → Providers, or each service's variable in the environment (`ELEVENLA
 ## Releases
 
 Every pull request that changes what a package's users get carries a **changeset**: run `pnpm changeset`, pick the
-packages it changes (`@tryworld/set`, `@tryworld/set-desktop`, `@tryworld/set-shared`) and how much (`patch` for a fix, `minor`
+packages it changes (`setpiece`, `setpiece-desktop`, `setpiece-shared`) and how much (`patch` for a fix, `minor`
 for something new; `major` only by agreement), and write a line for the changelog, as a user would read it. Commit the
 file it writes in `.changeset/`. A change to tests, docs or CI alone needs none (`pnpm changeset --empty` says so).
 Each line in the changelog links its pull request and thanks its author.
 
 All the packages share one version. When changesets reach `main`, the version workflow opens a "Version packages"
-pull request that bumps it and writes the changelogs; merging it publishes `@tryworld/set` to npm (with provenance, from CI
+pull request that bumps it and writes the changelogs; merging it publishes `setpiece` to npm (with provenance, from CI
 only) and pushes the tag `v<version>`. The desktop workflow then builds the app, signs and notarizes it when the signing
 secrets are set (unsigned otherwise), and makes a draft GitHub release with the installers. Publishing that release
 makes it the latest, which the website's download links and the apps' update checks follow. The required secrets are in
@@ -136,11 +136,11 @@ makes it the latest, which the website's download links and the apps' update che
 
 Issues labeled `good first issue` are small and say what is needed; `help wanted` ones are bigger. Say on the issue
 that you are taking it, and open one before starting a large change, so nobody does it twice. Questions go to
-[Discussions](https://github.com/TryWorld2026/tryworld-set/discussions).
+[Discussions](https://github.com/TryWorld2026/setpiece/discussions).
 
 ## What we keep small
 
-- **The manual** ([MANUAL.md](packages/openfilm/MANUAL.md)), what `twset` prints for agents, holds three things:
+- **The manual** ([MANUAL.md](packages/openfilm/MANUAL.md)), what `setpiece` prints for agents, holds three things:
   what a film is, the one rule (the picture depends only on t), and how the tools are used. No style advice or
   methods. If an agent gets something wrong, a word is added only when the manual was ambiguous; if a tool behaved
   oddly, the tool is fixed.
@@ -152,7 +152,7 @@ that you are taking it, and open one before starting a large change, so nobody d
 
 ### Which services are built in
 
-A built-in provider reads as a service TryWorld Set vouches for: people hand it their keys, their prompts and their
+A built-in provider reads as a service Setpiece vouches for: people hand it their keys, their prompts and their
 footage. So we hold one standard for every one:
 
 - **An internationally known company, or a leading name in its field**, offering **its own** service (its own models,
@@ -165,9 +165,9 @@ footage. So we hold one standard for every one:
 
   We look at it with you, and say yes or no with the reason before you spend time on a pull request.
 - **A service that resells or routes other companies' models** is not built in, however good its API: those models
-  reach TryWorld Set through their makers, or through a provider that is already built in.
+  reach Setpiece through their makers, or through a provider that is already built in.
 
-Every service, built in or not, works with TryWorld Set today through **Settings › Providers › Custom services**: any
+Every service, built in or not, works with Setpiece today through **Settings › Providers › Custom services**: any
 HTTP service with its address, a key if it has one, and a few words about it; the agent calls it from there, and the
 key stays on the computer.
 

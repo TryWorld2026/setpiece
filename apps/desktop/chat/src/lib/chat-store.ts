@@ -4,7 +4,7 @@
  * project opens (openProjectChat), held here so the chat reads it as it always has, and written back as it changes.
  */
 import React from 'react';
-import type { Turn } from '@tryworld/set-shared';
+import type { Turn } from 'setpiece-shared';
 import type { TranscriptItem } from '@/lib/agent-transcript';
 import type { ProjectSessionItem } from '@/lib/project-sessions';
 import { app } from '../app-bridge';

@@ -54,6 +54,7 @@ import {
 } from '@/lib/export-jobs';
 import { FILM_FRAME_IDS, filmFrameBox, filmFrameRatio, type FilmFrameFill, type FilmFrameId } from '@/lib/film-frame';
 import { cleanMoments, loadSharedMoments, MOMENTS_MAX, momentSeconds, saveMoments } from '@/lib/export-moments';
+import { readPreference, writePreference } from '@/lib/preference-storage';
 import { MomentPicker } from './MomentPicker';
 import { RangePicker } from './RangePicker';
 import { LARGE_DIALOG, LARGE_DIALOG_BACKDROP } from '../dialog-chrome';
@@ -131,7 +132,7 @@ const STORE_KEY = 'openfilm.exportCenter.v1';
 function loadSettings(language: string, projectFps: number): Settings {
   const first = DEFAULTS;
   try {
-    const raw = JSON.parse(localStorage.getItem(STORE_KEY) ?? 'null') as (Omit<Partial<Settings>, 'dest'> & {
+    const raw = JSON.parse(readPreference(STORE_KEY) ?? 'null') as (Omit<Partial<Settings>, 'dest'> & {
       dest?: Dest | 'social' | 'slides';
       presets?: string[]; socialQuality?: ExportQuality; socialSubs?: 'auto' | 'on' | 'off';
       slides?: Omit<Settings['images'], 'as' | 'format'> & { format?: 'pdf' | 'pptx' };
@@ -175,7 +176,7 @@ function loadSettings(language: string, projectFps: number): Settings {
 }
 
 function saveSettings(s: Settings): void {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch { /* storage off (private window) */ }
+  writePreference(STORE_KEY, JSON.stringify(s));
 }
 
 const SHORT_EDGES = [480, 720, 1080, 1440, 2160];

@@ -1,0 +1,1558 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TryWorld Set · Glass UI Preview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080a0d;
+      --glass: rgba(20, 24, 31, 0.58);
+      --glass-strong: rgba(24, 29, 37, 0.78);
+      --glass-soft: rgba(255, 255, 255, 0.055);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-soft: rgba(255, 255, 255, 0.075);
+      --text: #f3f5f7;
+      --text-dim: rgba(235, 240, 245, 0.68);
+      --text-muted: rgba(235, 240, 245, 0.44);
+      --accent: #8ab4ff;
+      --accent-strong: #5f8fff;
+      --accent-soft: rgba(138, 180, 255, 0.15);
+      --warm: #f0a35c;
+      --warm-soft: rgba(240, 163, 92, 0.14);
+      --ok: #69d6a1;
+      --shadow-xl: 0 40px 120px rgba(0, 0, 0, 0.55), 0 12px 36px rgba(0, 0, 0, 0.32);
+      --shadow-panel: 0 18px 54px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 9px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 6%, rgba(94, 142, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 88% 18%, rgba(240, 163, 92, 0.1), transparent 26%),
+        radial-gradient(circle at 54% 100%, rgba(92, 214, 200, 0.08), transparent 34%),
+        #07090c;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      font-size: 13px;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.01em;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% -20%, rgba(255, 255, 255, 0.08), transparent 45%),
+        radial-gradient(ellipse at 50% 120%, rgba(0, 0, 0, 0.72), transparent 58%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .app {
+      position: relative;
+      display: grid;
+      grid-template-rows: 54px minmax(0, 1fr) 250px;
+      width: min(1480px, calc(100vw - 44px));
+      height: min(930px, calc(100vh - 44px));
+      margin: 22px auto;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(30, 35, 44, 0.74), rgba(11, 14, 19, 0.8)),
+        rgba(11, 14, 19, 0.8);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(34px) saturate(150%);
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13), inset 0 -1px 0 rgba(255, 255, 255, 0.035);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(32, 38, 48, 0.62), rgba(15, 18, 24, 0.38));
+      backdrop-filter: blur(30px) saturate(170%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 204px;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 9px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.17), rgba(255, 255, 255, 0.035)),
+        linear-gradient(135deg, rgba(138, 180, 255, 0.4), rgba(240, 163, 92, 0.2));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 6px 18px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid rgba(255, 255, 255, 0.86);
+    }
+
+    .brand-mark::before {
+      top: 7px;
+      left: 7px;
+      border-right: 0;
+      border-bottom: 0;
+      border-radius: 4px 0 0 0;
+    }
+
+    .brand-mark::after {
+      right: 7px;
+      bottom: 7px;
+      border-top: 0;
+      border-left: 0;
+      border-radius: 0 0 4px 0;
+    }
+
+    .brand-mark span {
+      width: 0;
+      height: 0;
+      margin-left: 2px;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid rgba(255, 255, 255, 0.92);
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.28));
+    }
+
+    .brand-name {
+      font-size: 14px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      margin-top: 1px;
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .project-switcher {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--text-dim);
+      cursor: default;
+    }
+
+    .project-switcher strong {
+      max-width: 180px;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 550;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .saved-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 9px rgba(105, 214, 161, 0.8);
+    }
+
+    .topbar-spacer { flex: 1; }
+
+    .top-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      white-space: nowrap;
+    }
+
+    .avatar {
+      display: grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 50%;
+      background: linear-gradient(145deg, rgba(138, 180, 255, 0.75), rgba(95, 143, 255, 0.28));
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--text-dim);
+      font-size: 11.5px;
+      font-weight: 550;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      cursor: default;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .btn:hover {
+      border-color: rgba(255, 255, 255, 0.17);
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text);
+    }
+
+    .btn.primary {
+      border-color: rgba(180, 207, 255, 0.35);
+      background: linear-gradient(180deg, rgba(138, 180, 255, 0.9), rgba(95, 143, 255, 0.82));
+      color: #08111f;
+      box-shadow: 0 7px 20px rgba(95, 143, 255, 0.23), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(180deg, #a1c3ff, #6e9bff);
+      color: #06101d;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 228px minmax(0, 1fr) 292px;
+      gap: 10px;
+      min-height: 0;
+      padding: 10px 12px 0;
+    }
+
+    .panel {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--glass-border-soft);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.022)),
+        rgba(15, 19, 25, 0.52);
+      box-shadow: var(--shadow-panel);
+      backdrop-filter: blur(24px) saturate(145%);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.075);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 43px;
+      padding: 0 13px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+
+    .panel-count {
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .icon-btn {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: default;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.075);
+      color: var(--text);
+    }
+
+    .icon-btn svg { width: 14px; height: 14px; }
+
+    .media-search {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 29px;
+      margin: 10px 11px 8px;
+      padding: 0 9px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px;
+      background: rgba(5, 8, 12, 0.26);
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .media-search svg { width: 12px; height: 12px; flex: 0 0 auto; }
+
+    .segmented {
+      display: flex;
+      gap: 2px;
+      margin: 0 11px 10px;
+      padding: 2px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .segmented span {
+      flex: 1;
+      padding: 5px 6px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      text-align: center;
+    }
+
+    .segmented span.on {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+      padding: 0 11px;
+    }
+
+    .media-card {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.035);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .media-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(138, 180, 255, 0.35);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .media-thumb {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+    }
+
+    .media-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.38));
+    }
+
+    .m1 { background: linear-gradient(135deg, #2f4e6e, #6e8fb4 45%, #d7c0a2); }
+    .m2 { background: linear-gradient(135deg, #3d2d5f, #9a6d9d 48%, #e6b77e); }
+    .m3 { background: linear-gradient(135deg, #163d43, #397c78 48%, #b8d7c0); }
+    .m4 { background: linear-gradient(135deg, #4b2f20, #a5623e 46%, #e7c88f); }
+    .m5 { background: linear-gradient(135deg, #1e2734, #4b5e79 50%, #9aa8b2); }
+    .m6 { background: linear-gradient(135deg, #3c1f2b, #8d485e 48%, #d6a5a1); }
+
+    .media-badge {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      z-index: 1;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: rgba(4, 7, 11, 0.62);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 8px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+
+    .media-meta {
+      padding: 6px 6px 7px;
+    }
+
+    .media-name {
+      overflow: hidden;
+      color: var(--text-dim);
+      font-size: 9.5px;
+      font-weight: 550;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .media-size {
+      margin-top: 2px;
+      color: var(--text-muted);
+      font-size: 8px;
+    }
+
+    .ai-import {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 11px;
+      padding: 9px 10px;
+      border: 1px solid rgba(240, 163, 92, 0.22);
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(240, 163, 92, 0.18), transparent 55%),
+        rgba(240, 163, 92, 0.07);
+      color: rgba(255, 238, 222, 0.88);
+      font-size: 10px;
+    }
+
+    .ai-import .spark {
+      display: grid;
+      width: 19px;
+      height: 19px;
+      place-items: center;
+      border-radius: 6px;
+      background: rgba(240, 163, 92, 0.16);
+      color: var(--warm);
+      font-size: 12px;
+    }
+
+    .viewer {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewer-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 43px;
+      padding: 0 13px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+    }
+
+    .viewer-title {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .viewer-title strong {
+      overflow: hidden;
+      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 550;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .viewer-title span {
+      color: var(--text-muted);
+      font-size: 9.5px;
+    }
+
+    .viewer-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .viewer-tools .chip {
+      padding: 4px 7px;
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--text-muted);
+      font-size: 9px;
+    }
+
+    .stage-wrap {
+      position: relative;
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 16px 18px 13px;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.03), transparent 58%),
+        rgba(0, 0, 0, 0.18);
+    }
+
+    .stage {
+      position: relative;
+      width: min(100%, 780px);
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      background:
+        radial-gradient(circle at 28% 26%, rgba(255, 224, 188, 0.62), transparent 18%),
+        radial-gradient(circle at 68% 68%, rgba(120, 173, 255, 0.24), transparent 26%),
+        linear-gradient(152deg, #26384b 0%, #17222f 45%, #0b1016 100%);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(115deg, transparent 0 38%, rgba(255, 255, 255, 0.055) 38.5%, transparent 39%),
+        linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.52) 100%);
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      right: -7%;
+      bottom: -20%;
+      width: 56%;
+      height: 76%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(134, 187, 255, 0.34), rgba(38, 68, 100, 0.12) 42%, transparent 70%);
+      filter: blur(2px);
+    }
+
+    .stage-copy {
+      position: absolute;
+      z-index: 2;
+      bottom: 17%;
+      left: 8%;
+    }
+
+    .stage-kicker {
+      margin-bottom: 9px;
+      color: rgba(255, 255, 255, 0.56);
+      font-size: 9px;
+      font-weight: 650;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .stage-title {
+      max-width: 410px;
+      font-size: clamp(23px, 3vw, 40px);
+      font-weight: 620;
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+      text-shadow: 0 8px 28px rgba(0, 0, 0, 0.38);
+    }
+
+    .stage-title em {
+      color: rgba(240, 204, 165, 0.96);
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .stage-sub {
+      margin-top: 9px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .stage-chip {
+      position: absolute;
+      z-index: 3;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 7px;
+      background: rgba(6, 10, 15, 0.32);
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 9px;
+      backdrop-filter: blur(14px);
+    }
+
+    .stage-chip i {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--warm);
+      box-shadow: 0 0 8px rgba(240, 163, 92, 0.8);
+    }
+
+    .stage-controls {
+      position: absolute;
+      z-index: 4;
+      right: 12px;
+      bottom: 11px;
+      left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(9, 13, 18, 0.48);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px) saturate(150%);
+    }
+
+    .play-btn {
+      display: grid;
+      width: 21px;
+      height: 21px;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0b1118;
+      font-size: 9px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+    }
+
+    .play-btn span {
+      width: 0;
+      height: 0;
+      margin-left: 1px;
+      border-top: 3.5px solid transparent;
+      border-bottom: 3.5px solid transparent;
+      border-left: 5px solid currentColor;
+    }
+
+    .timecode {
+      color: rgba(255, 255, 255, 0.78);
+      font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: 0.02em;
+    }
+
+    .timecode span { color: rgba(255, 255, 255, 0.35); }
+
+    .stage-progress {
+      position: relative;
+      flex: 1;
+      height: 3px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .stage-progress::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 43%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.52), rgba(138, 180, 255, 0.86));
+    }
+
+    .stage-controls .mini {
+      color: rgba(255, 255, 255, 0.42);
+      font-size: 10px;
+    }
+
+    .viewer-foot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 31px;
+      padding: 0 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.055);
+      color: var(--text-muted);
+      font-size: 9px;
+    }
+
+    .viewer-foot .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--ok);
+    }
+
+    .inspector {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inspector-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 11px;
+    }
+
+    .inspector-scroll::-webkit-scrollbar { width: 0; }
+
+    .selected-clip {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px;
+      border: 1px solid rgba(138, 180, 255, 0.16);
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(138, 180, 255, 0.12), rgba(138, 180, 255, 0.035));
+    }
+
+    .clip-thumb {
+      width: 48px;
+      aspect-ratio: 16 / 10;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #304b68, #b28c6c);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .clip-meta strong {
+      display: block;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 580;
+    }
+
+    .clip-meta span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: 9px;
+    }
+
+    .section {
+      margin-top: 16px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .section-title span { color: var(--text-muted); font-size: 12px; }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 29px;
+      padding: 0 9px;
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.16);
+      color: var(--text-muted);
+      font-size: 9.5px;
+    }
+
+    .field b {
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--text-muted);
+      font-size: 9px;
+    }
+
+    .slider {
+      position: relative;
+      flex: 1;
+      height: 3px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 74%;
+      border-radius: inherit;
+      background: rgba(138, 180, 255, 0.8);
+    }
+
+    .slider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 74%;
+      width: 9px;
+      height: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 50%;
+      background: rgba(35, 46, 62, 0.9);
+      box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+      transform: translate(-50%, -50%);
+    }
+
+    .assistant {
+      margin-top: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(240, 163, 92, 0.2);
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(240, 163, 92, 0.17), transparent 46%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+        rgba(18, 20, 25, 0.48);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .assistant-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 11px 8px;
+    }
+
+    .assistant-orb {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border: 1px solid rgba(255, 216, 178, 0.22);
+      border-radius: 7px;
+      background: linear-gradient(145deg, rgba(255, 214, 172, 0.25), rgba(240, 163, 92, 0.08));
+      color: #ffd8b2;
+      font-size: 11px;
+      box-shadow: 0 0 18px rgba(240, 163, 92, 0.12);
+    }
+
+    .assistant-head strong {
+      display: block;
+      color: rgba(255, 242, 228, 0.92);
+      font-size: 10.5px;
+      font-weight: 600;
+    }
+
+    .assistant-head span {
+      display: block;
+      margin-top: 2px;
+      color: rgba(255, 230, 208, 0.42);
+      font-size: 8.5px;
+    }
+
+    .assistant-body {
+      padding: 0 11px 11px;
+    }
+
+    .assistant-prompt {
+      min-height: 56px;
+      padding: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      background: rgba(5, 7, 10, 0.28);
+      color: rgba(255, 245, 234, 0.72);
+      font-size: 9.5px;
+      line-height: 1.55;
+    }
+
+    .assistant-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 7px;
+    }
+
+    .assistant-chips span {
+      padding: 4px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.035);
+      color: rgba(255, 239, 223, 0.55);
+      font-size: 8px;
+    }
+
+    .assistant-send {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      background: rgba(240, 163, 92, 0.13);
+      color: rgba(255, 232, 207, 0.8);
+      font-size: 9px;
+    }
+
+    .assistant-send b {
+      display: grid;
+      width: 18px;
+      height: 18px;
+      place-items: center;
+      border-radius: 5px;
+      background: rgba(240, 163, 92, 0.22);
+      color: #ffd7ad;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .timeline {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-rows: 42px minmax(0, 1fr) 22px;
+      min-height: 0;
+      margin: 10px 12px 12px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border-soft);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+        rgba(13, 16, 22, 0.68);
+      box-shadow: var(--shadow-panel);
+      backdrop-filter: blur(26px) saturate(140%);
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .timeline-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 42px;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .transport {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .transport .icon-btn {
+      width: 25px;
+      height: 25px;
+    }
+
+    .transport .main {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .time-display {
+      padding: 5px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.22);
+      color: rgba(255, 255, 255, 0.74);
+      font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: 0.03em;
+    }
+
+    .time-display span { color: rgba(255, 255, 255, 0.3); }
+
+    .timeline-title {
+      color: var(--text-muted);
+      font-size: 9.5px;
+    }
+
+    .timeline-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .timeline-tools .tool {
+      padding: 4px 7px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 9px;
+    }
+
+    .timeline-tools .tool.on {
+      border-color: rgba(138, 180, 255, 0.22);
+      background: rgba(138, 180, 255, 0.1);
+      color: rgba(205, 222, 255, 0.9);
+    }
+
+    .timeline-body {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .track-heads {
+      padding-top: 23px;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .track-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 9px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.038);
+      color: var(--text-muted);
+      font-size: 8.5px;
+    }
+
+    .track-head b {
+      display: grid;
+      width: 18px;
+      height: 15px;
+      place-items: center;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.48);
+      font-size: 7px;
+      font-weight: 650;
+    }
+
+    .track-head i {
+      width: 14px;
+      height: 1px;
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 4px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .lanes {
+      position: relative;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 74px),
+        rgba(3, 5, 8, 0.2);
+    }
+
+    .ruler {
+      position: relative;
+      height: 23px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+      color: rgba(255, 255, 255, 0.26);
+      font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 7px;
+    }
+
+    .ruler span {
+      position: absolute;
+      top: 6px;
+      transform: translateX(-50%);
+    }
+
+    .ruler span::after {
+      content: "";
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      width: 1px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .lane {
+      position: relative;
+      height: 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.038);
+    }
+
+    .clip {
+      position: absolute;
+      top: 3px;
+      height: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 5px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 9px rgba(0, 0, 0, 0.18);
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 7.5px;
+      font-weight: 550;
+      line-height: 20px;
+      text-indent: 6px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .clip.video {
+      background:
+        linear-gradient(90deg, rgba(48, 79, 120, 0.95), rgba(75, 112, 159, 0.9)),
+        repeating-linear-gradient(90deg, transparent 0 41px, rgba(255, 255, 255, 0.11) 41px 42px);
+    }
+
+    .clip.video.alt {
+      background: linear-gradient(90deg, rgba(54, 87, 98, 0.95), rgba(79, 126, 131, 0.9));
+    }
+
+    .clip.title {
+      background: linear-gradient(90deg, rgba(126, 88, 145, 0.94), rgba(161, 119, 172, 0.9));
+    }
+
+    .clip.voice {
+      background: linear-gradient(90deg, rgba(51, 102, 117, 0.94), rgba(70, 135, 151, 0.88));
+    }
+
+    .clip.music {
+      background:
+        linear-gradient(90deg, rgba(42, 105, 91, 0.95), rgba(62, 135, 119, 0.88)),
+        repeating-linear-gradient(90deg, transparent 0 17px, rgba(255, 255, 255, 0.12) 17px 18px);
+    }
+
+    .clip.caption {
+      background: linear-gradient(90deg, rgba(83, 94, 109, 0.92), rgba(104, 117, 134, 0.85));
+    }
+
+    .clip.video::after,
+    .clip.music::after {
+      content: "";
+      position: absolute;
+      inset: 3px 6px;
+      opacity: 0.16;
+      background: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 5px);
+      mask-image: linear-gradient(180deg, transparent, black 40%, black 60%, transparent);
+    }
+
+    .playhead {
+      position: absolute;
+      z-index: 8;
+      top: 0;
+      bottom: 0;
+      left: 42%;
+      width: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(138, 180, 255, 0.55));
+      box-shadow: 0 0 10px rgba(138, 180, 255, 0.45);
+    }
+
+    .playhead::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 2px 2px 4px 4px;
+      background: #f4f7ff;
+      box-shadow: 0 0 8px rgba(138, 180, 255, 0.6);
+      transform: translateX(-50%);
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 22px;
+      padding: 0 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.045);
+      color: var(--text-muted);
+      font-size: 8px;
+    }
+
+    .statusbar .right { margin-left: auto; }
+
+    .fade-in {
+      animation: rise 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .fade-in.delay { animation-delay: 80ms; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1180px) {
+      .workspace { grid-template-columns: 205px minmax(0, 1fr) 260px; }
+      .brand { min-width: 170px; }
+      .top-status { display: none; }
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-rows: 54px minmax(0, 1fr) 238px; width: calc(100vw - 24px); height: calc(100vh - 24px); margin: 12px auto; }
+      .topbar { gap: 10px; padding: 0 12px; }
+      .brand { min-width: 160px; }
+      .workspace { grid-template-columns: 172px minmax(0, 1fr) 236px; gap: 8px; padding: 8px 8px 0; }
+      .project-switcher strong { max-width: 148px; }
+    }
+
+    @media (max-width: 780px) {
+      .workspace { grid-template-columns: 180px minmax(0, 1fr); }
+      .inspector { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app fade-in">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span></div>
+        <div>
+          <div class="brand-name">TryWorld Set</div>
+          <div class="brand-sub">AI Video Set</div>
+        </div>
+      </div>
+
+      <div class="project-switcher">
+        <span class="saved-dot"></span>
+        <strong>霜降之后 · 产品短片</strong>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="top-status">
+        <span class="saved-dot"></span>
+        所有更改已保存
+      </div>
+      <button class="btn" type="button">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        分享
+      </button>
+      <button class="btn primary" type="button">
+        导出
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="avatar">TW</div>
+    </header>
+
+    <section class="workspace">
+      <aside class="panel fade-in delay">
+        <div class="panel-head">
+          <span class="panel-title">素材</span>
+          <span class="panel-count">12</span>
+          <div class="panel-actions">
+            <button class="icon-btn" type="button" aria-label="导入素材">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+            <button class="icon-btn" type="button" aria-label="更多">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="media-search">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          搜索素材
+        </div>
+
+        <div class="segmented">
+          <span class="on">项目素材</span>
+          <span>收藏</span>
+        </div>
+
+        <div class="media-grid">
+          <div class="media-card">
+            <div class="media-thumb m1"><span class="media-badge">00:08</span></div>
+            <div class="media-meta"><div class="media-name">霜降 · 主镜头</div><div class="media-size">4K · 24fps</div></div>
+          </div>
+          <div class="media-card">
+            <div class="media-thumb m2"><span class="media-badge">00:05</span></div>
+            <div class="media-meta"><div class="media-name">光线穿过玻璃</div><div class="media-size">4K · 24fps</div></div>
+          </div>
+          <div class="media-card">
+            <div class="media-thumb m3"><span class="media-badge">00:11</span></div>
+            <div class="media-meta"><div class="media-name">雾中山脊</div><div class="media-size">4K · 24fps</div></div>
+          </div>
+          <div class="media-card">
+            <div class="media-thumb m4"><span class="media-badge">00:03</span></div>
+            <div class="media-meta"><div class="media-name">产品特写</div><div class="media-size">4K · 24fps</div></div>
+          </div>
+          <div class="media-card">
+            <div class="media-thumb m5"><span class="media-badge">00:06</span></div>
+            <div class="media-meta"><div class="media-name">冷调背景</div><div class="media-size">4K · 24fps</div></div>
+          </div>
+          <div class="media-card">
+            <div class="media-thumb m6"><span class="media-badge">00:04</span></div>
+            <div class="media-meta"><div class="media-name">暖色反光</div><div class="media-size">4K · 24fps</div></div>
+          </div>
+        </div>
+
+        <div class="ai-import">
+          <span class="spark">✦</span>
+          <span>用 AI 生成新镜头</span>
+        </div>
+      </aside>
+
+      <section class="panel viewer fade-in delay">
+        <div class="viewer-head">
+          <div class="viewer-title">
+            <strong>主画面</strong>
+            <span>16:9 · 1920 × 1080</span>
+          </div>
+          <div class="viewer-tools">
+            <span class="chip">适应画布</span>
+            <span class="chip">100%</span>
+            <button class="icon-btn" type="button" aria-label="全屏">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3m13 5h3a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="stage-wrap">
+          <div class="stage">
+            <div class="stage-chip"><i></i>场景 01 · 霜降</div>
+            <div class="stage-copy">
+              <div class="stage-kicker">A film by TryWorld Set</div>
+              <div class="stage-title">霜降之后<br><em>世界安静下来</em></div>
+              <div class="stage-sub">A QUIET WORLD · 2026</div>
+            </div>
+            <div class="stage-controls">
+              <button class="play-btn" type="button" aria-label="播放"><span></span></button>
+              <div class="timecode">00:00:08:<span>12</span></div>
+              <div class="stage-progress"></div>
+              <div class="timecode">00:00:18:<span>00</span></div>
+              <span class="mini">◰</span>
+              <span class="mini">⌘</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="viewer-foot">
+          <span class="dot"></span>
+          <span>实时预览</span>
+          <span>·</span>
+          <span>23.976 fps</span>
+          <span>·</span>
+          <span>Rec.709</span>
+          <span style="margin-left:auto;">已渲染 8 / 18 秒</span>
+        </div>
+      </section>
+
+      <aside class="panel inspector fade-in delay">
+        <div class="panel-head">
+          <span class="panel-title">检查器</span>
+          <div class="panel-actions">
+            <button class="icon-btn" type="button" aria-label="更多">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="inspector-scroll">
+          <div class="selected-clip">
+            <div class="clip-thumb"></div>
+            <div class="clip-meta">
+              <strong>主画面 · 霜降</strong>
+              <span>视频 · 00:00:08:12</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">变换 <span>⌄</span></div>
+            <div class="field-grid">
+              <div class="field">X <b>0 px</b></div>
+              <div class="field">Y <b>0 px</b></div>
+              <div class="field">宽度 <b>100%</b></div>
+              <div class="field">高度 <b>100%</b></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">外观 <span>⌄</span></div>
+            <div class="slider-row">不透明度 <div class="slider"></div><b>100</b></div>
+            <div class="slider-row">混合 <div class="field" style="height:25px; flex:1;">正常 <span>⌄</span></div></div>
+          </div>
+
+          <div class="assistant">
+            <div class="assistant-head">
+              <div class="assistant-orb">✦</div>
+              <div>
+                <strong>片场助手</strong>
+                <span>理解画面，也理解你的意图</span>
+              </div>
+            </div>
+            <div class="assistant-body">
+              <div class="assistant-prompt">把这段镜头改成更安静的清晨质感，保留产品反光，节奏再慢一点。</div>
+              <div class="assistant-chips">
+                <span>重写旁白</span>
+                <span>生成分镜</span>
+                <span>匹配音乐</span>
+              </div>
+              <div class="assistant-send">
+                <span>发送给片场助手</span>
+                <b>↑</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="timeline fade-in delay">
+      <div class="timeline-head">
+        <div class="transport">
+          <button class="icon-btn" type="button" aria-label="回到开头">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM18 5v14l-9-7z"/></svg>
+          </button>
+          <button class="icon-btn main" type="button" aria-label="播放">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m9 6 9 6-9 6z"/></svg>
+          </button>
+          <button class="icon-btn" type="button" aria-label="下一帧">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM6 5l9 7-9 7z"/></svg>
+          </button>
+        </div>
+        <div class="time-display">00:00:08:<span>12</span></div>
+        <div class="timeline-title">霜降之后 / 主时间线</div>
+        <div class="timeline-tools">
+          <span class="tool on">选择</span>
+          <span class="tool">刀片</span>
+          <span class="tool">磁吸</span>
+          <span class="tool">−</span>
+          <span class="tool">100%</span>
+          <span class="tool">＋</span>
+        </div>
+      </div>
+
+      <div class="timeline-body">
+        <div class="track-heads">
+          <div class="track-head"><b>V2</b>标题 <i></i></div>
+          <div class="track-head"><b>V1</b>主画面 <i></i></div>
+          <div class="track-head"><b>A1</b>旁白 <i></i></div>
+          <div class="track-head"><b>A2</b>音乐 <i></i></div>
+          <div class="track-head"><b>T1</b>字幕 <i></i></div>
+        </div>
+
+        <div class="lanes">
+          <div class="ruler">
+            <span style="left: 0%;">00:00</span>
+            <span style="left: 20%;">00:04</span>
+            <span style="left: 40%;">00:08</span>
+            <span style="left: 60%;">00:12</span>
+            <span style="left: 80%;">00:16</span>
+            <span style="left: 100%;">00:20</span>
+          </div>
+
+          <div class="lane">
+            <div class="clip title" style="left: 5%; width: 25%;">霜降之后 · 标题</div>
+          </div>
+          <div class="lane">
+            <div class="clip video" style="left: 0%; width: 18%;">主镜头 01</div>
+            <div class="clip video alt" style="left: 18%; width: 22%;">玻璃光线</div>
+            <div class="clip video" style="left: 40%; width: 24%;">雾中山脊</div>
+            <div class="clip video alt" style="left: 64%; width: 20%;">产品特写</div>
+          </div>
+          <div class="lane">
+            <div class="clip voice" style="left: 8%; width: 33%;">旁白 · 女声</div>
+            <div class="clip voice" style="left: 51%; width: 31%;">旁白 · 女声</div>
+          </div>
+          <div class="lane">
+            <div class="clip music" style="left: 2%; width: 82%;">Ambient score · 安静的世界</div>
+          </div>
+          <div class="lane">
+            <div class="clip caption" style="left: 12%; width: 15%;">世界安静下来</div>
+            <div class="clip caption" style="left: 44%; width: 18%;">光落在产品上</div>
+            <div class="clip caption" style="left: 68%; width: 14%;">霜降之后</div>
+          </div>
+
+          <div class="playhead"></div>
+        </div>
+      </div>
+
+      <div class="statusbar">
+        <span>1920 × 1080</span>
+        <span>·</span>
+        <span>23.976 fps</span>
+        <span>·</span>
+        <span>立体声 48 kHz</span>
+        <span class="right">项目已保存 · 刚刚</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

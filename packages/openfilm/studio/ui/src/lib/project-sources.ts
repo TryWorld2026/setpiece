@@ -10,6 +10,7 @@
  *   GET  /api/skills?project=<id>   → { skills } (the project's, the person's own, the official ones)
  *   POST /api/projects/:id/locate { path } → { project }
  */
+import { readPreferenceFrom, removePreferenceFrom, writePreferenceTo } from './preference-storage.ts';
 
 export type BrowseFolder = { name: string; path: string; film: boolean };
 export type BrowseListing = {
@@ -273,11 +274,11 @@ export function followFetch(
 const COLLAPSE_KEY = 'openfilm.projects.examplesCollapsed';
 /** Whether the person folded the examples away (kept in this browser). */
 export function examplesCollapsed(storage: Pick<Storage, 'getItem'> | null): boolean {
-  try { return storage?.getItem(COLLAPSE_KEY) === '1'; } catch { return false; }
+  try { return readPreferenceFrom(storage, COLLAPSE_KEY) === '1'; } catch { return false; }
 }
 export function setExamplesCollapsed(storage: Pick<Storage, 'setItem' | 'removeItem'> | null, collapsed: boolean): void {
   try {
-    if (collapsed) storage?.setItem(COLLAPSE_KEY, '1');
-    else storage?.removeItem(COLLAPSE_KEY);
+    if (collapsed) writePreferenceTo(storage, COLLAPSE_KEY, '1');
+    else removePreferenceFrom(storage, COLLAPSE_KEY);
   } catch { /* not kept */ }
 }

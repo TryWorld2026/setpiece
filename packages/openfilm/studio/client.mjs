@@ -11,6 +11,7 @@ import { request } from 'node:http';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { studioHome, studioKey } from './server/projects.mjs';
+import { envValue } from '../src/env.mjs';
 
 const MAIN = fileURLToPath(new URL('./server/main.mjs', import.meta.url));
 const VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
@@ -40,7 +41,7 @@ export async function running() {
     const said = await health(run.origin);
     if (said) return { ...run, version: said.version, ...(said.app ? { app: true } : {}) };
   }
-  const given = Number(process.env.OPENFILM_STUDIO_PORT);
+  const given = Number(envValue('STUDIO_PORT'));
   const origin = `http://127.0.0.1:${Number.isInteger(given) && given > 0 ? given : 4747}`;
   const said = await health(origin);
   /* it says which home it serves as a hash of the path (the path itself is not told to anyone who asks) */
@@ -79,22 +80,22 @@ export function olderThanThis(/** @type {string | undefined} */ version, mine = 
 }
 
 /**
- * What npm has: the latest @tryworld/set (null when it was never learnt) and when it was asked. Asked of the registry at
+ * What npm has: the latest setpiece (null when it was never learnt) and when it was asked. Asked of the registry at
  * most once a day (the answer kept in Studio's folder) unless `force`, never for more than `waitMs`, and never with
  * `network` false (only what was learnt before). A check that fails is no answer, and nothing else waits on it.
- * OPENFILM_NO_UPDATE_CHECK=1: never asked.
+ * SETPIECE_NO_UPDATE_CHECK=1 (OPENFILM_NO_UPDATE_CHECK=1): never asked.
  * @param {{ network?: boolean, waitMs?: number, force?: boolean }} [options]
  * @returns {Promise<{ latest: string | null, checkedAt: number | null }>}
  */
 export async function npmOpenfilm({ network = true, waitMs = 1500, force = false } = {}) {
-  if (process.env.OPENFILM_NO_UPDATE_CHECK) return { latest: null, checkedAt: null };
+  if (envValue('NO_UPDATE_CHECK')) return { latest: null, checkedAt: null };
   const file = join(studioHome(), 'update.json');
   /** @type {{ checkedAt?: number, latest?: string }} */
   let known = {};
   try { known = JSON.parse(readFileSync(file, 'utf8')); } catch { /* never asked */ }
   if (network && (force || !(Date.now() - (known.checkedAt ?? 0) < 24 * 3_600_000))) {
     try {
-      const res = await fetch('https://registry.npmjs.org/@tryworld%2Fset/latest', { signal: AbortSignal.timeout(waitMs), headers: { accept: 'application/json' } });
+      const res = await fetch('https://registry.npmjs.org/setpiece/latest', { signal: AbortSignal.timeout(waitMs), headers: { accept: 'application/json' } });
       const latest = res.ok ? String((await res.json()).version ?? '') : '';
       if (/^\d+\.\d+\.\d+/.test(latest)) {
         known = { checkedAt: Date.now(), latest };
@@ -106,7 +107,7 @@ export async function npmOpenfilm({ network = true, waitMs = 1500, force = false
   return { latest: known.latest ?? null, checkedAt: known.checkedAt ?? null };
 }
 
-/** A newer TryWorld Set on npm than this one, or null (see npmOpenfilm). @param {{ network?: boolean, waitMs?: number }} [options] */
+/** A newer Setpiece on npm than this one, or null (see npmOpenfilm). @param {{ network?: boolean, waitMs?: number }} [options] */
 export async function newerOpenfilm(options) {
   const { latest } = await npmOpenfilm(options);
   return latest && olderThanThis(VERSION, latest) ? latest : null;
@@ -155,10 +156,10 @@ export async function ensureStudio(say = () => {}, { fresh = false } = {}) {
   let pages = 0;
   if (found) {
     const older = olderThanThis(found.version);
-    say(older ? `Updating TryWorld Set Studio to ${VERSION}…` : 'Restarting TryWorld Set Studio…');
+    say(older ? `Updating Setpiece Studio to ${VERSION}…` : 'Restarting Setpiece Studio…');
     const replaced = await replace(found);
     if ('stays' in replaced) {
-      say(`TryWorld Set Studio keeps running: ${replaced.stays}`);
+      say(`Setpiece Studio keeps running: ${replaced.stays}`);
       return found;
     }
     pages = replaced.pages;
@@ -170,7 +171,7 @@ export async function ensureStudio(say = () => {}, { fresh = false } = {}) {
   let exited = /** @type {number | null} */ (null);
   child.once('exit', (code) => { exited = code ?? 1; });
   child.unref();
-  if (!found) say('Starting TryWorld Set Studio…');
+  if (!found) say('Starting Setpiece Studio…');
   const deadline = Date.now() + 20_000;
   while (Date.now() < deadline) {
     const up = await running();
@@ -187,37 +188,37 @@ export async function ensureStudio(say = () => {}, { fresh = false } = {}) {
 }
 
 /**
- * `twset update`: the newest TryWorld Set, and Studio on it. This one is the newest, or the newest is run to do it
- * (`npx -y @tryworld/set@<latest> update` fetches it); then a Studio on an older one is started again on it once it is
+ * `setpiece update`: the newest Setpiece, and Studio on it. This one is the newest, or the newest is run to do it
+ * (`npx -y setpiece@<latest> update` fetches it); then a Studio on an older one is started again on it once it is
  * idle, and the pages open on it come back on the new version. The desktop app's Studio updates with the app, and a
  * source checkout with git pull: each is said instead. `ok` false when it could not be done (offline, Studio busy).
  * @param {(line: string) => void} [say] @returns {Promise<{ ok: boolean, lines: string[] }>}
  */
 export async function updateOpenfilm(say = () => {}) {
-  if (FROM_SOURCE) return { ok: true, lines: [`TryWorld Set ${VERSION} runs from a source checkout: git pull updates it.`] };
+  if (FROM_SOURCE) return { ok: true, lines: [`Setpiece ${VERSION} runs from a source checkout: git pull updates it.`] };
   const found = (await running()) ?? (await restarting());
-  if (found?.app) return { ok: true, lines: ['Studio is the TryWorld Set app\'s: it updates with the app (TryWorld Set → Check for Updates…).'] };
+  if (found?.app) return { ok: true, lines: ['Studio is the Setpiece app\'s: it updates with the app (Setpiece → Check for Updates…).'] };
   const { latest } = await npmOpenfilm({ force: true, waitMs: 8000 });
-  if (!latest) return { ok: false, lines: ['Could not reach npm to learn the newest TryWorld Set: try again when online.'] };
+  if (!latest) return { ok: false, lines: ['Could not reach npm to learn the newest Setpiece: try again when online.'] };
   if (olderThanThis(VERSION, latest)) {
     /* the newest does it, fetched by npx; it ran already and is still not the newest: npx gave another */
-    if (process.env.OPENFILM_UPDATING) return { ok: false, lines: [`npx ran TryWorld Set ${VERSION}, not ${latest}.`] };
-    say(`Getting TryWorld Set ${latest}…`);
-    const r = spawnSync('npx', ['-y', `@tryworld/set@${latest}`, 'update'], {
-      stdio: 'inherit', env: { ...process.env, OPENFILM_UPDATING: '1' }, shell: process.platform === 'win32', windowsHide: true,
+    if (envValue('UPDATING')) return { ok: false, lines: [`npx ran Setpiece ${VERSION}, not ${latest}.`] };
+    say(`Getting Setpiece ${latest}…`);
+    const r = spawnSync('npx', ['-y', `setpiece@${latest}`, 'update'], {
+      stdio: 'inherit', env: { ...process.env, SETPIECE_UPDATING: '1' }, shell: process.platform === 'win32', windowsHide: true,
     });
     if (r.error) return { ok: false, lines: [`Could not run npx (it comes with Node.js): ${r.error.message}`] };
-    /* a `twset` installed with npm -g is not npx's: it stays as it is until npm updates it */
-    const installed = process.env.npm_command !== 'exec' && !process.env.TWSET_RUN && !process.env.OPENFILM_RUN;
-    return { ok: r.status === 0, lines: installed && r.status === 0 ? [`The \`twset\` command installed here is still ${VERSION}: \`npm install -g @tryworld/set@latest\` updates it.`] : [] };
+    /* a `setpiece` installed with npm -g is not npx's: it stays as it is until npm updates it */
+    const installed = process.env.npm_command !== 'exec' && !envValue('RUN');
+    return { ok: r.status === 0, lines: installed && r.status === 0 ? [`The \`setpiece\` command installed here is still ${VERSION}: \`npm install -g setpiece@latest\` updates it.`] : [] };
   }
-  if (!found) return { ok: true, lines: [`TryWorld Set ${VERSION} is the newest. Studio starts on it the next time it opens.`] };
-  if (!olderThanThis(found.version)) return { ok: true, lines: [`TryWorld Set ${VERSION} is the newest, and Studio runs it.`] };
-  say(`Updating TryWorld Set Studio from ${found.version} to ${VERSION}…`);
+  if (!found) return { ok: true, lines: [`Setpiece ${VERSION} is the newest. Studio starts on it the next time it opens.`] };
+  if (!olderThanThis(found.version)) return { ok: true, lines: [`Setpiece ${VERSION} is the newest, and Studio runs it.`] };
+  say(`Updating Setpiece Studio from ${found.version} to ${VERSION}…`);
   const replaced = await replace(found);
   if ('stays' in replaced) return { ok: false, lines: [`Studio keeps running ${found.version} for now: ${replaced.stays}. Update again once that is done.`] };
   await ensureStudio(say);
-  return { ok: true, lines: [`Studio runs TryWorld Set ${VERSION} now${replaced.pages ? `: the ${replaced.pages === 1 ? 'page' : `${replaced.pages} pages`} open on it come back on it` : ''}.`] };
+  return { ok: true, lines: [`Studio runs Setpiece ${VERSION} now${replaced.pages ? `: the ${replaced.pages === 1 ? 'page' : `${replaced.pages} pages`} open on it come back on it` : ''}.`] };
 }
 
 /**
@@ -271,7 +272,7 @@ function projectAround(from) {
 }
 
 /** Programs between an agent and its command: shells, package runners, openfilm's own launchers. */
-const BETWEEN = /^(\S*\/)?-?(sh|bash|zsh|fish|dash|ksh|tcsh|csh|env|login|sudo)(\s|$)|(^|[/\s])(npm|npx|pnpm|pnpx|yarn|bunx?|corepack)(\s|$)|npm-cli\.js|npx-cli\.js|\/\.bin\/twset(\s|$)|\/bin\/twset(\.mjs)?(\s|$)/;
+const BETWEEN = /^(\S*\/)?-?(sh|bash|zsh|fish|dash|ksh|tcsh|csh|env|login|sudo)(\s|$)|(^|[/\s])(npm|npx|pnpm|pnpx|yarn|bunx?|corepack)(\s|$)|npm-cli\.js|npx-cli\.js|\/\.bin\/(setpiece|twset|openfilm)(\s|$)|\/bin\/(setpiece|twset|openfilm)(\.mjs)?(\s|$)/;
 
 /**
  * The agent running this command, as Studio names agents to give each its notes once (studio/server/person-edits.mjs):
@@ -314,7 +315,7 @@ export async function keptNote(from = '.') {
 }
 
 /**
- * `twset get [verb] [--option value …] [--yes]`: media for the project around the current folder, made by Studio
+ * `setpiece get [verb] [--option value …] [--yes]`: media for the project around the current folder, made by Studio
  * (started when needed). Without a verb (or with --help): what can be got here now. `--via <provider>` and
  * `--model <id>` override the person's choices in Studio's Settings (Models) for one run; the listing leaves them
  * out, as it leaves out who makes what. `code` is the exit status: 0 done, 1 it did not run, 2 not a project or a wrong
@@ -330,7 +331,7 @@ export async function getMedia(argv, say) {
     const a = argv[i];
     if (a === '-h') { flags.help = true; continue; }
     if (!a.startsWith('--')) {
-      if (verb !== null) return { code: 2, lines: [`twset get: unexpected ${a}: options are written --name value`] };
+      if (verb !== null) return { code: 2, lines: [`setpiece get: unexpected ${a}: options are written --name value`] };
       verb = a;
       continue;
     }
@@ -341,31 +342,31 @@ export async function getMedia(argv, say) {
     flags[name] = had === undefined ? value : [...[had].flat(), value];
   }
   const { help, via, model, yes, ...args } = flags;
-  if (via !== undefined && typeof via !== 'string') return { code: 2, lines: ['twset get: --via names a provider, e.g. --via elevenlabs'] };
-  if (model !== undefined && typeof model !== 'string') return { code: 2, lines: ['twset get: --model names a model, e.g. --model eleven_v4'] };
+  if (via !== undefined && typeof via !== 'string') return { code: 2, lines: ['setpiece get: --via names a provider, e.g. --via elevenlabs'] };
+  if (model !== undefined && typeof model !== 'string') return { code: 2, lines: ['setpiece get: --model names a model, e.g. --model eleven_v4'] };
   const listing = !verb || verb === 'help' || help !== undefined;
   const folder = projectAround('.');
-  if (!folder && !listing) return { code: 2, lines: [`twset get: ${resolve('.')} is not in a project; \`twset open\` makes one`] };
+  if (!folder && !listing) return { code: 2, lines: [`setpiece get: ${resolve('.')} is not in a project; \`setpiece open\` makes one`] };
   /* the listing is read from a Studio already running, else here: asking what there is starts nothing */
   const run = listing ? await running() : await ensureStudio(say);
   if (!listing && run) {
     const answer = await post(run, '/api/get', { folder, verb, args, ...(via ? { via } : {}), ...(model ? { model } : {}), yes: yes === true });
-    if (typeof answer?.text !== 'string') return { code: 1, lines: [`twset get: ${answer?.error ?? 'Studio did not say how it went'}`] };
+    if (typeof answer?.text !== 'string') return { code: 1, lines: [`setpiece get: ${answer?.error ?? 'Studio did not say how it went'}`] };
     return { code: answer.ok ? 0 : answer.code === 2 ? 2 : 1, lines: [answer.text] };
   }
   const one = verb && verb !== 'help' ? verb : null;
   /* web search and web pages, for an agent without web tools of its own (the app's own agents say so) */
-  const web = process.env.OPENFILM_GET_WEB === '1';
+  const web = envValue('GET_WEB') === '1';
   /** @type {{ verbs: { verb: string, help: string, dir?: string, options: Record<string, { value?: string, required?: boolean, choices?: string[] }> }[], note: string | null, services?: string, error?: string }} */
   let listed;
   if (run) {
     const query = new URLSearchParams({ ...(one ? { verb: one } : {}), ...(web ? { web: '1' } : {}) }).toString();
     const res = await fetch(`${run.origin}/api/get${query ? `?${query}` : ''}`, { headers: { 'x-studio-key': run.key } });
     listed = await res.json();
-    if (!res.ok) return { code: 2, lines: [`twset get: ${listed.error ?? `Studio answered ${res.status}`}`] };
+    if (!res.ok) return { code: 2, lines: [`setpiece get: ${listed.error ?? `Studio answered ${res.status}`}`] };
   } else {
     const { catalog } = await import('./server/get.mjs');
-    try { listed = await catalog(one ?? undefined, { web }); } catch (e) { return { code: 2, lines: [`twset get: ${/** @type {Error} */ (e).message}`] }; }
+    try { listed = await catalog(one ?? undefined, { web }); } catch (e) { return { code: 2, lines: [`setpiece get: ${/** @type {Error} */ (e).message}`] }; }
   }
   const { verbs, note, services } = listed;
   const where = one || !services ? [] : ['', services];
@@ -374,7 +375,7 @@ export async function getMedia(argv, say) {
   const width = Math.max(...verbs.map((v) => v.verb.length));
   const pad = ' '.repeat(width + 4);
   return { code: 0, lines: [
-    'twset get <what> [--option value …]   media for this project, saved under assets/',
+    'setpiece get <what> [--option value …]   media for this project, saved under assets/',
     '  --yes              the person already agreed to what it spends',
     '',
     ...verbs.flatMap((v) => {

@@ -1,7 +1,7 @@
 {
-  "name": "tryworld-set-monorepo",
+  "name": "setpiece-monorepo",
   "private": true,
-  "description": "TryWorld Set: an open source AI video studio. The `@tryworld/set` package (the format, the `twset` CLI and Studio), the desktop app, and what the clients share.",
+  "description": "Setpiece · 造境: an Apple-inspired AI film workspace. A commercial derivative of OpenFilm, with the film format, `setpiece` CLI and Studio, the desktop app, and what the clients share.",
   "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@9.15.9",
@@ -9,11 +9,12 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "dev": "pnpm --filter @tryworld/set dev",
-    "dev:desktop": "pnpm --filter @tryworld/set-desktop start",
-    "build": "pnpm --filter @tryworld/set build:ui && pnpm --filter @tryworld/set-desktop build:shell",
+    "dev": "pnpm --filter setpiece dev",
+    "dev:desktop": "pnpm --filter setpiece-desktop start",
+    "build": "pnpm --filter setpiece build:ui && pnpm --filter setpiece-desktop build:shell",
     "test": "pnpm -r --workspace-concurrency=1 --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
+    "setpiece": "node packages/openfilm/bin/twset.mjs",
     "twset": "node packages/openfilm/bin/twset.mjs",
     "audit:public": "node scripts/audit-public.mjs",
     "check:pack": "node scripts/check-pack.mjs",

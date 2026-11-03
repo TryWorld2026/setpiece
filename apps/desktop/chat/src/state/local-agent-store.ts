@@ -18,6 +18,7 @@ import {
   type RosterAgent,
 } from '@/lib/desktop-bridge';
 import { forgetLocalAgentSessions } from '@/lib/local-agent-run';
+import { readPreference, writePreference } from 'setpiece/studio-ui/lib/preference-storage.ts';
 
 export type AgentPick = LocalAgentId;
 
@@ -72,7 +73,7 @@ function load(): Persisted {
   const empty: Persisted = { picked: 'claude', prefs: {}, options: {} };
   if (typeof window === 'undefined') return empty;
   try {
-    const raw = JSON.parse(window.localStorage.getItem(KEY) ?? window.localStorage.getItem('openfilm.local-agents.v1') ?? 'null') as Partial<Persisted> | null;
+    const raw = JSON.parse(readPreference(KEY) ?? readPreference('openfilm.local-agents.v1') ?? 'null') as Partial<Persisted> | null;
     if (!raw) return empty;
     return {
       picked: isAgent(raw.picked) ? raw.picked : 'claude',
@@ -85,9 +86,7 @@ function load(): Persisted {
 }
 
 function save(s: Persisted): void {
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify({ picked: s.picked, prefs: s.prefs, options: s.options }));
-  } catch { /* private mode */ }
+  writePreference(KEY, JSON.stringify({ picked: s.picked, prefs: s.prefs, options: s.options }));
 }
 
 type OwnModel = NonNullable<RosterAgent['byok']>['models'][number];

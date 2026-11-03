@@ -5,12 +5,12 @@
  */
 
 /* ──────────────────────────────────────────────────────────────
-   OpenFilm design system: dark and light themes. [data-theme] picks one;
+   Setpiece design system: dark and light themes. [data-theme] picks one;
    without it the system's setting applies.
    ────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Fonts: a sans for text, Space Grotesk for headings, monospace for code. */
+  /* Fonts: Inter for text and headings, monospace for code. */
   /* CJK fallbacks, system fonts first and open ones last: PingFang (Apple) → Hiragino Sans GB (older macOS) →
      Microsoft YaHei (Windows) → Noto / Source Han (Linux, Android, anything else). Without the last two,
      Linux and Android fall back to rough default glyphs. */
@@ -18,7 +18,7 @@
     'Noto Sans SC', 'Source Han Sans SC', 'Heiti SC', sans-serif;
   --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, var(--font-cjk-sans);
-  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui,
+  --font-display: 'Inter Variable', 'Inter', ui-sans-serif, system-ui,
     var(--font-cjk-sans);
   --font-mono: ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
@@ -943,13 +943,6 @@ html[data-focus-nav='tab'] :where(a, button, [role='button'], select, summary):f
   .greeting-unit {
     animation: none;
   }
-}
-
-/* Editorial section headings: the greeting's serif, tighter tracking. */
-.editorial-title {
-  font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
-  font-weight: 500;
-  letter-spacing: -0.015em;
 }
 
 .sidebar-header-icon {

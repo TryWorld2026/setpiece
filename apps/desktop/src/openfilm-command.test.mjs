@@ -6,10 +6,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { commandScript, commandScriptWindows } from './openfilm-command.mjs';
 
-test("the twset command alone has the app's ffmpeg first and its browser; the agent's PATH is left as it is", () => {
+test("the setpiece command alone has the app's ffmpeg first and its browser; the agent's PATH is left as it is", () => {
   const sh = commandScript('/app/node', '/app/twset.mjs', { ffmpeg: '/app/ffmpeg', env: { PLAYWRIGHT_BROWSERS_PATH: '/app/pw' } });
   assert.match(sh, /^#!\/bin\/sh\n/);
-  assert.match(sh, /PLAYWRIGHT_BROWSERS_PATH='\/app\/pw' PATH='\/app\/ffmpeg':"\$PATH" ELECTRON_RUN_AS_NODE=1 OPENFILM_NO_UPDATE_CHECK=1 exec '\/app\/node' '\/app\/twset.mjs' "\$@"\n$/);
+  assert.match(sh, /PLAYWRIGHT_BROWSERS_PATH='\/app\/pw' PATH='\/app\/ffmpeg':"\$PATH" ELECTRON_RUN_AS_NODE=1 SETPIECE_NO_UPDATE_CHECK=1 exec '\/app\/node' '\/app\/twset.mjs' "\$@"\n$/);
   assert.doesNotMatch(commandScript('/n', '/c'), /PATH=/);
   const cmd = commandScriptWindows('C:\\app\\node.exe', 'C:\\app\\twset.mjs', { ffmpeg: 'C:\\app\\ffmpeg', env: { PLAYWRIGHT_BROWSERS_PATH: 'C:\\pw' } });
   assert.match(cmd, /setlocal\r\nset "PLAYWRIGHT_BROWSERS_PATH=C:\\pw"\r\nset "PATH=C:\\app\\ffmpeg;%PATH%"\r\n/);

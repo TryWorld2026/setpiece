@@ -8,6 +8,7 @@
  *   · `stats` (off by default, Settings → Developer): the viewer's corner says how playing goes.
  */
 import { useSyncExternalStore } from 'react';
+import { readPreference, writePreference } from './preference-storage.ts';
 
 export type PreviewPrefs = { fitPages: boolean; renders: boolean; stats: boolean };
 type Pref = keyof PreviewPrefs;
@@ -22,7 +23,7 @@ let current: PreviewPrefs | null = null;
 
 function read(pref: Pref): boolean {
   try {
-    const raw = localStorage.getItem(KEY[pref]);
+    const raw = readPreference(KEY[pref]);
     if (raw != null) return raw !== '0';
   } catch { /* no localStorage: this session's choice */ }
   return memory[pref] ?? DEFAULTS[pref];
@@ -35,7 +36,7 @@ export function readPreviewPrefs(): PreviewPrefs {
 
 export function writePreviewPref(pref: Pref, on: boolean): void {
   memory[pref] = on;
-  try { localStorage.setItem(KEY[pref], on ? '1' : '0'); } catch { /* not stored: `memory` has it */ }
+  writePreference(KEY[pref], on ? '1' : '0');
   current = { ...readPreviewPrefs(), [pref]: on };
   for (const fn of listeners) fn();
 }

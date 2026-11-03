@@ -11,6 +11,7 @@ import * as React from 'react';
 import {
   RECENT_MAX, projectFontFaceCss, pushRecent, type InstalledFont, type PageFonts, type ProjectFont,
 } from './font-menu.ts';
+import { readPreference, writePreference } from './preference-storage.ts';
 
 /* ── installed ── */
 
@@ -132,7 +133,7 @@ const RECENT_KEY = 'openfilm.recentFonts';
 
 export function readRecentFonts(): string[] {
   try {
-    const list: unknown = JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]');
+    const list: unknown = JSON.parse(readPreference(RECENT_KEY) ?? '[]');
     return Array.isArray(list) ? list.filter((f): f is string => typeof f === 'string').slice(0, RECENT_MAX) : [];
   } catch {
     return [];
@@ -141,7 +142,7 @@ export function readRecentFonts(): string[] {
 
 export function rememberRecentFont(family: string): string[] {
   const next = pushRecent(readRecentFonts(), family);
-  try { localStorage.setItem(RECENT_KEY, JSON.stringify(next)); } catch { /* private window: not remembered */ }
+  writePreference(RECENT_KEY, JSON.stringify(next));
   return next;
 }
 

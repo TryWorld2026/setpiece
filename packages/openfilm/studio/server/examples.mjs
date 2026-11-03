@@ -23,6 +23,7 @@
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, rename, rm } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
+import { envValue } from '../../src/env.mjs';
 import { fileURLToPath } from 'node:url';
 import { studioHomeDir } from '../../src/locations.mjs';
 
@@ -102,7 +103,7 @@ export function readExamples(raw, source = EXAMPLES_INDEX) {
  * A file beside an index read from this computer (its posters and previews), or null: a path inside its folder only.
  * @param {string} path @param {{ source?: string }} [options]
  */
-export function exampleFile(path, { source = process.env.OPENFILM_EXAMPLES_INDEX || EXAMPLES_INDEX } = {}) {
+export function exampleFile(path, { source = envValue('EXAMPLES_INDEX') || EXAMPLES_INDEX } = {}) {
   if (!repoPath(path)) return null;
   /* GitHub's index: the posters of the copy that came with OpenFilm */
   if (source === EXAMPLES_INDEX) return existsSync(join(BUNDLED_INDEX, ...path.split('/'))) ? join(BUNDLED_INDEX, ...path.split('/')) : null;
@@ -127,7 +128,7 @@ function indexAt(file) {
  * the copy that came with OpenFilm, while GitHub is asked in the background.
  * @param {{ source?: string, fetchImpl?: typeof fetch, home?: string }} [options]
  */
-export async function listExamples({ source = process.env.OPENFILM_EXAMPLES_INDEX || EXAMPLES_INDEX, fetchImpl = fetch, home = studioHomeDir() } = {}) {
+export async function listExamples({ source = envValue('EXAMPLES_INDEX') || EXAMPLES_INDEX, fetchImpl = fetch, home = studioHomeDir() } = {}) {
   const kept = cache.get(source);
   if (kept && Date.now() - kept.at < (kept.ok ? KEEP_MS : RETRY_MS)) return kept.examples;
   if (source === EXAMPLES_INDEX) {
@@ -177,7 +178,7 @@ const DAY = 24 * 60 * 60 * 1000;
  * @param {{ home: string, source?: string, fetchFolder: (url: string, into: string) => Promise<string>, now?: () => number }} options
  *   `fetchFolder`: a repository folder's address fetched into a folder (fetch-repo.mjs), → where it landed
  */
-export async function exampleFolder(id, { home, source = process.env.OPENFILM_EXAMPLES_INDEX || EXAMPLES_INDEX, fetchFolder, now = Date.now }) {
+export async function exampleFolder(id, { home, source = envValue('EXAMPLES_INDEX') || EXAMPLES_INDEX, fetchFolder, now = Date.now }) {
   if (!repoPath(id) || id.includes('/')) throw new Error('There is no such example.');
   if (!/^https?:\/\//.test(source)) {
     const dir = join(dirname(source), id);

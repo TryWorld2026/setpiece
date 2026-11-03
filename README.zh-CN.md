@@ -1,49 +1,70 @@
-# 试界片场 · TryWorld Set
+# Setpiece / 造境
 
-> 把想法，拍成世界。
-> Turn ideas into worlds.
+> 把想法，造成现场。
+>
+> Bring ideas to the set.
 
-**TryWorld Set · by 试界**
-
-AI 视频片场 / AI Video Agent。把想法变成可编辑、可导出的影片。
-
-**下载：** https://set.tryworld.com.cn/
+**Setpiece · 造境** 是一个 AI 片场：以网页为影片格式，提供 Apple 风格的专业桌面编辑器与命令行。它完整保留
+OpenFilm 的编辑、时间线、素材、智能体与导出能力，并采用全新的产品身份与界面。
 
 [English](README.md)
 
 ## 状态
 
-Pre-alpha。OpenFilm 代码已导入，上游历史保留；品牌改造、桌面端 / Studio 构建与 Windows 验证已完成。
+`0.3.0` 是正在开发中的私有 Alpha 版本。本项目是 OpenFilm 的独立商业衍生版本，并保留上游 Git 历史。
 
-## 产品结构
+## 产品
 
-- 母品牌：试界 TryWorld
-- 产品名：试界片场
-- 英文名：TryWorld Set
-- 品类：AI 视频片场 / AI Video Agent
-- CLI：`twset`
-- 包名：`@tryworld/set`
-- 域名：`set.tryworld.com.cn`
+- 产品名：Setpiece / 造境
+- 品类：AI Film Workspace / AI 片场
+- 桌面应用：`setpiece-desktop`
+- CLI 与 npm 包：`setpiece`
+- 共享包：`setpiece-shared`
+- 仓库：https://github.com/TryWorld2026/setpiece
+- 版本：`0.3.0`
+
+`twset` 与 `openfilm` 命令继续作为隐藏兼容别名保留。旧 npm 包 `@tryworld/set` 由 `setpiece` 接替。
+
+## 从源码运行
+
+需要 Node.js `>=22.18` 和 pnpm。
+
+```sh
+pnpm install
+pnpm dev
+```
+
+运行桌面应用：
+
+```sh
+pnpm dev:desktop
+```
+
+运行 CLI：
+
+```sh
+pnpm setpiece --help
+```
+
+## 验证
+
+```sh
+pnpm typecheck
+pnpm build
+pnpm test
+```
 
 ## 开源归属
 
-TryWorld Set 是 OpenFilm 的独立衍生项目。OpenFilm 的代码采用 MIT 许可证，原始版权归 OpenFilm contributors。我们保留上游版权声明和许可证；OpenFilm 的名称和 Logo 不用于 TryWorld Set 的产品品牌。
+Setpiece 是 [OpenFilm](https://github.com/openfilm/openfilm) 的独立衍生项目。OpenFilm 的代码采用 MIT
+许可证，原始版权归 OpenFilm contributors。我们保留上游版权声明、许可证和 Git 历史。
 
-TryWorld Set 与 OpenFilm 官方不存在关联，也不代表获得其背书。
+Setpiece 使用自己的产品名、标志和界面，不是 OpenFilm 官方产品，与 OpenFilm 项目不存在隶属关系，也不代表获得其背书。
 
-参见 [NOTICE.md](NOTICE.md)、[LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt)，以及上游参考文档：[English](README.upstream.md) / [简体中文](README.upstream.zh-CN.md)。
+参见 [NOTICE.md](NOTICE.md)、[LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt)，以及上游参考文档：
+[English](README.upstream.md) / [简体中文](README.upstream.zh-CN.md)。
 
-## 路线
+## 许可证
 
-- [x] 导入经审计的 OpenFilm 基础提交
-- [x] 改造 CLI、Studio、桌面端与包名
-- [x] 保留上游许可证并生成第三方声明
-- [x] 在 Windows 上构建并验证
-- [ ] 私有 Alpha
-
-## 链接
-
-- 下载：https://set.tryworld.com.cn/
-- GitHub Release：https://github.com/TryWorld2026/tryworld-set/releases/tag/v0.2.8
-- 试界 TryWorld：https://tryworld.com.cn
-- OpenFilm 上游：https://github.com/openfilm/openfilm
+本仓库采用 MIT 许可证，参见 [LICENSE](LICENSE)。上游 OpenFilm 声明保留在
+[LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt)。

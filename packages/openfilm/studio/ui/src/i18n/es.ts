@@ -142,7 +142,7 @@ export const es: Words = {
     goneApp: 'Studio se ha detenido. Cierra y vuelve a abrir la app TryWorld Set para recuperarlo.',
     copied: 'Copiado',
     lockedTitle: 'Este navegador no ha entrado en Studio',
-    lockedBody: 'Studio está en marcha, pero solo deja entrar a un navegador que lo abrió una vez con su clave. Abre la dirección completa que mostró `twset open` (o `pnpm dev`), la que lleva ?key=; después, este navegador puede usar la dirección de Studio tal cual.',
+lockedBody: 'Studio está en marcha, pero solo deja entrar a un navegador que lo abrió una vez con su clave. Abre la dirección completa que mostró `setpiece open` (o `pnpm dev`), la que lleva ?key=; después, este navegador puede usar la dirección de Studio tal cual.',
     lockedHow: 'Para obtenerla de nuevo, ejecuta',
   },
   projects: {
@@ -273,6 +273,14 @@ export const es: Words = {
     },
   },
   library: {
+    recent: 'Recientes',
+    all: 'Todos los proyectos',
+    sidebar: {
+      library: 'Biblioteca',
+      folders: 'Carpetas',
+      recentlyOpened: 'Abiertos recientemente',
+      local: 'Guardado en este equipo',
+    },
     noMatches: 'Ningún proyecto coincide con la búsqueda',
     searchPlaceholder: 'Buscar',
     sortLabel: 'Ordenar',
@@ -1671,7 +1679,7 @@ export const es: Words = {
       newer: 'Ya está disponible TryWorld Set {version}.',
       upToDate: 'Está al día.',
       source: 'Se ejecuta desde el código fuente: git pull lo actualiza.',
-      off: 'Aquí no se buscan actualizaciones (OPENFILM_NO_UPDATE_CHECK).',
+off: 'Aquí no se buscan actualizaciones (SETPIECE_NO_UPDATE_CHECK).',
       never: 'Aún no se ha comprobado.',
       inApp: 'Studio se actualiza con la app de escritorio: TryWorld Set → Check for Updates…',
       howTitle: 'Actualizar',

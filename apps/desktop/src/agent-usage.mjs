@@ -85,7 +85,7 @@ async function codexUsage(cli) {
   });
   try {
     return await within((async () => {
-      await call('initialize', { clientInfo: { name: 'tryworld-set-desktop', title: 'TryWorld Set', version: '1' }, capabilities: null });
+      await call('initialize', { clientInfo: { name: 'setpiece-desktop', title: 'Setpiece', version: '1' }, capabilities: null });
       child.stdin.write(`${JSON.stringify({ method: 'initialized' })}\n`);
       const account = await call('account/read', { refreshToken: false });
       const limits = await call('account/rateLimits/read', undefined);

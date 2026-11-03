@@ -80,6 +80,7 @@ before(() => {
   writeFileSync(join(work, 'README.md'), '# films\n');
   writeFileSync(join(work, 'films', 'one', 'film.html'), '<!doctype html><title>one</title>');
   writeFileSync(join(work, 'films', 'one', 'assets', 'a.txt'), 'a');
+  writeFileSync(join(work, 'films', 'one', 'assets', 'captions.vtt'), 'WEBVTT\n\n00:00.000 --> 00:01.000\nHello\n');
   writeFileSync(join(work, 'films', 'two', 'film.html'), '<!doctype html><title>two</title>');
   writeFileSync(join(work, 'films', 'dots', 'film.html'), '<!doctype html><img src="..assets/frame.svg">');
   writeFileSync(join(work, 'films', 'dots', '..notes.md'), 'notes');
@@ -107,6 +108,11 @@ test('a folder is a partial clone: only its files download, and only it is check
   await cloneInto({ cloneUrl: origin, ref: 'main', folder: ['films', 'one'], dir });
   assert.ok(existsSync(join(dir, 'films', 'one', 'film.html')));
   assert.ok(existsSync(join(dir, 'films', 'one', 'assets', 'a.txt')));
+  assert.equal(
+    readFileSync(join(dir, 'films', 'one', 'assets', 'captions.vtt'), 'utf8'),
+    'WEBVTT\n\n00:00.000 --> 00:01.000\nHello\n',
+    'a Windows autocrlf setting does not rewrite text files on checkout',
+  );
   assert.ok(!existsSync(join(dir, 'films', 'two')), 'the folder beside it is not checked out');
   assert.ok(!existsSync(join(dir, 'big.bin')));
   /* the big file outside the folder was never downloaded (listed without fetching it) */
@@ -231,10 +237,15 @@ test('over https: the size is known before the first byte, and the bar only goes
   assert.equal(to, join(lib, 'one'));
   assert.equal(readFileSync(join(to, 'film.html'), 'utf8'), '<!doctype html><title>one</title>');
   assert.equal(readFileSync(join(to, 'assets', 'a.txt'), 'utf8'), 'a');
+  assert.equal(
+    readFileSync(join(to, 'assets', 'captions.vtt'), 'utf8'),
+    'WEBVTT\n\n00:00.000 --> 00:01.000\nHello\n',
+    'the raw file keeps its bytes over https too',
+  );
   assert.deepEqual(readdirSync(lib), ['one'], 'nothing else left behind');
   assert.deepEqual([...new Set(seen.map((p) => p.phase))], ['lookup', 'download', 'copy']);
   const downloads = seen.filter((p) => p.phase === 'download');
-  const total = statSync(join(to, 'film.html')).size + 1;
+  const total = statSync(join(to, 'film.html')).size + statSync(join(to, 'assets', 'a.txt')).size + statSync(join(to, 'assets', 'captions.vtt')).size;
   assert.ok(downloads.every((p) => p.total === total), 'the total from the start');
   const percents = downloads.map((p) => p.percent);
   assert.deepEqual(percents, [...percents].sort((a, b) => a - b));

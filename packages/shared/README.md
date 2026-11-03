@@ -1,11 +1,11 @@
-# @tryworld/set-shared
+# setpiece-shared
 
-What TryWorld Set's clients share: a chat turn and the events a client sees, how an agent's activity reads, prompt
+What Setpiece's clients share: a chat turn and the events a client sees, how an agent's activity reads, prompt
 references, title limits and Markdown parsing.
 
 ```ts
-import { buildPromptDisplay, type Turn } from '@tryworld/set-shared';
-import { scanMarkdownBlocks } from '@tryworld/set-shared/markdown';
+import { buildPromptDisplay, type Turn } from 'setpiece-shared';
+import { scanMarkdownBlocks } from 'setpiece-shared/markdown';
 ```
 
-Part of [TryWorld Set](https://github.com/TryWorld2026/tryworld-set). MIT licensed.
+Part of [Setpiece](https://github.com/TryWorld2026/setpiece). MIT licensed.

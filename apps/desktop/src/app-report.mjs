@@ -1,5 +1,5 @@
 /**
- * The app's part of the diagnostic report Studio's Settings → Developer copies (the rest is `openfilm doctor` and the
+ * The app's part of the diagnostic report Studio's Settings → Developer copies (the rest is `setpiece doctor` and the
  * page's browser): the app, where its PATH came from, and each of the person's own agents as the roster has it, with
  * its program and the version that program says. Paths in the home folder read ~; no account, key or token.
  *
@@ -43,7 +43,7 @@ export function appReport({ version, flavor, packaged, channel = null, electron,
   const own = agents.filter((a) => a.id !== 'byok');
   const byok = agents.find((a) => a.id === 'byok');
   return [
-    'TryWorld Set desktop app',
+    'Setpiece desktop app',
     '',
     `  App            ${version} (${flavor}${packaged ? '' : ', from source'}${channel ? `, ${channel} updates` : ''}; Electron ${electron})`,
     `  PATH from      ${pathSource ?? 'not read yet'}`,

@@ -20,6 +20,7 @@ import { basename, isAbsolute, join } from 'node:path';
 import { exportsDefault, studioHomeDir } from '../../src/locations.mjs';
 import { KEEP_DAYS, problemsFile, recentProblems, redact } from '../../src/problems.mjs';
 import { zipFiles } from './zip.mjs';
+import { envValue } from '../../src/env.mjs';
 
 /** The most of a log that goes in: its end. */
 const LOG_TAIL = 1 << 20;
@@ -103,17 +104,17 @@ export async function codexLogAround(dir, times) {
   }
 }
 
-/** A name for the file, by the time: `TryWorld Set diagnostics 2026-10-18 1013.zip`. @param {Date} now */
+/** A name for the file, by the time: `Setpiece diagnostics 2026-10-18 1013.zip`. @param {Date} now */
 export function diagnosticsName(now) {
   const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
-  return `TryWorld Set diagnostics ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}${pad(now.getMinutes())}.zip`;
+  return `Setpiece diagnostics ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}${pad(now.getMinutes())}.zip`;
 }
 
 /**
  * Write the diagnostic file; → where it is.
  * @param {{ report: string, conversations?: boolean, folder?: string, home?: string, appLogs?: string | null, now?: Date }} options
  */
-export async function exportDiagnostics({ report, conversations = false, folder = exportsDefault(), home = studioHomeDir(), appLogs = process.env.OPENFILM_APP_LOGS ?? null, now = new Date() }) {
+export async function exportDiagnostics({ report, conversations = false, folder = exportsDefault(), home = studioHomeDir(), appLogs = envValue('APP_LOGS') ?? null, now = new Date() }) {
   /** @type {{ name: string, data: Buffer }[]} */
   const entries = [];
   const add = (/** @type {string} */ name, /** @type {string} */ text) => entries.push({ name, data: Buffer.from(text) });

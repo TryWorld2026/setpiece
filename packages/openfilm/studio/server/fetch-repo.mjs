@@ -18,11 +18,12 @@ import { FILM_FILE } from '../../src/film-doc.mjs';
 import { SKILL_FILE, holdsSkills } from '../../src/skills.mjs';
 import { FetchError } from './fetch-error.mjs';
 import { downloadFiles, listFiles, resolveCommit } from './fetch-github.mjs';
+import { envValue } from '../../src/env.mjs';
 
 export { FetchError };
 
-/** Biggest fetch, unless OPENFILM_FETCH_MAX_MB says otherwise. */
-export const MAX_BYTES = (Number(process.env.OPENFILM_FETCH_MAX_MB) || 500) * 1024 * 1024;
+/** Biggest fetch, unless SETPIECE_FETCH_MAX_MB (OPENFILM_FETCH_MAX_MB) says otherwise. */
+export const MAX_BYTES = (Number(envValue('FETCH_MAX_MB')) || 500) * 1024 * 1024;
 /** Longest wait for anything to come: a fetch that gets nothing for this long is stopped. */
 export const TIMEOUT_MS = 2 * 60 * 1000;
 
@@ -202,10 +203,10 @@ export async function cloneInto({ cloneUrl, ref, folder, dir, signal, onLine }) 
   if (ref != null && (!/^[^\u0000- ~^:?*[\\]+$/.test(ref) || ref.startsWith('-') || ref.includes('..'))) throw new FetchError('That branch’s name cannot be fetched.', 400, 'ref');
   const branch = ref ? [`--branch=${ref}`] : [];
   if (!folder.length) {
-    await git(['clone', '--depth=1', '--single-branch', '--no-tags', '--progress', ...branch, '--', cloneUrl, dir], { signal, onLine });
+    await git(['clone', '-c', 'core.autocrlf=false', '-c', 'core.eol=lf', '--depth=1', '--single-branch', '--no-tags', '--progress', ...branch, '--', cloneUrl, dir], { signal, onLine });
     return;
   }
-  await git(['clone', '--depth=1', '--single-branch', '--no-tags', '--filter=blob:none', '--no-checkout', ...branch, '--', cloneUrl, dir], { signal });
+  await git(['clone', '-c', 'core.autocrlf=false', '-c', 'core.eol=lf', '--depth=1', '--single-branch', '--no-tags', '--filter=blob:none', '--no-checkout', ...branch, '--', cloneUrl, dir], { signal });
   /* the folder's files, asked for by name: read-tree would fetch them too, but says nothing about how far it got */
   const listed = await git(['ls-tree', '-r', '-z', 'HEAD', '--', folder.join('/')], { cwd: dir, signal });
   const blobs = listed.split('\0').map((entry) => /^\d+ blob ([0-9a-f]+)\t/.exec(entry)?.[1]).filter(Boolean);
@@ -254,7 +255,7 @@ export async function fetchFilm(source, { library, onProgress = () => {}, signal
   const notThere = (/** @type {string[]} */ folder) => {
     const place = folder.length ? `“${folder.join('/')}”` : 'that repository';
     return skill ? new FetchError(`There is no ${SKILL_FILE} in ${place}: it is not a skill.`, 422, 'no-skill')
-      : new FetchError(`There is no film.html in ${place}: it is not a TryWorld Set film.`, 422, 'no-film');
+      : new FetchError(`There is no film.html in ${place}: it is not a Setpiece film.`, 422, 'no-film');
   };
   const tooBig = () => new FetchError(`It is bigger than ${Math.max(1, Math.round(maxBytes / 1024 / 1024))} MB, so it was stopped.`, 413, 'too-big');
   /** @type {FetchProgress} */

@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TryWorld Set Studio</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20role%3D%22img%22%20aria-label%3D%22TryWorld%20Set%22%3E%3Ctitle%3ETryWorld%20Set%3C%2Ftitle%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2324564E%22%2F%3E%3Cpath%20d%3D%22M10%2024V16Q10%2010%2016%2010H24M40%2010H48Q54%2010%2054%2016V24M54%2040V48Q54%2054%2048%2054H40M24%2054H16Q10%2054%2010%2048V40%22%20stroke%3D%22%23F2EEE6%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M27%2023L42%2032L27%2041Z%22%20fill%3D%22%23F2693C%22%2F%3E%3C%2Fsvg%3E">
+    <title>Setpiece · 造境</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20role%3D%22img%22%20aria-label%3D%22Setpiece%22%3E%3Ctitle%3ESetpiece%3C%2Ftitle%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23F6F4EF%22%2F%3E%3Cpath%20d%3D%22M13%2010H51Q56%2010%2056%2015V49Q56%2054%2051%2054H13Q8%2054%208%2049V15Q8%2010%2013%2010Z%22%20stroke%3D%22%23242629%22%20stroke-width%3D%224.5%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%224.5%22%20fill%3D%22%236F879C%22%2F%3E%3C%2Fsvg%3E">
 <script>
-  /* the theme before the first paint, so the wrong one never flashes: dark unless the person chose another */
+  /* the theme before the first paint: system unless the person chose one. Setpiece keys win, older OpenFilm keys
+     are read as a fallback so an existing person's appearance is never lost. */
   (function () {
-    var t = 'dark';
-    try { t = localStorage.getItem('openfilm.theme') || 'dark'; } catch (e) {}
+    var t = 'system';
+    try { t = localStorage.getItem('setpiece.theme') || localStorage.getItem('openfilm.theme') || 'system'; } catch (e) {}
     if (t === 'system') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = t === 'dark' ? 'dark' : 'light';
   })();

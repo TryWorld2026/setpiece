@@ -7,12 +7,12 @@ const count = (text, part) => text.split(part).length - 1;
 test("the app's own agent's prompt says each thing once and never tells it to go and print the manual it carries", () => {
   const prompt = ownAgentPrompt();
   assert.equal(count(prompt, '<manual>'), 1);
-  assert.ok(!prompt.includes('npx @tryworld/set'), 'the command on its PATH, as the manual reads for it');
+  assert.ok(!prompt.includes('npx setpiece'), 'the command on its PATH, as the manual reads for it');
   assert.ok(!prompt.includes(INSTRUCTIONS), 'not the words for another agent');
-  assert.ok(!/run\s+`twset`\s+with no arguments/.test(prompt), 'no telling it to print the manual it already has');
+  assert.ok(!/run\s+`setpiece`\s+with no arguments/.test(prompt), 'no telling it to print the manual it already has');
   assert.equal(count(prompt, STUDIO_REFERENCES), 1, 'how Studio is pointed at, once');
   assert.equal(count(prompt, 'Reply in the language'), 1);
-  assert.match(prompt, /Never run `twset open`/, 'Studio is open beside it, whatever the manual says of `open`');
+  assert.match(prompt, /Never run `setpiece open`/, 'Studio is open beside it, whatever the manual says of `open`');
 });
 
 test('every agent is told how to point at Studio', () => {

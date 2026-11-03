@@ -1,14 +1,14 @@
 /**
  * Runs Studio for the window (src/studio-process.mjs, in a utility process) and keeps it running.
  *
- * One Studio per machine: when `openfilm open` already started one, it is asked to stop (`POST /api/quit`, after it
+ * One Studio per machine: when `setpiece open` already started one, it is asked to stop (`POST /api/quit`, after it
  * has written its history) and the app's takes its place, on the same port, so the address agents and bookmarks
  * know keeps working. When the port is held by something else, Studio takes any free one.
  *
  * Asked to stop only once nothing is being exported or made (`whenIdle`): either cut off is lost. While one runs, that
  * Studio says no; the window does not wait for it (an export can take many minutes) but starts its own on another
  * port, and the other one is asked again every few seconds until it has stopped. Its pages lose their Studio then;
- * the window, agents' `openfilm` commands and run.json are the app's from the start.
+ * the window, agents' `setpiece` commands and run.json are the app's from the start.
  */
 import { utilityProcess } from 'electron';
 import { readFileSync } from 'node:fs';
@@ -20,7 +20,7 @@ const QUIT_WAIT_MS = 10_000;
 const START_WAIT_MS = 30_000;
 const EXPORT_RETRY_MS = 5_000;
 
-/** The Studio `openfilm open` started, if it answers. */
+/** The Studio `setpiece open` started, if it answers. */
 async function advertised(home) {
   let run;
   try { run = JSON.parse(readFileSync(join(home, 'run.json'), 'utf8')); } catch { return null; }
@@ -66,8 +66,8 @@ async function takeOver(home, log) {
 function fork({ port, env, onOpen, onBrowser, log }) {
   return new Promise((resolve, reject) => {
     const child = utilityProcess.fork(ENTRY, [], {
-      serviceName: 'TryWorld Set Studio',
-      env: { ...env, OPENFILM_STUDIO_PORT: String(port) },
+      serviceName: 'Setpiece Studio',
+      env: { ...env, SETPIECE_STUDIO_PORT: String(port) },
       stdio: 'pipe',
     });
     child.stdout?.on('data', (d) => log(String(d)));

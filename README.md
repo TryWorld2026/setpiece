@@ -1,47 +1,75 @@
-# TryWorld Set
+# Setpiece / 造境
 
-> Turn ideas into worlds.
+> Bring ideas to the set.
+>
+> 把想法，造成现场。
 
-**TryWorld Set · by 试界 (TryWorld)**
+**Setpiece · 造境** is an AI film workspace: an Apple-inspired desktop editor and command line for making
+editable, exportable films as web pages. It keeps the complete OpenFilm editing, timeline, media, agent and export
+toolchain, with a new identity and interface.
 
-An AI video set / AI video agent. Turn ideas into editable, exportable films.
-
-**Download:** https://set.tryworld.com.cn/
-
-[Chinese](README.zh-CN.md)
+[简体中文](README.zh-CN.md)
 
 ## Status
 
-Pre-alpha. The OpenFilm code is imported with upstream history preserved; the rebrand, desktop / Studio builds, and Windows verification are complete.
+`0.3.0` is an active private-alpha build. The source is an independent commercial derivative of OpenFilm, with the
+upstream Git history preserved.
 
 ## Product
 
-- Parent brand: 试界 TryWorld
-- Product name: 试界片场 (TryWorld Set)
-- Category: AI video set / AI video agent
-- CLI: `twset`
-- Package: `@tryworld/set`
-- Domain: `set.tryworld.com.cn`
+- Product: Setpiece / 造境
+- Category: AI Film Workspace / AI 片场
+- Desktop app: `setpiece-desktop`
+- CLI and npm package: `setpiece`
+- Shared package: `setpiece-shared`
+- Repository: https://github.com/TryWorld2026/setpiece
+- Version: `0.3.0`
+
+The `twset` and `openfilm` command names remain hidden compatibility aliases. The previous `@tryworld/set` npm
+package is superseded by `setpiece`.
+
+## Run from source
+
+Requires Node.js `>=22.18` and pnpm.
+
+```sh
+pnpm install
+pnpm dev
+```
+
+The desktop app:
+
+```sh
+pnpm dev:desktop
+```
+
+The CLI:
+
+```sh
+pnpm setpiece --help
+```
+
+## Verification
+
+```sh
+pnpm typecheck
+pnpm build
+pnpm test
+```
 
 ## Open-source attribution
 
-TryWorld Set is an independent derivative of OpenFilm. OpenFilm's code is MIT-licensed, and the original copyright belongs to the OpenFilm contributors. We preserve the upstream copyright notices and license. The OpenFilm name and logo are not used as the TryWorld Set product brand.
+Setpiece is an independent derivative of [OpenFilm](https://github.com/openfilm/openfilm). OpenFilm's code is
+MIT-licensed, and its copyright belongs to the OpenFilm contributors. We preserve the upstream copyright notices,
+license and Git history.
 
-TryWorld Set is not affiliated with or endorsed by the OpenFilm project.
+Setpiece uses its own product name, logo and interface. It is not the OpenFilm project, is not affiliated with it, and
+is not endorsed by it.
 
-See [NOTICE.md](NOTICE.md), [LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt), and the upstream reference docs: [English](README.upstream.md) / [简体中文](README.upstream.zh-CN.md).
+See [NOTICE.md](NOTICE.md), [LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt), and the upstream reference docs:
+[English](README.upstream.md) / [简体中文](README.upstream.zh-CN.md).
 
-## Roadmap
+## License
 
-- [x] Import OpenFilm at the audited base commit
-- [x] Rebrand CLI, Studio, desktop app, package names
-- [x] Preserve upstream license and generate third-party notices
-- [x] Build and verify on Windows
-- [ ] Private alpha
-
-## Links
-
-- Download: https://set.tryworld.com.cn/
-- GitHub Release: https://github.com/TryWorld2026/tryworld-set/releases/tag/v0.2.8
-- TryWorld: https://tryworld.com.cn
-- OpenFilm upstream: https://github.com/openfilm/openfilm
+The repository is distributed under the MIT License. See [LICENSE](LICENSE). Upstream OpenFilm notices remain in
+[LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.txt).

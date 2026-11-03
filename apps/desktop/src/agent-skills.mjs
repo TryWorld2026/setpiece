@@ -37,7 +37,7 @@ import { pathToFileURL } from 'node:url';
 
 const require = createRequire(import.meta.url);
 /* by its file URL: import() takes no Windows path (`D:\…`) */
-const skillsLib = () => import(pathToFileURL(require.resolve('@tryworld/set/skills')).href);
+const skillsLib = () => import(pathToFileURL(require.resolve('setpiece/skills')).href);
 
 /** The agents whose own skills can be hidden in OpenFilm (byok: the app's own agent, Pi). */
 export const FILTERED_AGENTS = Object.freeze(['claude', 'codex', 'opencode', 'qwen', 'byok']);
@@ -97,11 +97,12 @@ async function skillFolders(dir, { except = [] } = {}) {
 }
 
 /**
- * TryWorld Set's own skill for agents in a terminal (the repository's skills/twset: "run `npx @tryworld/set`, read
+ * Setpiece's own skill for agents in a terminal (the repository's skills/setpiece: "run `npx setpiece`, read
  * the manual"), installed in an agent: in the app it is never wanted, as the app tells the agent the same, and its
  * `npx` would contradict it. Never shown, never let in. A skill an earlier OpenFilm install left behind is known too.
  */
-export const isOurs = (skill) => (skill.name === 'twset' && /\bTryWorld Set\b/.test(skill.description ?? ''))
+export const isOurs = (skill) => (skill.name === 'setpiece' && /\bSetpiece\b/.test(skill.description ?? ''))
+  || (skill.name === 'twset' && /\b(?:TryWorld Set|Setpiece)\b/.test(skill.description ?? ''))
   || (skill.name === 'openfilm' && /\bOpenFilm\b/.test(skill.description ?? ''));
 /** the folder and each above it, to the root */
 const upFrom = (cwd) => { const out = []; for (let up = resolve(cwd); ; up = dirname(up)) { out.push(up); if (up === dirname(up)) break; } return out; };
@@ -235,7 +236,7 @@ function linkFolder(base, skills) {
   mkdirSync(join(dir, '.claude-plugin'), { recursive: true });
   mkdirSync(join(dir, 'skills'));
   mkdirSync(join(dir, '.agents'));
-  writeFileSync(join(dir, '.claude-plugin', 'plugin.json'), `${JSON.stringify({ name: 'twset', description: 'TryWorld Set skills', version: '1.0.0' }, null, 2)}\n`);
+  writeFileSync(join(dir, '.claude-plugin', 'plugin.json'), `${JSON.stringify({ name: 'setpiece', description: 'Setpiece skills', version: '1.0.0' }, null, 2)}\n`);
   for (const skill of skills) {
     if (!/^[\w.-]+$/.test(skill.name)) continue;
     try { symlinkSync(skill.folder, join(dir, 'skills', skill.name), link); } catch { /* one that cannot be linked is left out */ }

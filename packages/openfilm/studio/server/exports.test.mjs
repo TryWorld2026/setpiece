@@ -703,15 +703,15 @@ test('Final Cut Pro keeps source audio rows when an effect overlaps adjacent nar
   ]);
   assert.deepEqual(timeline.audio.map((t) => t.sourceTrack), [1, 2, 3]);
   const xml = fcpxmlDocument(timeline);
-  assert.match(xml, /name="story-01-1" lane="-1"[^>]*role="TryWorld Set A1"/);
-  assert.match(xml, /name="story-01-2" lane="-1"[^>]*role="TryWorld Set A1"/);
-  assert.match(xml, /name="game-sfx-1" lane="-2"[^>]*role="TryWorld Set A2"/);
-  assert.match(xml, /name="adventure-music" lane="-3"[^>]*role="TryWorld Set A3"/);
+  assert.match(xml, /name="story-01-1" lane="-1"[^>]*role="Setpiece A1"/);
+  assert.match(xml, /name="story-01-2" lane="-1"[^>]*role="Setpiece A1"/);
+  assert.match(xml, /name="game-sfx-1" lane="-2"[^>]*role="Setpiece A2"/);
+  assert.match(xml, /name="adventure-music" lane="-3"[^>]*role="Setpiece A3"/);
   assert.notDeepEqual(planNleTimeline(film, opts).audio.map((t) => t.clips.map((c) => c.name)), timeline.audio.map((t) => t.clips.map((c) => c.name)), 'other editors keep their existing role grouping');
   const overlapping = planNleTimeline({ ...film, sounds: [...film.sounds, sound('overlapping-voice', 1, 1, 2)] }, { ...opts, audioTracks: 'source' });
   assert.equal(overlapping.audio.length, 4, 'only an overlap within a source row needs another lane');
   assert.deepEqual(overlapping.audio.map((t) => t.sourceTrack), [1, 1, 2, 3]);
-  assert.match(fcpxmlDocument(overlapping), /name="overlapping-voice"[^>]*role="TryWorld Set A1"/);
+  assert.match(fcpxmlDocument(overlapping), /name="overlapping-voice"[^>]*role="Setpiece A1"/);
   const reversed = planNleTimeline({ ...film, sounds: [...film.sounds].reverse() }, { ...opts, audioTracks: 'source' });
   assert.deepEqual(reversed.audio.map((t) => t.clips.map((c) => c.name)), timeline.audio.map((t) => t.clips.map((c) => c.name)));
   const { track, ...untracked } = film.sounds[0];
@@ -818,7 +818,7 @@ test('Final Cut Pro exports Studio row names for empty tracks, overlaps and foot
     sounds: evaluated.filter((clip) => clip.track.kind === 'audio').map((clip) => ({ ...clip, kind: 'voice' })),
   });
   assert.deepEqual(studio.map((row) => row.badge), ['V2', 'V1', 'A1', 'A2', 'A3']);
-  const expected = Object.fromEntries(studio.flatMap((row) => row.blocks.map((clip) => [clip.clipId, `TryWorld Set ${row.badge}`])));
+  const expected = Object.fromEntries(studio.flatMap((row) => row.blocks.map((clip) => [clip.clipId, `Setpiece ${row.badge}`])));
   const done = await exported({ kind: 'nle', format: 'fcpxml', fps: 25, audio: 'clips', subtitles: false }, 'Source rows', folder);
   const [{ error, found }] = await parseXml([readFileSync(done.out, 'utf8')], (doc) =>
     Object.fromEntries([...doc.querySelectorAll('audio')].map((audio) => [audio.getAttribute('name'), audio.getAttribute('role')])));
@@ -896,9 +896,9 @@ test('Final Cut Pro connections retain their parent and sequence positions acros
     assert.equal(parents['overlay-a'], 'first');
     assert.equal(parents['overlay-b'], 'second');
     assert.equal(parents.voice, 'second');
-    assert.equal(parents['across-gap'], 'TryWorld Set');
+    assert.equal(parents['across-gap'], 'Setpiece');
     assert.equal(parents[caption.name], 'second');
-    assert.equal(parents[gapCaption.name], 'TryWorld Set');
+    assert.equal(parents[gapCaption.name], 'Setpiece');
   }
 });
 
@@ -925,9 +925,9 @@ test('Final Cut Pro export packages FCPXML, rendered pages, audio and optional s
     assert.equal(found.clips.filter((c) => c.kind === 'video').length, 2);
     assert.ok(found.clips.some((c) => c.kind === 'audio' && c.lane < 0));
     if (audio === 'clips') {
-      assert.equal(found.clips.find((c) => c.name === 'tone')?.role, 'TryWorld Set A1');
-      assert.equal(found.clips.find((c) => c.name === 'click')?.role, 'TryWorld Set A2');
-      assert.equal(found.clips.find((c) => c.name === 'bed')?.role, 'TryWorld Set A3');
+      assert.equal(found.clips.find((c) => c.name === 'tone')?.role, 'Setpiece A1');
+      assert.equal(found.clips.find((c) => c.name === 'click')?.role, 'Setpiece A2');
+      assert.equal(found.clips.find((c) => c.name === 'bed')?.role, 'Setpiece A3');
     } else {
       assert.equal(found.clips.find((c) => c.name === 'Voice stem')?.role, 'dialogue.Voice');
       assert.equal(found.clips.find((c) => c.name === 'SFX stem')?.role, 'effects');

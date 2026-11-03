@@ -1,24 +1,25 @@
 #!/usr/bin/env node
 import { setPriority } from 'node:os';
 import { parseArgs } from 'node:util';
+import { envFlag } from '../src/env.mjs';
 
-const USAGE = `twset — a film is a function of time: given t, it draws that moment
+const USAGE = `setpiece — a film is a function of time: given t, it draws that moment
 
-  twset open    [folder | url]      start or open a project; Studio shows it to the person
-  twset look    [what] [t | a-b]    check the film and draw it: a contact sheet with its sound and loudness
-  twset render  [a-b]               the MP4, saved beside film.html
-  twset get     [what] [--options]  voice-over, music, sound effects, transcripts, images, video, from a connected service
-  twset skills                      the skills this film can be made with; \`twset skill <name>\` prints one
-  twset update                      the newest TryWorld Set; Studio starts again on it
-  twset doctor                      what this computer has for TryWorld Set, to paste into an issue
+  setpiece open    [folder | url]      start or open a project; Studio shows it to the person
+  setpiece look    [what] [t | a-b]    check the film and draw it: a contact sheet with its sound and loudness
+  setpiece render  [a-b]               the MP4, saved beside film.html
+  setpiece get     [what] [--options]  voice-over, music, sound effects, transcripts, images, video, from a connected service
+  setpiece skills                      the skills this film can be made with; \`setpiece skill <name>\` prints one
+  setpiece update                      the newest Setpiece; Studio starts again on it
+  setpiece doctor                      what this computer has for Setpiece, to paste into an issue
 
-  Run with no arguments for the manual; \`twset <command> --help\` for one command's options; --version for the version.
+  Run with no arguments for the manual; \`setpiece <command> --help\` for one command's options; --version for the version.
   look, render and get work on the project around the current folder.
   Exit status: 0 done, 1 the film or the command failed (the output says why), 2 not a project or a wrong command.`;
 
 /* one command's help: what it does, what it takes, where its output goes */
 const COMMAND_HELP = {
-  open: `twset open [folder | url]
+  open: `setpiece open [folder | url]
 
   folder   a new film: a folder named after it (made if missing); or an existing project
            A folder that is not a project yet gets an empty film.html, 1920 × 1080 (its viewport <meta>) with no
@@ -29,37 +30,37 @@ const COMMAND_HELP = {
   without  the project around the current folder, else the one opened last, else Studio's projects (where the
            person can start one). The current folder is never made a project: name it (.) for that.
 
-  Starts TryWorld Set Studio if it is not running and prints its address. A Studio page already open, in any browser,
+  Starts Setpiece Studio if it is not running and prints its address. A Studio page already open, in any browser,
   switches to the project, and nothing more opens; otherwise open the address in your built-in browser, and if no
-  page connects within 15 s, Studio opens the person's browser (OPENFILM_NO_BROWSER=1: never).`,
-  skills: `twset skills
+  page connects within 15 s, Studio opens the person's browser (SETPIECE_NO_BROWSER=1: never).`,
+  skills: `setpiece skills
 
   The skills the project around the current folder can be made with: ways of making a kind of film, each a folder with
   a SKILL.md (its name, what it is for, how to work) and the files it brings. Looked for in the project's skills/,
   then yours (Skills/ beside the projects), then the official ones; the first
   holding a name wins.`,
-  skill: `twset skill <name>
-twset skill add <GitHub address | folder>
-twset skill remove <name>
+  skill: `setpiece skill <name>
+setpiece skill add <GitHub address | folder>
+setpiece skill remove <name>
 
   <name>   print the skill: where its files are, and its SKILL.md whole
   add      add a skill (or a folder of skills) to yours: a folder on this computer, or a repository or a folder in one
            on github.com or gitlab.com, fetched without its git history. One of the same name goes to the trash.
   remove   move one of yours to the trash, where you can take it back
 
-  Yours are kept in Skills/ beside the projects (OPENFILM_SKILLS names another).`,
-  update: `twset update
+  Yours are kept in Skills/ beside the projects (SETPIECE_SKILLS names another).`,
+  update: `setpiece update
 
-  The newest TryWorld Set from npm, and Studio started again on it once nothing is being exported or made; pages open on
+  The newest Setpiece from npm, and Studio started again on it once nothing is being exported or made; pages open on
   it come back on the new version. The desktop app's Studio updates with the app, a source checkout with git pull:
   each is said instead.`,
-  doctor: `twset doctor
+  doctor: `setpiece doctor
 
-  Checks what TryWorld Set needs here and prints a report to paste into an issue: TryWorld Set's and Node's versions, the
+  Checks what Setpiece needs here and prints a report to paste into an issue: Setpiece's and Node's versions, the
   system, which agent ran the command, Studio, ffmpeg, the browser films are drawn in and its graphics, the data and
   projects folders, npm, and the last errors in Studio's log. Paths under your home folder read ~; no keys, accounts
   or projects are in it. Exit status 1 when something needs fixing; the report says what.`,
-  look: `twset look [what] [t | a-b]
+  look: `setpiece look [what] [t | a-b]
 
   what   the project (default), a web page (.html), or a media file (video, image, sound)
   t      one frame at full size, e.g. 4.5
@@ -71,7 +72,7 @@ twset skill remove <name>
   opened in Studio first, so the person watches it.
 
   --count <n>     frames in a sheet (12)`,
-  render: `twset render [a-b]
+  render: `setpiece render [a-b]
 
   Render the project around the current folder to video.
   The whole film goes to <project>/<folder name>.mp4, beside film.html; a range (a-b) goes to .film/cache/render/.
@@ -85,25 +86,25 @@ twset skill remove <name>
   --subtitles     burn the project's subtitles in, in their own style`,
 };
 
-/* `twset` alone: the manual, the whole of what an agent needs to know. `get` takes any options its verb has,
+/* `setpiece` alone: the manual, the whole of what an agent needs to know. `get` takes any options its verb has,
    so it goes to Studio (studio/client.mjs) before the fixed options below are parsed. */
 const RAW = process.argv.slice(2);
-/* the command as the agent can type it here: the one that ran it when it says so (TWSET_RUN, or the older
-   OPENFILM_RUN: the development checkout's .dev/bin/twset), through npx always the newest (npx keeps the first one it
-   fetched for a bare name), else `twset` where it is installed */
-const RUN = process.env.TWSET_RUN || process.env.OPENFILM_RUN || (process.env.npm_command === 'exec' ? 'npx -y @tryworld/set@latest' : 'twset');
+/* the command as the agent can type it here: SETPIECE_RUN, or the older TWSET_RUN / OPENFILM_RUN; through npx always
+   the newest (npx keeps the first one it fetched for a bare name), else `setpiece` where it is installed */
+const RUN = process.env.SETPIECE_RUN || process.env.TWSET_RUN || process.env.OPENFILM_RUN
+  || (process.env.npm_command === 'exec' ? 'npx -y setpiece@latest' : 'setpiece');
 /**
- * A newer TryWorld Set, said once in a line before what the command prints: looked up on npm (at most daily, briefly) when
+ * A newer Setpiece, said once in a line before what the command prints: looked up on npm (at most daily, briefly) when
  * a session starts (the manual, open), else only as learnt before, so look, render and get never wait for it.
  */
 const updateNotice = async (network) => {
   const latest = await (await import('../studio/client.mjs')).newerOpenfilm({ network }).catch(() => null);
-  if (latest) console.error(`twset ${latest} is out (this is an older one): \`${RUN} update\` updates it, and Studio with it.`);
+  if (latest) console.error(`setpiece ${latest} is out (this is an older one): \`${RUN} update\` updates it, and Studio with it.`);
 };
 if (RAW.length === 0) {
   const { readFileSync } = await import('node:fs');
   await updateNotice(true);
-  console.log(readFileSync(new URL('../MANUAL.md', import.meta.url), 'utf8').replaceAll('npx @tryworld/set', RUN));
+  console.log(readFileSync(new URL('../MANUAL.md', import.meta.url), 'utf8').replaceAll('npx setpiece', RUN));
   process.exit(0);
 }
 if (RAW.length === 1 && (RAW[0] === '--version' || RAW[0] === '-v')) {
@@ -132,8 +133,8 @@ if (RAW[0] === 'get') {
      aborts Node 24.17 on Windows (`Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)`, exit status 127) */
   process.exitCode = result.code;
 } else {
-  /* the help speaks the name this was run as: `twset` or `npx -y @tryworld/set@latest` */
-  const named = (text) => text.replace(/^( {2})?twset(?= )/gm, `$1${RUN}`).replace('`twset <command>', `\`${RUN} <command>`);
+  /* the help speaks the name this was run as: `setpiece` or `npx -y setpiece@latest` */
+  const named = (text) => text.replace(/^( {2})?setpiece(?= )/gm, `$1${RUN}`).replace('`setpiece <command>', `\`${RUN} <command>`);
   let parsed;
   try {
     parsed = parseArgs({
@@ -202,9 +203,10 @@ if (RAW[0] === 'get') {
     const { openInStudio } = await import('../studio/client.mjs');
     const { existsSync, mkdirSync, statSync, writeFileSync } = await import('node:fs');
     const { dirname, join, resolve } = await import('node:path');
-    const fallback = process.env.OPENFILM_NO_BROWSER ? 0 : 15;
+    const noBrowser = envFlag('NO_BROWSER');
+    const fallback = noBrowser ? 0 : 15;
     /* a person at a terminal has no browser of an agent's: theirs opens at once */
-    const now = !process.env.OPENFILM_NO_BROWSER && Boolean(process.stdout.isTTY && process.stdin.isTTY);
+    const now = !noBrowser && Boolean(process.stdout.isTTY && process.stdin.isTTY);
     /* a checkout whose editor was never built (npm install builds it): Studio would show only that it is missing */
     if (!existsSync(new URL('../studio/ui/dist/index.html', import.meta.url))) {
       console.error('Studio\'s editor is not built in this checkout: run `npm run build:ui` (npm install does it).');
@@ -237,7 +239,7 @@ if (RAW[0] === 'get') {
     } catch (e) { return { ok: false, lines: [`${RUN} open: ${e.message}`] }; }
   }
   /**
-   * `twset open <url>`: the repository or folder fetched into the projects library (studio/server/fetch-repo.mjs),
+   * `setpiece open <url>`: the repository or folder fetched into the projects library (studio/server/fetch-repo.mjs),
    * its progress on stderr.
    * @param {string} url
    */

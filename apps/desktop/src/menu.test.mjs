@@ -10,7 +10,7 @@ function fixture(platform, packaged = true, updates = null) {
   let opened = 0;
   const noop = () => {};
   const menu = applicationMenuTemplate({
-    productName: 'OpenFilm', packaged, toggleChat: noop, openProject: noop,
+    productName: 'Setpiece', packaged, toggleChat: noop, openProject: noop,
     reload: noop, devTools: noop, openSettings: () => { opened++; },
     tabs: { open: noop, close: noop, reopen: noop, step: noop, pick: noop },
     updates,
@@ -21,7 +21,7 @@ for (const platform of ['darwin', 'win32', 'linux']) {
   for (const packaged of [true, false]) {
     test(`Settings is discoverable and has its native accelerator on ${platform}, packaged=${packaged}`, () => {
       const f = fixture(platform, packaged);
-      const parent = f.menu.find((item) => item.label === (platform === 'darwin' ? 'OpenFilm' : 'File'));
+      const parent = f.menu.find((item) => item.label === (platform === 'darwin' ? 'Setpiece' : 'File'));
       const settings = parent.submenu.find((item) => item.label === 'Settings…');
       assert.equal(settings.accelerator, 'CmdOrCtrl+,');
       assert.notEqual(settings.enabled, false);
@@ -35,7 +35,7 @@ for (const platform of ['darwin', 'win32', 'linux']) {
 for (const updates of [null, { check: async () => {}, beta: false, setBeta: () => {} }]) {
   test(`macOS puts updates before Settings and Services after it, updates=${!!updates}`, () => {
     const { menu } = fixture('darwin', true, updates);
-    const items = menu.find((item) => item.label === 'OpenFilm').submenu;
+    const items = menu.find((item) => item.label === 'Setpiece').submenu;
     const settings = items.findIndex((item) => item.label === 'Settings…');
     const services = items.findIndex((item) => item.role === 'services');
     assert.equal(items[0].role, 'about');
@@ -55,7 +55,7 @@ for (const updates of [null, { check: async () => {}, beta: false, setBeta: () =
 
 const noop = () => {};
 const build = (language, platform, { packaged = false, updates = true } = {}) => applicationMenuTemplate({
-  productName: 'TryWorld Set', packaged, language, toggleChat: noop, openProject: noop, reload: noop, devTools: noop, openSettings: noop,
+  productName: language === 'zh-CN' ? '造境' : 'Setpiece', packaged, language, toggleChat: noop, openProject: noop, reload: noop, devTools: noop, openSettings: noop,
   tabs: { open: noop, close: noop, reopen: noop, step: noop, pick: noop },
   updates: updates ? { check: async () => {}, beta: false, setBeta: noop } : null,
 }, platform);
@@ -73,9 +73,9 @@ test('the menu speaks the page\'s language, else the system\'s as Studio picks i
   assert.equal(appLanguage(null, ['de-DE']), 'en');
   assert.equal(appLanguage(null), 'en');
   const [app, file] = build('zh-CN', 'darwin');
-  assert.equal(app.label, 'TryWorld Set');
+  assert.equal(app.label, '造境');
   assert.equal(file.label, '文件');
-  assert.deepEqual(shown(app.submenu).map((item) => item.label), ['关于 TryWorld Set', '检查更新…', 'Beta 版更新', '设置…', '服务', '隐藏 TryWorld Set', '隐藏其他', '全部显示', '退出 TryWorld Set']);
+  assert.deepEqual(shown(app.submenu).map((item) => item.label), ['关于 造境', '检查更新…', 'Beta 版更新', '设置…', '服务', '隐藏 造境', '隐藏其他', '全部显示', '退出 造境']);
   assert.equal(build('xx', 'darwin')[1].label, 'File');
 });
 
@@ -87,10 +87,11 @@ test('every language names every item, Electron\'s role items too, on macOS and 
     const words = MENU_WORDS[language];
     assert.deepEqual(Object.keys(words).sort(), keys, language);
     for (const key of keys) assert.ok(words[key].trim(), `${language} ${key}`);
-    const named = new Map(Object.entries(words).map(([key, text]) => [text.replaceAll('{name}', 'TryWorld Set'), key]));
+    const productName = language === 'zh-CN' ? '造境' : 'Setpiece';
+    const named = new Map(Object.entries(words).map(([key, text]) => [text.replaceAll('{name}', productName), key]));
     for (const platform of ['darwin', 'win32']) {
       const template = build(language, platform);
-      if (platform === 'darwin') assert.equal(template[0].label, 'TryWorld Set');
+      if (platform === 'darwin') assert.equal(template[0].label, productName);
       for (const item of shown(platform === 'darwin' ? template.slice(1) : template).concat(platform === 'darwin' ? shown(template[0].submenu) : [])) {
         assert.ok(named.has(item.label), `${language} ${platform}: "${item.label}" (${item.role ?? 'item'}) is not in its words`);
         used.add(named.get(item.label));
@@ -128,10 +129,10 @@ test('the update dialogs have every line in every language', async () => {
   await check({ status: 'ready', availableVersion: '0.2.4' })('ko');
   await check({ status: 'error', error: 'offline' })('es');
   assert.deepEqual(messages.map((m) => [m.title, m.message, m.detail, m.buttons]), [
-    ['检查更新', 'TryWorld Set 已是最新版本', '版本 0.2.3（Beta）', ['好']],
-    ['アップデートを確認', 'TryWorld Set をダウンロードしています', UPDATE_DIALOG_WORDS.ja.downloadingDetail, ['OK']],
-    ['업데이트 확인', 'TryWorld Set 0.2.4 준비가 끝났습니다', UPDATE_DIALOG_WORDS.ko.readyDetail, ['재시작', '나중에']],
+    ['检查更新', '造境 已是最新版本', '版本 0.2.3（Beta）', ['好']],
+    ['アップデートを確認', 'Setpiece をダウンロードしています', UPDATE_DIALOG_WORDS.ja.downloadingDetail, ['OK']],
+    ['업데이트 확인', 'Setpiece 0.2.4 준비가 끝났습니다', UPDATE_DIALOG_WORDS.ko.readyDetail, ['재시작', '나중에']],
     ['업데이트 확인', '아직 재시작할 수 없습니다', UPDATE_DIALOG_WORDS.ko.errors['agent-busy'], ['확인']],
-    ['Buscar actualizaciones', 'No se pudo buscar actualizaciones', `${UPDATE_DIALOG_WORDS.es.errors.offline} TryWorld Set también lo volverá a intentar por sí solo.`, ['Aceptar']],
+    ['Buscar actualizaciones', 'No se pudo buscar actualizaciones', `${UPDATE_DIALOG_WORDS.es.errors.offline} Setpiece también lo volverá a intentar por sí solo.`, ['Aceptar']],
   ]);
 });

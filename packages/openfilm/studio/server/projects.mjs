@@ -26,6 +26,7 @@ import { writeAtomic } from './atomic.mjs';
 import { coverAt } from './cover.mjs';
 import { libraryProjects, libraryRoot } from '../../src/locations.mjs';
 import { projectMissing } from './project-presence.mjs';
+import { envValue } from '../../src/env.mjs';
 
 export const TOOL_DIR = '.film';
 
@@ -41,8 +42,8 @@ export class ProjectError extends Error {
   }
 }
 
-/** Where Studio keeps its own state (not projects): ~/.openfilm, or OPENFILM_HOME. */
-export const studioHome = () => process.env.OPENFILM_HOME || join(homedir(), '.openfilm');
+/** Where Studio keeps its own state (not projects): ~/.openfilm, or SETPIECE_HOME / OPENFILM_HOME. */
+export const studioHome = () => envValue('HOME') || join(homedir(), '.openfilm');
 
 /**
  * The key this machine's Studio opens with (~/.openfilm/key, readable by this user only), the same at every launch: an

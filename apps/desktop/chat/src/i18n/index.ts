@@ -32,9 +32,23 @@ export function useUiLocale(): UiLocale {
   return React.useSyncExternalStore(subscribe, () => language, () => 'en' as UiLocale);
 }
 
+export function brandName(locale: UiLocale = language): string {
+  return locale === 'zh-CN' ? '造境' : 'Setpiece';
+}
+
+function withBrand(text: string, locale: UiLocale): string {
+  return locale === 'zh-CN'
+    ? text.replaceAll('试界片场', '造境').replaceAll('TryWorld Set', '造境')
+    : text.replaceAll('TryWorld Set', 'Setpiece');
+}
+
 function say(locale: UiLocale, path: string): string {
   const said = locale === 'en' ? null : lookup(TABLES[locale], path);
-  return said && said !== path ? said : lookup(enUS, path);
+  return withBrand(said && said !== path ? said : lookup(enUS, path), locale);
+}
+
+export function useBrandName(): string {
+  return brandName(useUiLocale());
 }
 
 /** t('project.stop'), in the language shown. */
