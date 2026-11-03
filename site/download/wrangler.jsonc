@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tryworld-set-download",
+  "account_id": "d59de4a1d41cd3bfce2ce0c459cfe359",
+  "compatibility_date": "2026-11-03",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    {
+      "pattern": "set.tryworld.com.cn",
+      "custom_domain": true
+    }
+  ]
+}

@@ -24,3 +24,6 @@ coverage/
 .DS_Store
 Thumbs.db
 *.log
+
+# local screenshots and generated handoff artifacts
+outputs/

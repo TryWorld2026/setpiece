@@ -6,6 +6,8 @@
 
 An AI video set / AI video agent. Turn ideas into editable, exportable films.
 
+**Download:** https://set.tryworld.com.cn/
+
 [Chinese](README.zh-CN.md)
 
 ## Status
@@ -39,5 +41,7 @@ See [NOTICE.md](NOTICE.md), [LICENSES/OpenFilm-MIT.txt](LICENSES/OpenFilm-MIT.tx
 
 ## Links
 
+- Download: https://set.tryworld.com.cn/
+- GitHub Release: https://github.com/TryWorld2026/tryworld-set/releases/tag/v0.2.8
 - TryWorld: https://tryworld.com.cn
 - OpenFilm upstream: https://github.com/openfilm/openfilm

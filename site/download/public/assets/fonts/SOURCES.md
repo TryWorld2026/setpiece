@@ -1,0 +1,1 @@
+Noto Sans SC (Source Han Sans family) and Fraunces, Google Fonts. SIL Open Font License. Full Unicode coverage for newly published CMS content. Original CSS: https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Noto+Sans+SC:wght@100..900&display=swap

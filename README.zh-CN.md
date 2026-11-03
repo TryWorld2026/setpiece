@@ -7,6 +7,8 @@
 
 AI 视频片场 / AI Video Agent。把想法变成可编辑、可导出的影片。
 
+**下载：** https://set.tryworld.com.cn/
+
 [English](README.md)
 
 ## 状态
@@ -41,5 +43,7 @@ TryWorld Set 与 OpenFilm 官方不存在关联，也不代表获得其背书。
 
 ## 链接
 
+- 下载：https://set.tryworld.com.cn/
+- GitHub Release：https://github.com/TryWorld2026/tryworld-set/releases/tag/v0.2.8
 - 试界 TryWorld：https://tryworld.com.cn
 - OpenFilm 上游：https://github.com/openfilm/openfilm

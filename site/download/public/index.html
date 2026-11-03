@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TryWorld Set · 试界片场 — 把想法，拍成世界。</title>
+    <meta
+      name="description"
+      content="TryWorld Set 是试界 TryWorld 的 AI 视频片场。让智能体把想法写成一部片子，再在时间线上亲手修改。下载 macOS / Windows 桌面版，或安装 @tryworld/set CLI。"
+    />
+    <meta name="theme-color" content="#F2EEE6" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TryWorld Set · 试界片场" />
+    <meta
+      property="og:description"
+      content="把想法，拍成世界。Turn ideas into worlds."
+    />
+    <meta property="og:url" content="https://set.tryworld.com.cn/" />
+    <meta property="og:site_name" content="TryWorld Set" />
+    <meta
+      property="og:image"
+      content="https://set.tryworld.com.cn/assets/share/og.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://set.tryworld.com.cn/assets/share/og.png"
+    />
+    <link rel="icon" href="./assets/logos/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="https://tryworld.com.cn" aria-label="TryWorld 试界">
+        <img
+          src="./assets/logos/tryworld-signature-green.svg"
+          width="44"
+          height="27"
+          alt=""
+        />
+        <span class="brand__product">TryWorld Set</span>
+        <span class="brand__rule" aria-hidden="true"></span>
+        <span class="brand__cn">试界片场</span>
+      </a>
+
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#how">怎么用</a>
+        <a href="#download">下载</a>
+        <a href="#cli">CLI</a>
+        <a
+          class="site-nav__github"
+          href="https://github.com/TryWorld2026/tryworld-set"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+        <a class="nav-cta" href="#download">获取 0.2.8</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">
+            <span class="eyebrow__dot" aria-hidden="true"></span>
+            AI VIDEO SET · EARLY PREVIEW
+          </p>
+
+          <h1>
+            把想法，<br />
+            <span class="hero__title-accent">拍成世界。</span>
+          </h1>
+
+          <p class="hero__en">Turn ideas into worlds.</p>
+
+          <p class="hero__lead">
+            TryWorld Set 让智能体把想法写成一部片子，再让你在时间线上亲手修改。
+            页面即镜头，时间线即片场。
+          </p>
+
+          <div class="hero__actions">
+            <a class="button button--primary" href="#download">
+              下载桌面版
+              <span class="button__arrow" aria-hidden="true">↓</span>
+            </a>
+            <a
+              class="button button--ghost"
+              href="https://github.com/TryWorld2026/tryworld-set"
+              target="_blank"
+              rel="noreferrer"
+            >
+              查看 GitHub
+              <span class="button__arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <ul class="hero__meta" aria-label="支持平台">
+            <li>macOS</li>
+            <li>Windows</li>
+            <li>CLI · twset</li>
+          </ul>
+        </div>
+
+        <div class="hero__visual">
+          <div class="slate" aria-label="TryWorld Set 片场界面示意">
+            <div class="slate__bar">
+              <span>TRY WORLD SET</span>
+              <span>SCENE 01 · TAKE 01</span>
+            </div>
+
+            <div class="slate__frame">
+              <div class="world" aria-hidden="true">
+                <span class="world__star world__star--a"></span>
+                <span class="world__star world__star--b"></span>
+                <span class="world__star world__star--c"></span>
+                <span class="world__orbit world__orbit--outer"></span>
+                <span class="world__orbit world__orbit--inner"></span>
+                <span class="world__sun"></span>
+                <span class="world__horizon"></span>
+                <span class="world__grain"></span>
+              </div>
+
+              <p class="slate__caption">把一句话，变成一场戏。</p>
+
+              <div class="slate__hud">
+                <span><i aria-hidden="true"></i> LIVE SET</span>
+                <span>1920 × 1080</span>
+              </div>
+            </div>
+
+            <div class="slate__bottom">
+              <div class="timeline" aria-hidden="true">
+                <span class="timeline__clip timeline__clip--one"></span>
+                <span class="timeline__clip timeline__clip--two"></span>
+                <span class="timeline__clip timeline__clip--three"></span>
+                <span class="timeline__playhead"></span>
+              </div>
+              <span class="slate__timecode">00:00:12:08</span>
+            </div>
+          </div>
+
+          <div class="float-card float-card--one" aria-hidden="true">
+            <span class="float-card__number">01</span>
+            <span>智能体写镜头</span>
+          </div>
+          <div class="float-card float-card--two" aria-hidden="true">
+            <span class="float-card__number">02</span>
+            <span>你在时间线上改</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section how" id="how">
+        <div class="section__head">
+          <p class="eyebrow">HOW IT WORKS</p>
+          <h2>从一句话，<br />到一条时间线。</h2>
+          <p>
+            不用先学一套新软件。片子由网页组成，智能体本来就懂网页；
+            你在 Studio 里看到的，就是最终会渲染出来的画面。
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <span class="step__number">01</span>
+            <h3>说出想法</h3>
+            <p>
+              让 Codex、Claude Code 或任何编程智能体把片子写成
+              <code>film.html</code>。一个网页就是一个可以画出任意时刻的镜头。
+            </p>
+          </article>
+
+          <article class="step">
+            <span class="step__number">02</span>
+            <h3>看着它成形</h3>
+            <p>
+              Studio 实时显示每一帧。移动、缩放、旋转画面里的元素，
+              在时间线上修剪、切分、调整音量与速度。
+            </p>
+          </article>
+
+          <article class="step">
+            <span class="step__number">03</span>
+            <h3>导出成片</h3>
+            <p>
+              渲染 MP4、4K、透明背景视频，或把整条时间线交给
+              Final Cut Pro、Premiere Pro 与 DaVinci Resolve。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section download" id="download">
+        <div class="download__head">
+          <div>
+            <p class="eyebrow">DOWNLOAD</p>
+            <h2>下载 TryWorld Set <span>0.2.8</span></h2>
+          </div>
+          <p class="download__status">
+            <span class="status-dot" aria-hidden="true"></span>
+            当前为早期预览版 · Early Preview
+          </p>
+        </div>
+
+        <div class="downloads">
+          <article class="download-card">
+            <div class="download-card__top">
+              <span class="os-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path
+                    fill="currentColor"
+                    d="M16.7 12.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.7.9-.8 0-1.9-.9-3.2-.9-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3.1 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.8 1.3-2.9-.1 0-2.6-1-2.6-3.6ZM14.4 5.2c.7-.8 1.1-1.9 1-3-1 .1-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.5Z"
+                  />
+                </svg>
+              </span>
+              <span class="download-card__badge">推荐</span>
+            </div>
+            <p class="download-card__os">macOS</p>
+            <h3>Apple Silicon</h3>
+            <p class="download-card__meta">M1 · M2 · M3 · M4 / arm64</p>
+            <div class="download-card__foot">
+              <span class="download-card__size">291 MB</span>
+              <a
+                class="download-link"
+                href="https://github.com/TryWorld2026/tryworld-set/releases/download/v0.2.8/TryWorld-Set-arm64.dmg"
+              >
+                下载 .dmg <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="download-card">
+            <div class="download-card__top">
+              <span class="os-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path
+                    fill="currentColor"
+                    d="M16.7 12.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.7.9-.8 0-1.9-.9-3.2-.9-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3.1 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.8 1.3-2.9-.1 0-2.6-1-2.6-3.6ZM14.4 5.2c.7-.8 1.1-1.9 1-3-1 .1-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.5Z"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p class="download-card__os">macOS</p>
+            <h3>Intel</h3>
+            <p class="download-card__meta">Intel 处理器 / x64</p>
+            <div class="download-card__foot">
+              <span class="download-card__size">305 MB</span>
+              <a
+                class="download-link"
+                href="https://github.com/TryWorld2026/tryworld-set/releases/download/v0.2.8/TryWorld-Set-x64.dmg"
+              >
+                下载 .dmg <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="download-card">
+            <div class="download-card__top">
+              <span class="os-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path
+                    fill="currentColor"
+                    d="M3 5.3 10.4 4v7.3H3V5.3Zm0 13.4 7.4 1.3v-7.2H3v5.9Zm8.6 1.5L21 22V12.6h-9.4v7.6Zm0-16.4v7.5H21V2l-9.4 1.8Z"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p class="download-card__os">Windows</p>
+            <h3>PC · x64</h3>
+            <p class="download-card__meta">Windows 10 / 11 · 64-bit</p>
+            <div class="download-card__foot">
+              <span class="download-card__size">281 MB</span>
+              <a
+                class="download-link"
+                href="https://github.com/TryWorld2026/tryworld-set/releases/download/v0.2.8/TryWorld-Set-Setup-x64.exe"
+              >
+                下载 .exe <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <div class="download__notes">
+          <p>
+            macOS 安装包为 unsigned 构建，首次打开请在 Finder 中右键应用 →
+            「打开」。Windows 安装包未做代码签名，SmartScreen 提示时选择
+            「更多信息」→「仍要运行」。
+          </p>
+          <a
+            class="text-link"
+            href="https://github.com/TryWorld2026/tryworld-set/releases/download/v0.2.8/SHA256SUMS.txt"
+          >
+            SHA-256 校验文件 <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section cli" id="cli">
+        <div class="cli__copy">
+          <p class="eyebrow">COMMAND LINE</p>
+          <h2>也可以在终端里<br />直接开机。</h2>
+          <p>
+            安装 <code>@tryworld/set</code>，用 <code>twset</code> 打开片场。
+            需要 Node.js 22.18 或更高版本。
+          </p>
+          <a
+            class="text-link"
+            href="https://www.npmjs.com/package/@tryworld/set"
+            target="_blank"
+            rel="noreferrer"
+          >
+            在 npm 查看 @tryworld/set <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="terminal">
+          <div class="terminal__bar" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <em>twset</em>
+          </div>
+          <pre><code><span class="terminal__comment"># 安装</span>
+npm install -g @tryworld/set
+
+<span class="terminal__comment"># 打开片场</span>
+twset --help</code></pre>
+          <button
+            class="copy-button"
+            type="button"
+            data-copy="npm install -g @tryworld/set"
+          >
+            复制安装命令
+          </button>
+        </div>
+      </section>
+
+      <section class="opensource">
+        <div class="opensource__copy">
+          <p class="eyebrow">OPEN SOURCE</p>
+          <h2>站在 OpenFilm<br />的肩膀上。</h2>
+          <p>
+            TryWorld Set 是 OpenFilm 的独立衍生项目，遵循 MIT License。
+            原始版权与许可声明已完整保留。TryWorld Set 与 OpenFilm
+            官方无关联，也不代表获得其背书。
+          </p>
+        </div>
+
+        <div class="opensource__links">
+          <a
+            href="https://github.com/TryWorld2026/tryworld-set/blob/main/NOTICE.md"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>NOTICE</span>
+            <span>归属与商标说明 ↗</span>
+          </a>
+          <a
+            href="https://github.com/TryWorld2026/tryworld-set/blob/main/LICENSES/OpenFilm-MIT.txt"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>LICENSE</span>
+            <span>OpenFilm MIT 许可 ↗</span>
+          </a>
+          <a
+            href="https://github.com/openfilm/openfilm"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>UPSTREAM</span>
+            <span>OpenFilm 原项目 ↗</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__brand">
+        <img
+          src="./assets/logos/tryworld-signature-light.svg"
+          width="44"
+          height="27"
+          alt=""
+        />
+        <div>
+          <strong>TryWorld Set</strong>
+          <span>试界片场 · by 试界 TryWorld</span>
+        </div>
+      </div>
+
+      <p class="site-footer__slogan">把想法，拍成世界。</p>
+
+      <nav class="site-footer__nav" aria-label="页脚导航">
+        <a href="https://tryworld.com.cn" target="_blank" rel="noreferrer">
+          试界 TryWorld ↗
+        </a>
+        <a
+          href="https://github.com/TryWorld2026/tryworld-set"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub ↗
+        </a>
+        <a
+          href="https://www.npmjs.com/package/@tryworld/set"
+          target="_blank"
+          rel="noreferrer"
+        >
+          npm ↗
+        </a>
+        <span>© 2026 TryWorld</span>
+      </nav>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
