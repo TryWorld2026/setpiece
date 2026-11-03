@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `ci.yml` | every pull request and push to `main` | typecheck, build, tests, public audit and package check on Linux, macOS and Windows |
 | `version.yml` | push to `main` | opens or updates the changesets "Version packages" pull request; once it is merged, publishes `@tryworld/set` and pushes the `v<version>` tag |
-| `release.yml` | `v*` tag, or run by hand | builds the macOS `.dmg` / `.zip` and the Windows installer, then opens a draft GitHub release with checksums |
+| `release.yml` | `v*` tag, or run by hand | builds the arm64 and x64 macOS `.dmg` / `.zip` files plus the Windows installer, then opens a draft GitHub release with checksums |
 
 ## Secrets
 
