@@ -39,6 +39,7 @@ jobs:
           publish: pnpm changeset publish
           commit: "chore: version packages"
           title: "chore: version packages"
+          createGithubReleases: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -46,8 +47,12 @@ jobs:
           # npm attests a publish to its source repository, and only accepts one that is public
           NPM_CONFIG_PROVENANCE: ${{ !github.event.repository.private }}
       - name: Tag the published version
-        if: steps.changesets.outputs.published == 'true'
         run: |
           version="$(node -p "require('./packages/openfilm/package.json').version")"
-          git tag "v$version"
-          git push origin "v$version"
+          tag="v$version"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then
+            echo "$tag already exists"
+          else
+            git tag "$tag"
+            git push origin "$tag"
+          fi
