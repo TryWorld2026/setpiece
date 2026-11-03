@@ -1,5 +1,17 @@
 # @tryworld/set
 
+## 0.2.8
+
+### Patch Changes
+
+- [`b70b5a1`](https://github.com/TryWorld2026/tryworld-set/commit/b70b5a15228b29a8fedc8e8866568c3524b2da1d) Thanks [@TryWorld2026](https://github.com/TryWorld2026)! - The Layers panel keeps asking until the picture has something to show: a slow machine that answered before the film's first frame was drawn used to leave the panel empty until the next seek or edit. A clip that says it has its own sound is marked in the timeline (`data-own-audio`), so the clip menu's Mute and the panel can be waited for.
+
+  A selected layer whose page is drawn anew (a paste undone, say) is kept for six seconds instead of one: on a slow machine the page took longer to come back and the selection was dropped, so the layers a person still had in hand were lost.
+
+- [`8b8c0f1`](https://github.com/TryWorld2026/tryworld-set/commit/8b8c0f1eb61b94591849bf57e82f79c15ce7c777) Thanks [@TryWorld2026](https://github.com/TryWorld2026)! - Studio records a merge or edit of `film.html` as soon as the new file is published: the temporary file's cleanup no longer runs between the rename and that record. A reader that saw the new film in that gap (on a slow Windows disk, say) asked what Studio knew of the person's edits and was told nothing, so the note for the agent was missing until the next change.
+
+- [`09e18d7`](https://github.com/TryWorld2026/tryworld-set/commit/09e18d7089aa4f51445f23b0708ac3d95a1077c4) Thanks [@WEBGRS](https://github.com/WEBGRS)! - Exports: on Windows and Linux, a ProRes 4444 video's likely size now reaches 1.6 times ProRes's rate, as ffmpeg's encoder there spends up to that on detailed footage. On a Mac, which encodes ProRes on its media engine, the range is as before.
+
 ## 0.2.7
 
 ### Patch Changes
