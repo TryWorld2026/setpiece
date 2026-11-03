@@ -4,8 +4,8 @@
  * would commit (tracked and untracked, not ignored; every file under the folder when it is not a git checkout), less
  * node_modules, dist, .dev and .release, and reports:
  *
- *   cjk       Chinese, Japanese or Korean prose outside the i18n dictionaries, the release notes (whats-new.ts), translated docs
- *             and a skill's openfilm.json (its title and summary in each language)
+ *   cjk       Chinese, Japanese or Korean prose outside the i18n dictionaries, the release notes (whats-new.ts), translated docs,
+ *             public site copy under site/download/public/ and a skill's openfilm.json (its title and summary in each language)
  *             (README.zh-CN.md): comments and text are in English.
  *             A line is prose when its CJK characters outweigh its Latin words (one character for four letters), so
  *             an English comment that quotes 永 or 2026年10月7日 passes. In tests and fixtures, string literals are
@@ -40,6 +40,7 @@ const ROOT = resolve(opts.dir ?? join(import.meta.dirname, '..'));
 
 const SKIP_DIR = /(^|\/)(node_modules|dist|\.dev|\.release|\.git)\//;
 const LOCALE = /(^|\/)(i18n|locales)\/|\/whats-new\.ts$|\.(zh-CN|ja|ko|es)\.md$|(^|\/)skills\/[^/]+\/openfilm\.json$/;
+const SITE_COPY = /(^|\/)site\/download\/public\//;
 const TESTISH = /(\.test\.[cm]?[jt]sx?$|(^|\/)(test|tests|fixtures?|__fixtures__)\/)/;
 
 /** A home folder with a real name in it; the placeholders docs and tests use are fine. */
@@ -135,11 +136,12 @@ function scan(files) {
     const text = textOf(file);
     if (text === null) continue;
     const locale = LOCALE.test(file);
+    const siteCopy = SITE_COPY.test(file);
     const testish = TESTISH.test(file);
-    if (locale && HAS_CJK.test(text)) locales++;
+    if ((locale || siteCopy) && HAS_CJK.test(text)) locales++;
     text.split('\n').forEach((line, i) => {
       const n = i + 1;
-      if (!locale && isProse(testish ? withoutStrings(line) : line)) report(file, n, 'cjk', line.trim());
+      if (!locale && !siteCopy && isProse(testish ? withoutStrings(line) : line)) report(file, n, 'cjk', line.trim());
       if (HOME.test(line)) report(file, n, 'private', `home folder: ${line.trim()}`);
       for (const term of TERMS) if (term.test(line)) report(file, n, 'private', `${term.source}: ${line.trim()}`);
       if (line.includes('../')) checkPath(file, n, line);
@@ -193,7 +195,7 @@ const locales = scan(files);
 checkDeps(files);
 if (!opts['no-secrets']) gitleaks(files);
 
-console.log(`public audit: ${files.length} files${locales ? `, ${locales} i18n dictionaries in CJK (expected)` : ''}${TERMS.length ? `, ${TERMS.length} private terms` : ''}${opts['no-secrets'] ? ', no secret scan' : ''}\n`);
+console.log(`public audit: ${files.length} files${locales ? `, ${locales} localized/public-copy files in CJK (expected)` : ''}${TERMS.length ? `, ${TERMS.length} private terms` : ''}${opts['no-secrets'] ? ', no secret scan' : ''}\n`);
 for (const f of findings.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line)) {
   console.log(`  ${f.file}:${f.line}  ${f.check}  ${f.text.length > 140 ? `${f.text.slice(0, 140)}…` : f.text}`);
 }
