@@ -20,13 +20,13 @@ upstream Git history preserved.
 - Product: Setpiece / 造境
 - Category: AI Film Workspace / AI 片场
 - Desktop app: `setpiece-desktop`
-- CLI and npm package: `setpiece`
+- CLI and npm package: `@tryworld/setpiece` (command: `setpiece`)
 - Shared package: `setpiece-shared`
 - Repository: https://github.com/TryWorld2026/setpiece
 - Version: `0.3.0`
 
 The `twset` and `openfilm` command names remain hidden compatibility aliases. The previous `@tryworld/set` npm
-package is superseded by `setpiece`.
+package is superseded by `@tryworld/setpiece`.
 
 ## Run from source
 

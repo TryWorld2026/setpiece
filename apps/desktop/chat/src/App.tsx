@@ -15,7 +15,7 @@ import { ProjectStarters } from '@/components/ProjectStarters';
 import { AttachmentPreview, type AttachmentPreviewItem } from '@/components/AttachmentPreview';
 import { ModelPopover } from '@/components/ModelPopover';
 import { AddSkillDialog, type PickedSkill } from '@/components/AddSkill';
-import { SKILLS_CHANGED } from 'setpiece/studio-ui/lib/project-sources.ts';
+import { SKILLS_CHANGED } from '@tryworld/setpiece/studio-ui/lib/project-sources.ts';
 import { CardActions, CardButton, ComposerCard } from '@/components/ComposerCard';
 import { LocalAgentQuestionCard } from '@/components/TurnQuestionCard';
 import { Tooltip } from '@/components/Tooltip';

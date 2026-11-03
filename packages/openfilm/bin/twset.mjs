@@ -92,7 +92,7 @@ const RAW = process.argv.slice(2);
 /* the command as the agent can type it here: SETPIECE_RUN, or the older TWSET_RUN / OPENFILM_RUN; through npx always
    the newest (npx keeps the first one it fetched for a bare name), else `setpiece` where it is installed */
 const RUN = process.env.SETPIECE_RUN || process.env.TWSET_RUN || process.env.OPENFILM_RUN
-  || (process.env.npm_command === 'exec' ? 'npx -y setpiece@latest' : 'setpiece');
+  || (process.env.npm_command === 'exec' ? 'npx -y @tryworld/setpiece@latest' : 'setpiece');
 /**
  * A newer Setpiece, said once in a line before what the command prints: looked up on npm (at most daily, briefly) when
  * a session starts (the manual, open), else only as learnt before, so look, render and get never wait for it.
@@ -104,7 +104,7 @@ const updateNotice = async (network) => {
 if (RAW.length === 0) {
   const { readFileSync } = await import('node:fs');
   await updateNotice(true);
-  console.log(readFileSync(new URL('../MANUAL.md', import.meta.url), 'utf8').replaceAll('npx setpiece', RUN));
+  console.log(readFileSync(new URL('../MANUAL.md', import.meta.url), 'utf8').replaceAll('npx @tryworld/setpiece', RUN));
   process.exit(0);
 }
 if (RAW.length === 1 && (RAW[0] === '--version' || RAW[0] === '-v')) {
@@ -133,7 +133,7 @@ if (RAW[0] === 'get') {
      aborts Node 24.17 on Windows (`Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)`, exit status 127) */
   process.exitCode = result.code;
 } else {
-  /* the help speaks the name this was run as: `setpiece` or `npx -y setpiece@latest` */
+  /* the help speaks the name this was run as: `setpiece` or `npx -y @tryworld/setpiece@latest` */
   const named = (text) => text.replace(/^( {2})?setpiece(?= )/gm, `$1${RUN}`).replace('`setpiece <command>', `\`${RUN} <command>`);
   let parsed;
   try {

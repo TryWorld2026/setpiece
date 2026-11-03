@@ -13,7 +13,7 @@ way it is made again in Setpiece, so every part of it can be changed.
 
 - **The same moments.** Where the reference cuts, a word appears, something moves or a sound hits, the film does too,
   scaled when the lengths differ; for an exact copy, each frame matches the reference's frame at the same time. Compare
-  the two at the same times with `npx setpiece look`, and report honestly, in numbers, how close it is.
+  the two at the same times with `npx @tryworld/setpiece look`, and report honestly, in numbers, how close it is.
 - **Made again.** The reference stays in `references/` and is never a clip of the film: what the film shows is made
   anew, and the reference's own music, footage or voice go in only when the person asks for them.
 - **Their version is theirs**: when they want their own content, every part carries their topic, product, words and
@@ -26,7 +26,7 @@ way it is made again in Setpiece, so every part of it can be changed.
 
 `references/` sits beside the film but not in it: `assets/` holds only what the film uses. Anything you can make
 pictures, motion and sound with: the web platform and any library on it, renderers whose output becomes a clip, the
-person's footage and photos, any font whose license allows it, images, video, music and voice from `npx setpiece get`,
+person's footage and photos, any font whose license allows it, images, video, music and voice from `npx @tryworld/setpiece get`,
 your own built-in tools, and services the person has keys for. Setpiece's own rules still hold: the picture at t
 depends on t alone, a page has no sound, and what you render elsewhere enters as a clip under `assets/` with the script
 that made it. Ask before downloading anything large onto the person's computer.

@@ -3,17 +3,17 @@
  * Mac's; `--unsigned` for a local try; `--platform=win --arch=x64|arm64` for the Windows installer, built here too;
  * `--official` for the project's own build; `--preview` for "Setpiece Preview", an app of its own to try a build in).
  *
- * Which build it is comes from the `setpiece` package's product files: a build of this source uses product.json,
+ * Which build it is comes from the `@tryworld/setpiece` package's product files: a build of this source uses product.json,
  * empty in the repository (no update feed: the app never looks for updates); `--official` uses product.official.json
  * (the update feed under its `desktop.updates`).
  *
  *   1. the window's page (shell/: Studio's editor with the chat beside it) and Studio's editor on its own (the
- *      `setpiece` package's UI) are built (the chat's `setpiece-shared` is bundled into the page);
- *   2. a stage folder gets the app's own files and a plain npm install of what it needs at run time: the `setpiece`
+ *      `@tryworld/setpiece` package's UI) are built (the chat's `setpiece-shared` is bundled into the page);
+ *   2. a stage folder gets the app's own files and a plain npm install of what it needs at run time: the `@tryworld/setpiece`
  *      package as `npm pack` makes it (what npm would publish), the agents' ACP adapters
  *      and the updater. Optional dependencies are left out: the adapters would bring the makers' own Claude Code and
  *      Codex programs (200–330 MB each), and the app uses the person's own installation instead (src/agents.mjs).
- *      The staged `setpiece` package gets the build's product.json;
+ *      The staged `@tryworld/setpiece` package gets the build's product.json;
  *   2b. the programs the app needs that are not node modules, for the platform and chip built for, in the app's
  *      resources (runtime/; src/main.mjs puts them to use): ffmpeg and ffprobe with their license (src/ffmpeg-runtime.mjs),
  *      and the headless browser Studio and `setpiece` draw pages in (Playwright's, the revision the staged
@@ -43,8 +43,9 @@ import { lockedOverrides, versionsOffLock } from './locked-versions.mjs';
 
 const require = createRequire(import.meta.url);
 const desktop = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-/* the `setpiece` package (Studio, the CLI), where node finds it */
-const protocol = dirname(require.resolve('setpiece/package.json'));
+const PACKAGE = '@tryworld/setpiece';
+/* the `@tryworld/setpiece` package (Studio, the CLI), where node finds it */
+const protocol = dirname(require.resolve(`${PACKAGE}/package.json`));
 const asked = process.argv.find((a) => a.startsWith('--arch='))?.slice('--arch='.length);
 const arch = asked === 'x64' || asked === 'arm64' ? asked : process.arch === 'arm64' ? 'arm64' : 'x64';
 const win = process.argv.includes('--platform=win');
@@ -88,7 +89,7 @@ mkdirSync(stage, { recursive: true });
 cpSync(join(desktop, 'src'), join(stage, 'src'), { recursive: true, filter: (from) => !from.endsWith('.test.mjs') });
 cpSync(join(desktop, 'shell/dist'), join(stage, 'shell/dist'), { recursive: true });
 const pack = (dir) => execFileSync('npm', ['pack', '--ignore-scripts', '--pack-destination', work, '--silent'], { cwd: dir, encoding: 'utf8' }).trim().split('\n').pop();
-const dependencies = { ...pkg.dependencies, setpiece: `file:../${pack(protocol)}` };
+const dependencies = { ...pkg.dependencies, [PACKAGE]: `file:../${pack(protocol)}` };
 /* npm takes the versions pnpm's lockfile has (locked-versions.mjs): what the tests ran with, not the latest */
 const lockedTree = JSON.parse(execFileSync('pnpm', ['list', '--prod', '--depth', 'Infinity', '--json'], { cwd: desktop, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }))[0];
 writeFileSync(join(stage, 'package.json'), `${JSON.stringify({
@@ -111,7 +112,7 @@ if (offLock.length) {
   throw new Error(`The installer's packages are not the lockfile's:\n${offLock.map((p) => `  ${p.name} ${p.version} (locked: ${p.locked.join(', ')})`).join('\n')}`);
 }
 /* the build's product file */
-cpSync(productFile, join(stage, 'node_modules/setpiece/product.json'));
+cpSync(productFile, join(stage, 'node_modules', ...PACKAGE.split('/'), 'product.json'));
 
 /* 2b. ffmpeg and the headless browser, for the platform and chip built for */
 const runtime = join(work, 'runtime');
@@ -162,7 +163,7 @@ await builder.build({
     electronVersion,
     asar: true,
     /* run by Electron as Node from outside the archive: the CLI the agents run, the agents' adapters */
-    asarUnpack: ['node_modules/setpiece/**', 'node_modules/@agentclientprotocol/**', 'node_modules/playwright-core/**'],
+    asarUnpack: [`node_modules/${PACKAGE}/**`, 'node_modules/@agentclientprotocol/**', 'node_modules/playwright-core/**'],
     files: ['src/**/*', 'shell/dist/**/*', 'package.json', 'node_modules/**/*'],
     /* ffmpeg and the headless browser (2b), as files of their own beside the archive: they run as programs */
     extraResources: [{ from: runtime, to: 'runtime' }],

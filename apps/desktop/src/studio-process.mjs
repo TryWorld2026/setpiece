@@ -15,8 +15,8 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
-import { startStudio } from 'setpiece/studio';
-import { launch } from 'setpiece/host';
+import { startStudio } from '@tryworld/setpiece/studio';
+import { launch } from '@tryworld/setpiece/host';
 
 const parent = process.parentPort;
 const send = (message) => parent.postMessage(message);
@@ -65,7 +65,7 @@ try {
   if (!/Executable doesn't exist/.test(e?.message ?? '')) send({ type: 'browser', state: 'failed', message: e?.message ?? String(e) });
   else {
     send({ type: 'browser', state: 'downloading' });
-    const twset = dirname(createRequire(import.meta.url).resolve('setpiece/package.json'));
+    const twset = dirname(createRequire(import.meta.url).resolve('@tryworld/setpiece/package.json'));
     const cli = join(dirname(createRequire(join(twset, 'package.json')).resolve('playwright-core/package.json')), 'cli.js');
     const child = spawn(process.execPath, [cli, 'install', 'chromium-headless-shell'], { env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, stdio: 'ignore', windowsHide: true });
     child.once('exit', (code) => send(code === 0 ? { type: 'browser', state: 'ready' } : { type: 'browser', state: 'failed', message: `the download stopped (${code})` }));

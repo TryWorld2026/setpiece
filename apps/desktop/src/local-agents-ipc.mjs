@@ -46,7 +46,7 @@
  */
 import { randomUUID } from 'node:crypto';
 import { join } from 'node:path';
-import { recordProblem, problemsFile } from 'setpiece/problems';
+import { recordProblem, problemsFile } from '@tryworld/setpiece/problems';
 import { LOG_SETTLE_MS } from './agent-logs.mjs';
 import { RECORDED_AGENTS, agentRecordCalls, compactCalls, recordedModel } from './agent-records.mjs';
 import { skillStore } from './agent-skills.mjs';

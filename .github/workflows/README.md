@@ -3,14 +3,14 @@
 | Workflow | When | What it does |
 | --- | --- | --- |
 | `ci.yml` | every pull request and push to `main` | typecheck, build, tests, public audit and package check on Linux, macOS and Windows |
-| `version.yml` | push to `main` | opens or updates the changesets "Version packages" pull request; once it is merged, publishes `setpiece` and pushes the `v<version>` tag |
+| `version.yml` | push to `main` | opens or updates the changesets "Version packages" pull request; once it is merged, publishes `@tryworld/setpiece` and pushes the `v<version>` tag |
 | `release.yml` | `v*` tag, or run by hand | builds the arm64 and x64 macOS `.dmg` / `.zip` files plus the Windows installer, then opens a draft GitHub release with checksums |
 
 ## Secrets
 
 `version.yml` needs one repository secret:
 
-- `NPM_TOKEN`: an npm automation token, or a granular access token with read and write access to all packages, that can create and publish the unscoped `setpiece` package. Without it the version pull request still opens, but merging it cannot publish.
+- `NPM_TOKEN`: an npm automation token, or a granular access token with read and write access to all packages, that can create and publish the `@tryworld/setpiece` package. Without it the version pull request still opens, but merging it cannot publish.
 
 The desktop build is unsigned unless the macOS signing values are present:
 

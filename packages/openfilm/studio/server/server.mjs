@@ -1123,7 +1123,7 @@ export async function startStudio({ port = 4747, key, openBrowser = systemBrowse
 const FROM_SOURCE = existsSync(new URL('../ui/src', import.meta.url));
 
 /**
- * `npx -y setpiece@<version> update` in the background (its words in logs/update.log), as the person would run it: the
+ * `npx -y @tryworld/setpiece@<version> update` in the background (its words in logs/update.log), as the person would run it: the
  * newest stops this Studio and starts itself in its place. `then` hears it failed later, with its last words, if this
  * Studio is still here to hear it; one that cannot start is said at once.
  * @param {string} version @param {(state: { status: 'failed', version: string, error: string }) => void} then
@@ -1137,7 +1137,7 @@ function runUpdate(version, then) {
   const failed = (/** @type {string} */ error) => then({ status: 'failed', version, error });
   try {
     const out = openSync(file, 'a');
-    const child = spawn('npx', ['-y', `setpiece@${version}`, 'update'], {
+    const child = spawn('npx', ['-y', `@tryworld/setpiece@${version}`, 'update'], {
       detached: true, stdio: ['ignore', out, out], windowsHide: true, shell: process.platform === 'win32', env: { ...process.env, SETPIECE_NO_BROWSER: '1' },
     });
     child.once('error', (e) => failed(`npx did not start (it comes with Node.js): ${e.message}`));

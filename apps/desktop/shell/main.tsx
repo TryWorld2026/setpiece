@@ -5,9 +5,9 @@
 import './bridge';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from 'setpiece/studio-ui/App.tsx';
-import { FocusNav } from 'setpiece/studio-ui/components/FocusNav.tsx';
-import { applyStudioHost } from 'setpiece/studio-ui/lib/host.ts';
+import { App } from '@tryworld/setpiece/studio-ui/App.tsx';
+import { FocusNav } from '@tryworld/setpiece/studio-ui/components/FocusNav.tsx';
+import { applyStudioHost } from '@tryworld/setpiece/studio-ui/lib/host.ts';
 import { mountChat } from '../chat/src/mount';
 import './shell.css';
 import '../chat/src/chat.css';

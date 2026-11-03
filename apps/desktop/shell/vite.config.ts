@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
  * The app's window: one page, Studio's editor and the chat beside it, built into shell/dist and served by the app's
  * Studio as its editor (studio-process.mjs `editorDir`). Studio's sources are the open-source ones as they are.
  */
-const STUDIO = join(dirname(createRequire(import.meta.url).resolve('setpiece/package.json')), 'studio/ui/src/');
+const STUDIO = join(dirname(createRequire(import.meta.url).resolve('@tryworld/setpiece/package.json')), 'studio/ui/src/');
 /* with forward slashes, as Vite names files on Windows too */
 const CHAT = normalizePath(fileURLToPath(new URL('../chat/src/', import.meta.url)));
 

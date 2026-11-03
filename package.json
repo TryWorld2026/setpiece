@@ -9,9 +9,9 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "dev": "pnpm --filter setpiece dev",
+    "dev": "pnpm --filter @tryworld/setpiece dev",
     "dev:desktop": "pnpm --filter setpiece-desktop start",
-    "build": "pnpm --filter setpiece build:ui && pnpm --filter setpiece-desktop build:shell",
+    "build": "pnpm --filter @tryworld/setpiece build:ui && pnpm --filter setpiece-desktop build:shell",
     "test": "pnpm -r --workspace-concurrency=1 --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
     "setpiece": "node packages/openfilm/bin/twset.mjs",

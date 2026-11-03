@@ -5,5 +5,5 @@ description: Compatibility entry for Setpiece. Make videos as web pages with Set
 
 # Setpiece
 
-Run `npx -y setpiece@latest` and follow the manual it prints: it is the whole of Setpiece, about a thousand words. Run it
+Run `npx -y @tryworld/setpiece@latest` and follow the manual it prints: it is the whole of Setpiece, about a thousand words. Run it
 again whenever you need it.

@@ -2,11 +2,11 @@
  * The parts of `window.openfilmDesktop` that are this app's own (src/preload-chat.cjs); the parts the copied chat code
  * uses (localAgents, pathForFile) are typed in lib/desktop-bridge.ts.
  */
-import type { CommunityItem, StudioRef, StudioSelection } from 'setpiece/studio-ui/lib/host.ts';
+import type { CommunityItem, StudioRef, StudioSelection } from '@tryworld/setpiece/studio-ui/lib/host.ts';
 import type { FileChange } from './lib/file-changes';
 
 /* what Studio and the chat say to each other about the film is Studio's own contract (its lib/host.ts) */
-export type { StageBox, StudioCommand, StudioRef, StudioRefImage, StudioSelection } from 'setpiece/studio-ui/lib/host.ts';
+export type { StageBox, StudioCommand, StudioRef, StudioRefImage, StudioSelection } from '@tryworld/setpiece/studio-ui/lib/host.ts';
 
 export type Theme = 'light' | 'dark';
 export interface Project { id: string; name: string; path: string }

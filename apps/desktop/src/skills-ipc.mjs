@@ -37,8 +37,8 @@ import { loginShellVariables } from './environment.mjs';
 
 const require = createRequire(import.meta.url);
 /* by their file URLs: import() takes no Windows path (`D:\…`) */
-const lib = () => import(pathToFileURL(require.resolve('setpiece/skills')).href);
-const cli = () => import(pathToFileURL(require.resolve('setpiece/skills-cli')).href);
+const lib = () => import(pathToFileURL(require.resolve('@tryworld/setpiece/skills')).href);
+const cli = () => import(pathToFileURL(require.resolve('@tryworld/setpiece/skills-cli')).href);
 
 /** A skill as the page shows it. */
 const shown = (s) => ({ name: s.name, description: s.description, source: s.source, folder: s.folder, scripts: s.scripts ?? [], ...(s.over ? { over: s.over } : {}), ...(s.shown ? { shown: s.shown } : {}) });

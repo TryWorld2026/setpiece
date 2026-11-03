@@ -16,7 +16,7 @@ const tree = {
     '@agentclientprotocol/codex-acp': { version: '1.13.1', dependencies: { diff: { version: '9.0.0' } } },
     diff: { version: '9.0.0' },
     undici: { version: '8.12.2' },
-    setpiece: { version: 'link:../../packages/openfilm', dependencies: { 'playwright-core': { version: '1.50.0' } } },
+    '@tryworld/setpiece': { version: 'link:../../packages/openfilm', dependencies: { 'playwright-core': { version: '1.50.0' } } },
   },
 };
 

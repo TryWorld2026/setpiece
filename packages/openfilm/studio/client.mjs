@@ -15,6 +15,7 @@ import { envValue } from '../src/env.mjs';
 
 const MAIN = fileURLToPath(new URL('./server/main.mjs', import.meta.url));
 const VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+const PACKAGE = '@tryworld/setpiece';
 /** A source checkout (Studio's editor source is here): git pull updates it, not npm. */
 export const FROM_SOURCE = existsSync(new URL('./ui/src', import.meta.url));
 
@@ -80,7 +81,7 @@ export function olderThanThis(/** @type {string | undefined} */ version, mine = 
 }
 
 /**
- * What npm has: the latest setpiece (null when it was never learnt) and when it was asked. Asked of the registry at
+ * What npm has: the latest Setpiece (null when it was never learnt) and when it was asked. Asked of the registry at
  * most once a day (the answer kept in Studio's folder) unless `force`, never for more than `waitMs`, and never with
  * `network` false (only what was learnt before). A check that fails is no answer, and nothing else waits on it.
  * SETPIECE_NO_UPDATE_CHECK=1 (OPENFILM_NO_UPDATE_CHECK=1): never asked.
@@ -95,7 +96,7 @@ export async function npmOpenfilm({ network = true, waitMs = 1500, force = false
   try { known = JSON.parse(readFileSync(file, 'utf8')); } catch { /* never asked */ }
   if (network && (force || !(Date.now() - (known.checkedAt ?? 0) < 24 * 3_600_000))) {
     try {
-      const res = await fetch('https://registry.npmjs.org/setpiece/latest', { signal: AbortSignal.timeout(waitMs), headers: { accept: 'application/json' } });
+      const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(PACKAGE)}/latest`, { signal: AbortSignal.timeout(waitMs), headers: { accept: 'application/json' } });
       const latest = res.ok ? String((await res.json()).version ?? '') : '';
       if (/^\d+\.\d+\.\d+/.test(latest)) {
         known = { checkedAt: Date.now(), latest };
@@ -189,7 +190,7 @@ export async function ensureStudio(say = () => {}, { fresh = false } = {}) {
 
 /**
  * `setpiece update`: the newest Setpiece, and Studio on it. This one is the newest, or the newest is run to do it
- * (`npx -y setpiece@<latest> update` fetches it); then a Studio on an older one is started again on it once it is
+ * (`npx -y @tryworld/setpiece@<latest> update` fetches it); then a Studio on an older one is started again on it once it is
  * idle, and the pages open on it come back on the new version. The desktop app's Studio updates with the app, and a
  * source checkout with git pull: each is said instead. `ok` false when it could not be done (offline, Studio busy).
  * @param {(line: string) => void} [say] @returns {Promise<{ ok: boolean, lines: string[] }>}
@@ -204,13 +205,13 @@ export async function updateOpenfilm(say = () => {}) {
     /* the newest does it, fetched by npx; it ran already and is still not the newest: npx gave another */
     if (envValue('UPDATING')) return { ok: false, lines: [`npx ran Setpiece ${VERSION}, not ${latest}.`] };
     say(`Getting Setpiece ${latest}…`);
-    const r = spawnSync('npx', ['-y', `setpiece@${latest}`, 'update'], {
+    const r = spawnSync('npx', ['-y', `${PACKAGE}@${latest}`, 'update'], {
       stdio: 'inherit', env: { ...process.env, SETPIECE_UPDATING: '1' }, shell: process.platform === 'win32', windowsHide: true,
     });
     if (r.error) return { ok: false, lines: [`Could not run npx (it comes with Node.js): ${r.error.message}`] };
     /* a `setpiece` installed with npm -g is not npx's: it stays as it is until npm updates it */
     const installed = process.env.npm_command !== 'exec' && !envValue('RUN');
-    return { ok: r.status === 0, lines: installed && r.status === 0 ? [`The \`setpiece\` command installed here is still ${VERSION}: \`npm install -g setpiece@latest\` updates it.`] : [] };
+    return { ok: r.status === 0, lines: installed && r.status === 0 ? [`The \`setpiece\` command installed here is still ${VERSION}: \`npm install -g ${PACKAGE}@latest\` updates it.`] : [] };
   }
   if (!found) return { ok: true, lines: [`Setpiece ${VERSION} is the newest. Studio starts on it the next time it opens.`] };
   if (!olderThanThis(found.version)) return { ok: true, lines: [`Setpiece ${VERSION} is the newest, and Studio runs it.`] };

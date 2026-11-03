@@ -11,7 +11,7 @@ this repository names in package.json), ffmpeg on the PATH, and git.
 ```sh
 git clone https://github.com/TryWorld2026/setpiece && cd setpiece
 pnpm install                 # also builds Studio's editor (packages/openfilm: build:ui)
-pnpm --filter setpiece exec playwright-core install chromium-headless-shell
+pnpm --filter @tryworld/setpiece exec playwright-core install chromium-headless-shell
 pnpm dev                     # Studio from this checkout, with a sample film
 pnpm test
 ```
@@ -26,16 +26,16 @@ From the root:
 | `pnpm typecheck` | every package's types |
 | `pnpm build` | Studio's editor and the desktop app's window |
 | `pnpm audit:public` | what must not be in a public repository: secrets (gitleaks), home folders, paths out of the repository, prose in another language than English outside the translations, dependencies outside this workspace |
-| `pnpm check:pack` | packs `setpiece` as npm would get it, lists its files and checks them |
+| `pnpm check:pack` | packs `@tryworld/setpiece` as npm would get it, lists its files and checks them |
 | `pnpm changeset` | adds a changeset to your pull request (below, Releases) |
 
-`pnpm --filter <package> <script>` runs one package's script; the packages are `setpiece`, `setpiece-shared`
+`pnpm --filter <package> <script>` runs one package's script; the packages are `@tryworld/setpiece`, `setpiece-shared`
 and `setpiece-desktop`.
 
 ## Layout
 
 ```
-packages/openfilm/   npm `setpiece`: the format, the CLI and Studio
+packages/openfilm/   npm `@tryworld/setpiece`: the format, the CLI and Studio
   SPEC.md, MANUAL.md   the film format; the manual `setpiece` prints for agents
   bin/                 the `setpiece` command
   src/                 reading film.html, the host that draws frames in a headless browser, look and render
@@ -61,7 +61,7 @@ docs/                pictures for the README
 Setpiece you have installed; its projects are in the library every Setpiece shares. It opens a sample film in your browser, rebuilds the editor
 when `studio/ui` changes (reload the page), and restarts Studio when `studio/server` or `src` change. Ctrl+C stops it.
 
-`pnpm --filter setpiece test` runs its tests and `pnpm --filter setpiece typecheck` checks the server's and the
+`pnpm --filter @tryworld/setpiece test` runs its tests and `pnpm --filter @tryworld/setpiece typecheck` checks the server's and the
 editor's types. One file, or one test in it, from `packages/openfilm`:
 
 ```sh
@@ -73,7 +73,7 @@ node --test --test-name-pattern="split" studio/server/film.test.mjs
 
 While `pnpm dev` runs, `packages/openfilm/.dev/bin/setpiece` (`setpiece.cmd` on Windows) is your checkout's command
 on that Studio. Ask Codex, Claude Code or any coding agent for a film and tell it to run that command instead of the
-skill's `npx -y setpiece@latest` (the release); the manual names the same command, so it keeps using it. Your films
+skill's `npx -y @tryworld/setpiece@latest` (the release); the manual names the same command, so it keeps using it. Your films
 appear in the Studio `pnpm dev` opened. Its state is in `packages/openfilm/.dev/` and its port is its own, so an
 installed Setpiece, its Studio on port 4747 and `~/.openfilm` are left alone; projects are the one thing they share:
 every Setpiece uses the same library, the one Studio's Settings chose (kept in `~/.openfilm/prefs.json`, which
@@ -120,13 +120,13 @@ Settings → Providers, or each service's variable in the environment (`ELEVENLA
 ## Releases
 
 Every pull request that changes what a package's users get carries a **changeset**: run `pnpm changeset`, pick the
-packages it changes (`setpiece`, `setpiece-desktop`, `setpiece-shared`) and how much (`patch` for a fix, `minor`
+packages it changes (`@tryworld/setpiece`, `setpiece-desktop`, `setpiece-shared`) and how much (`patch` for a fix, `minor`
 for something new; `major` only by agreement), and write a line for the changelog, as a user would read it. Commit the
 file it writes in `.changeset/`. A change to tests, docs or CI alone needs none (`pnpm changeset --empty` says so).
 Each line in the changelog links its pull request and thanks its author.
 
 All the packages share one version. When changesets reach `main`, the version workflow opens a "Version packages"
-pull request that bumps it and writes the changelogs; merging it publishes `setpiece` to npm (with provenance, from CI
+pull request that bumps it and writes the changelogs; merging it publishes `@tryworld/setpiece` to npm (with provenance, from CI
 only) and pushes the tag `v<version>`. The desktop workflow then builds the app, signs and notarizes it when the signing
 secrets are set (unsigned otherwise), and makes a draft GitHub release with the installers. Publishing that release
 makes it the latest, which the website's download links and the apps' update checks follow. The required secrets are in

@@ -37,7 +37,7 @@ import { pathToFileURL } from 'node:url';
 
 const require = createRequire(import.meta.url);
 /* by its file URL: import() takes no Windows path (`D:\…`) */
-const skillsLib = () => import(pathToFileURL(require.resolve('setpiece/skills')).href);
+const skillsLib = () => import(pathToFileURL(require.resolve('@tryworld/setpiece/skills')).href);
 
 /** The agents whose own skills can be hidden in OpenFilm (byok: the app's own agent, Pi). */
 export const FILTERED_AGENTS = Object.freeze(['claude', 'codex', 'opencode', 'qwen', 'byok']);
@@ -97,7 +97,7 @@ async function skillFolders(dir, { except = [] } = {}) {
 }
 
 /**
- * Setpiece's own skill for agents in a terminal (the repository's skills/setpiece: "run `npx setpiece`, read
+ * Setpiece's own skill for agents in a terminal (the repository's skills/setpiece: "run `npx @tryworld/setpiece`, read
  * the manual"), installed in an agent: in the app it is never wanted, as the app tells the agent the same, and its
  * `npx` would contradict it. Never shown, never let in. A skill an earlier OpenFilm install left behind is known too.
  */

@@ -24,7 +24,7 @@ laid over it, and it never changes who or what is in them.
 
 ## What you have
 
-The pictures and their metadata, the person's own song or music from `npx setpiece get`, and anything you can make
+The pictures and their metadata, the person's own song or music from `npx @tryworld/setpiece get`, and anything you can make
 pictures and motion with: the web platform and any library on it, renderers whose output becomes a clip, any font whose
 license allows it, your own built-in tools, and services the person has keys for. Setpiece's own rules still hold: the
 picture at t depends on t alone, a page has no sound, and what you render elsewhere enters as a clip under `assets/`

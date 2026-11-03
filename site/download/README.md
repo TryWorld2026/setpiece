@@ -26,6 +26,6 @@ The Worker is `tryworld-set-download`; `wrangler.jsonc` binds the custom domain
 ## Release state
 
 - There is no public installer yet: the page says Private Alpha and links GitHub Releases.
-- `setpiece` is not on npm yet: the page shows source-build instructions only.
+- The npm package is `@tryworld/setpiece`; until its first publish, the page shows source-build instructions only.
 - Release assets: https://github.com/TryWorld2026/setpiece/releases
 - Upstream: https://github.com/openfilm/openfilm

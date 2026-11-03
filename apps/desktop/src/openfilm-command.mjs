@@ -20,7 +20,7 @@ const require = createRequire(import.meta.url);
 
 /** The package's CLI. */
 export function twsetCli() {
-  const manifest = require.resolve('setpiece/package.json');
+  const manifest = require.resolve('@tryworld/setpiece/package.json');
   const bin = JSON.parse(readFileSync(manifest, 'utf8')).bin.setpiece;
   return join(dirname(manifest), bin);
 }

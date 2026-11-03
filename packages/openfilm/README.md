@@ -1,4 +1,4 @@
-# setpiece
+# @tryworld/setpiece
 
 Setpiece / 造境 is an AI film workspace. Films are web pages, the manual teaches your coding agent to make them,
 the `setpiece` command runs the work, and Studio is the desktop-class editor for changing anything in them.
@@ -14,7 +14,7 @@ copyright notice are preserved; see [NOTICE](../../NOTICE.md) and [TRADEMARK.md]
 Requires Node.js `>=22.18` and ffmpeg on macOS, Windows or Linux. The first run downloads a headless Chromium.
 
 ```sh
-npx setpiece
+npx -y @tryworld/setpiece@latest
 ```
 
 The command prints the manual. Then ask your agent for a film.

@@ -18,7 +18,7 @@ import {
   type RosterAgent,
 } from '@/lib/desktop-bridge';
 import { forgetLocalAgentSessions } from '@/lib/local-agent-run';
-import { readPreference, writePreference } from 'setpiece/studio-ui/lib/preference-storage.ts';
+import { readPreference, writePreference } from '@tryworld/setpiece/studio-ui/lib/preference-storage.ts';
 
 export type AgentPick = LocalAgentId;
 

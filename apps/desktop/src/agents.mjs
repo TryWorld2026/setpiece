@@ -141,7 +141,7 @@ the video editor, showing the project in your working directory; it updates live
 
 The project is a Setpiece film: pages with window.film, cut together by film.html. Before you change anything, run
 \`setpiece\` with no arguments and read the manual it prints; follow it. Use the \`setpiece\` command on your PATH (this
- app's own, on the Studio beside you), not \`npx setpiece\`, whatever a skill says. Studio is already open on this
+ app's own, on the Studio beside you), not \`npx @tryworld/setpiece\`, whatever a skill says. Studio is already open on this
 project: you never need \`setpiece open\` and never open Studio in a browser. Run \`setpiece look\` after each change
 to see what you made. Render the MP4 only when the person asks for it; they can also export from Studio. Reply in the
 language the person writes in.
@@ -157,7 +157,7 @@ ${STUDIO_REFERENCES}`;
  */
 export function ownAgentPrompt() {
   const prompt = readFileSync(new URL('./agent-prompt.md', import.meta.url), 'utf8').trim();
-  const manual = readFileSync(join(dirname(require.resolve('setpiece/package.json')), 'MANUAL.md'), 'utf8').replaceAll('npx setpiece', 'setpiece').trim();
+  const manual = readFileSync(join(dirname(require.resolve('@tryworld/setpiece/package.json')), 'MANUAL.md'), 'utf8').replaceAll('npx @tryworld/setpiece', 'setpiece').trim();
   return `${prompt}\n\n## Pointing at Studio\n\n${STUDIO_REFERENCES}\n\n<manual>\n${manual}\n</manual>`;
 }
 

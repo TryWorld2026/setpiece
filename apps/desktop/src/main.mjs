@@ -614,7 +614,7 @@ async function start() {
   const library = process.env.SETPIECE_LIBRARY ?? process.env.OPENFILM_LIBRARY
     ?? env.SETPIECE_LIBRARY ?? env.OPENFILM_LIBRARY;
   const mySkills = process.env.SETPIECE_SKILLS || process.env.OPENFILM_SKILLS
-    || (library ? join(dirname(library), 'Skills') : (await import('setpiece/skills')).mySkillsDir());
+    || (library ? join(dirname(library), 'Skills') : (await import('@tryworld/setpiece/skills')).mySkillsDir());
   localAgents = registerLocalAgentIpc(ipcMain, {
     trusted: fromPage,
     log,

@@ -58,9 +58,9 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ]; then
-            pnpm --filter setpiece exec playwright-core install --with-deps chromium-headless-shell
+            pnpm --filter @tryworld/setpiece exec playwright-core install --with-deps chromium-headless-shell
           else
-            pnpm --filter setpiece exec playwright-core install chromium-headless-shell
+            pnpm --filter @tryworld/setpiece exec playwright-core install chromium-headless-shell
           fi
       - run: pnpm typecheck
       - run: pnpm build

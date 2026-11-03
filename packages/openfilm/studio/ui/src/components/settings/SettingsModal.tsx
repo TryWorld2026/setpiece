@@ -382,7 +382,7 @@ function AboutGroup() {
             : t('settings.about.how')}
           control={(
             <>
-              <code className="select-all rounded-md bg-[var(--surface-2)] px-2 py-1 font-mono text-[12px] text-[var(--text)]">npx -y setpiece@latest update</code>
+              <code className="select-all rounded-md bg-[var(--surface-2)] px-2 py-1 font-mono text-[12px] text-[var(--text)]">npx -y @tryworld/setpiece@latest update</code>
               <SettingsButton variant="primary" disabled={!web.update || web.update.status === 'updating'} onClick={web.start}>
                 {web.update?.status === 'updating' ? <Loader2 size={14} className="animate-spin" aria-hidden /> : null}
                 {t('update.webUpdate')}

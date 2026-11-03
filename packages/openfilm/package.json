@@ -1,5 +1,5 @@
 {
-  "name": "setpiece",
+  "name": "@tryworld/setpiece",
   "version": "0.3.0",
   "description": "Setpiece · 造境: films as web pages, the manual that teaches your coding agent to make them, the `setpiece` command, and Studio, the AI film workspace. An independent derivative of OpenFilm.",
   "license": "MIT",

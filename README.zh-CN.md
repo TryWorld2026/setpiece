@@ -18,12 +18,12 @@ OpenFilm 的编辑、时间线、素材、智能体与导出能力，并采用�
 - 产品名：Setpiece / 造境
 - 品类：AI Film Workspace / AI 片场
 - 桌面应用：`setpiece-desktop`
-- CLI 与 npm 包：`setpiece`
+- CLI 与 npm 包：`@tryworld/setpiece`（命令：`setpiece`）
 - 共享包：`setpiece-shared`
 - 仓库：https://github.com/TryWorld2026/setpiece
 - 版本：`0.3.0`
 
-`twset` 与 `openfilm` 命令继续作为隐藏兼容别名保留。旧 npm 包 `@tryworld/set` 由 `setpiece` 接替。
+`twset` 与 `openfilm` 命令继续作为隐藏兼容别名保留。旧 npm 包 `@tryworld/set` 由 `@tryworld/setpiece` 接替。
 
 ## 从源码运行
 

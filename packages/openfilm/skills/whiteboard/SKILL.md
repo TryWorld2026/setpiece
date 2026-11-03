@@ -25,7 +25,7 @@ or slides in is not a whiteboard explainer.
 
 ## What you have
 
-A voice from `npx setpiece get tts`, with a WebVTT beside it that times every word; the person's own recording gets the
+A voice from `npx @tryworld/setpiece get tts`, with a WebVTT beside it that times every word; the person's own recording gets the
 same from `get asr`. Anything you can draw and move with: the web platform and any library on it, renderers whose
 output becomes a clip, any font whose license allows it, images from `get`, your own built-in tools, and services the
 person has keys for. Setpiece's own rules still hold: the picture at t depends on t alone, a page has no sound, and what
