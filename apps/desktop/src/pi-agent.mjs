@@ -159,9 +159,15 @@ async function open(client, cwd, resumeId) {
     resourceLoader, sessionManager, settingsManager, tools: ['read', 'bash', 'edit', 'write', 'ask'],
   });
   /* a request refused as too large is one Pi tries again (its retry: once, the failed attempt left out of what is sent)
-     when it held pictures to leave out; Pi neither retries a 413 nor, but for Anthropic's own words, compacts for it */
+     when it held pictures to leave out */
   const retryable = session._isRetryableError.bind(session);
   session._isRetryableError = (message) => (TOO_LARGE.test(String(message?.errorMessage ?? '')) ? imagesSent > 0 : retryable(message));
+  /* Pi 1.5 takes a 413 for context overflow and compacts the conversation, leaving the pictures it could not send out
+     and going on as if the model had seen them. With pictures the request is tried again above; when that still fails,
+     the turn says so instead. */
+  const compact = session._checkCompaction.bind(session);
+  session._checkCompaction = (message, skipAbortedCheck = true) =>
+    (TOO_LARGE.test(String(message?.errorMessage ?? '')) ? Promise.resolve(false) : compact(message, skipAbortedCheck));
   /* what it runs on now, as the chat names it (a conversation taken up again may be on another model and effort) */
   const now = ownOf(session.model);
   const onModel = now.id ?? startModel;
