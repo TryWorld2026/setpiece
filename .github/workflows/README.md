@@ -10,7 +10,7 @@
 
 `version.yml` needs one repository secret:
 
-- `NPM_TOKEN`: an npm automation token with publish access to the `@tryworld` scope. Without it the version pull request still opens, but merging it cannot publish.
+- `NPM_TOKEN`: an npm automation token, or a granular access token with read and write access to all packages, that can create and publish the unscoped `setpiece` package. Without it the version pull request still opens, but merging it cannot publish.
 
 The desktop build is unsigned unless the macOS signing values are present:
 
