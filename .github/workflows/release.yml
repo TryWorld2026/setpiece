@@ -29,8 +29,10 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Build the macOS app
-        run: pnpm --filter @tryworld/set-desktop release --unsigned
+      - name: Build the macOS apps
+        run: |
+          pnpm --filter @tryworld/set-desktop release --arch=arm64 --unsigned
+          pnpm --filter @tryworld/set-desktop release --arch=x64 --unsigned
       - name: Build the Windows installer
         run: pnpm --filter @tryworld/set-desktop release --platform=win --arch=x64 --unsigned
       - uses: actions/upload-artifact@v4
@@ -38,11 +40,11 @@ jobs:
           name: desktop-installers
           if-no-files-found: error
           path: |
+            apps/desktop/.release/arm64/out/*.dmg
+            apps/desktop/.release/arm64/out/*.zip
             apps/desktop/.release/x64/out/*.dmg
             apps/desktop/.release/x64/out/*.zip
-            apps/desktop/.release/x64/out/*.yml
             apps/desktop/.release/win-x64/out/*.exe
-            apps/desktop/.release/win-x64/out/*.yml
 
   publish:
     name: Draft GitHub release
