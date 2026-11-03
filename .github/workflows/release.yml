@@ -57,20 +57,20 @@ jobs:
           merge-multiple: true
       - name: Checksums
         run: |
-          cd dist
-          find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -print0 \
+          find dist -type f ! -name SHA256SUMS.txt -print0 \
             | sort -z \
-            | xargs -0 sha256sum > SHA256SUMS.txt
-          cat SHA256SUMS.txt
+            | xargs -0 sha256sum > dist/SHA256SUMS.txt
+          cat dist/SHA256SUMS.txt
       - name: Create or update the draft release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tag="${{ inputs.tag || github.ref_name }}"
+          mapfile -d '' files < <(find dist -type f -print0)
           if gh release view "$tag" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload "$tag" dist/* --clobber -R "$GITHUB_REPOSITORY"
+            gh release upload "$tag" "${files[@]}" --clobber -R "$GITHUB_REPOSITORY"
           else
-            gh release create "$tag" dist/* \
+            gh release create "$tag" "${files[@]}" \
               --draft \
               --generate-notes \
               --title "TryWorld Set $tag" \
