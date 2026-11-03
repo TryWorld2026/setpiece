@@ -283,25 +283,27 @@
           </div>
           <p class="download-status">
             <span class="status-dot" aria-hidden="true"></span>
-            Private Alpha · 尚无公开安装包
+            Public Alpha · CLI 与桌面端均已发布
           </p>
         </header>
 
         <div class="release-note">
           <div>
-            <h3>当前阶段：源码构建与内部验收</h3>
+            <h3>当前阶段：CLI 与桌面 Alpha 已发布</h3>
             <p>
-              macOS 与 Windows 的正式签名安装包尚未发布。这里不提供虚构的文件大小或下载地址；
-              最新构建状态、校验文件和发布记录请以 GitHub Releases 为准。
+              CLI 已发布为 <code>@tryworld/setpiece</code> 0.3.0，可以直接用 npx 启动 Studio。
+              macOS 与 Windows 的未签名 Alpha 安装包已作为预发布提供；正式签名与公证版本将在后续迭代中跟进。
+              macOS 首次打开如被系统阻止，请右键打开，或执行
+              <code>xattr -cr /Applications/Setpiece.app</code>。
             </p>
           </div>
           <a
             class="button button--primary"
-            href="https://github.com/TryWorld2026/setpiece/releases"
+            href="https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0"
             target="_blank"
             rel="noreferrer"
           >
-            查看 Releases
+            下载 0.3.0 Alpha
             <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -311,29 +313,29 @@
             <p class="platforms__label">macOS</p>
             <h3>Apple Silicon</h3>
             <p>M1 · M2 · M3 · M4 / arm64</p>
-            <span>等待签名与公证</span>
+            <span>未签名 Alpha · DMG / ZIP</span>
           </article>
           <article>
             <p class="platforms__label">macOS</p>
             <h3>Intel</h3>
             <p>Intel 处理器 / x64</p>
-            <span>等待签名与公证</span>
+            <span>未签名 Alpha · DMG / ZIP</span>
           </article>
           <article>
             <p class="platforms__label">Windows</p>
             <h3>PC · x64</h3>
             <p>Windows 10 / 11 · 64-bit</p>
-            <span>等待发布构建</span>
+            <span>未签名 Alpha · EXE</span>
           </article>
         </div>
       </section>
 
       <section class="section cli" id="source">
         <div class="cli__copy">
-          <p class="eyebrow">SOURCE BUILD</p>
-          <h2>从源码，<br />现在就能开机。</h2>
+          <p class="eyebrow">QUICK START</p>
+          <h2>一条命令，<br />现在就能开机。</h2>
           <p>
-            需要 Node.js 22.18 与 pnpm。npm 包为 <code>@tryworld/setpiece</code>，命令行保留 <code>setpiece</code> 作为主命令，
+            需要 Node.js 22.18。npm 包为 <code>@tryworld/setpiece</code>，命令行保留 <code>setpiece</code> 作为主命令，
             <code>twset</code> 与 <code>openfilm</code> 只是隐藏的兼容别名。
           </p>
           <a
@@ -342,31 +344,26 @@
             target="_blank"
             rel="noreferrer"
           >
-            阅读构建说明 <span aria-hidden="true">↗</span>
+            阅读使用说明 <span aria-hidden="true">↗</span>
           </a>
         </div>
 
         <div class="terminal">
           <div class="terminal__bar" aria-hidden="true">
             <span></span><span></span><span></span>
-            <em>setpiece · source</em>
+            <em>setpiece · quick start</em>
           </div>
-          <pre><code><span class="terminal__comment"># 取得源码</span>
-git clone https://github.com/TryWorld2026/setpiece.git
-cd setpiece
-
-<span class="terminal__comment"># 安装并启动 Studio</span>
-pnpm install
-pnpm --filter @tryworld/setpiece dev</code></pre>
+          <pre><code><span class="terminal__comment"># 启动 Studio</span>
+npx -y @tryworld/setpiece@latest open</code></pre>
           <button
             class="copy-button"
             type="button"
-            data-copy="git clone https://github.com/TryWorld2026/setpiece.git"
+            data-copy="npx -y @tryworld/setpiece@latest open"
           >
-            复制仓库地址
+            复制启动命令
           </button>
           <p class="terminal__note">
-            公开 npm 包尚未发布；请暂时从源码运行，不要使用不存在的安装命令。
+            npm 已发布 0.3.0。桌面未签名 Alpha 安装包见 v0.3.0 Release。
           </p>
         </div>
       </section>
