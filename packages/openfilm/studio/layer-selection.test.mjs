@@ -44,10 +44,22 @@ async function withCard(name, run, { chat = false, again = false } = {}) {
       if (withChat) window.openfilmHost = { version: 1, refer: () => {} };
     }, chat);
     await page.goto(`${studio.origin}/projects/${project.id}?key=${studio.key}`);
-    const film = page.locator('[data-viewer-picture] iframe').first();
+    const film = page.locator('[data-viewer-picture] iframe:not([data-loading])').first();
     await film.waitFor({ state: 'visible' });
     await page.locator('[data-layers-panel] [role="treeitem"]').filter({ hasText: 'On time' }).waitFor({ state: 'visible' });
-    const box = await film.boundingBox();
+    const box = await (async () => {
+      let last;
+      for (let i = 0; i < 100; i += 1) {
+        const next = await film.boundingBox();
+        if (next && next.width > 0 && next.height > 0) {
+          if (last && Math.abs(next.x - last.x) < 0.5 && Math.abs(next.y - last.y) < 0.5
+            && Math.abs(next.width - last.width) < 0.5 && Math.abs(next.height - last.height) < 0.5) return next;
+          last = next;
+        } else last = undefined;
+        await page.waitForTimeout(50);
+      }
+      assert.fail('the picture never came to rest');
+    })();
     const scale = box.width / 1080;
     /** A point of the film (its px) on the screen. */
     const on = (x, y) => ({ x: box.x + x * scale, y: box.y + y * scale });
