@@ -26,7 +26,20 @@
     "@changesets/cli": "2.31.1"
   },
   "pnpm": {
+    "packageExtensions": {
+      "app-builder-lib@26.15.3": {
+        "peerDependenciesMeta": {
+          "electron-builder-squirrel-windows": {
+            "optional": true
+          }
+        }
+      }
+    },
     "overrides": {
+      "@electron/asar": "4.3.1",
+      "@electron/universal": "3.0.6",
+      "glob@>=13 <14.1": "14.0.2",
+      "jake": "13.0.3",
       "minimatch@>=9 <11": "11.0.4",
       "zod@>=4 <4.6.6": "^4.6.6",
       "undici@>=8 <8.12.2": "^8.12.2"
