@@ -8,6 +8,11 @@ on:
       tag:
         description: Existing tag to build, such as v0.3.2
         required: true
+      unsigned_preview:
+        description: Build an unsigned macOS and Windows preview instead of the signed release
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -49,7 +54,7 @@ jobs:
   macos:
     name: macOS signed installers
     needs: signing
-    if: needs.signing.outputs.ready == 'true'
+    if: needs.signing.outputs.ready == 'true' && inputs.unsigned_preview != true
     runs-on: macos-latest
     timeout-minutes: 90
     env:
@@ -155,7 +160,7 @@ jobs:
   windows:
     name: Windows signed installer
     needs: signing
-    if: needs.signing.outputs.ready == 'true'
+    if: needs.signing.outputs.ready == 'true' && inputs.unsigned_preview != true
     runs-on: windows-latest
     timeout-minutes: 90
     env:
@@ -212,7 +217,7 @@ jobs:
   publish:
     name: Draft GitHub release
     needs: [signing, macos, windows]
-    if: needs.signing.outputs.ready == 'true'
+    if: needs.signing.outputs.ready == 'true' && inputs.unsigned_preview != true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -247,3 +252,110 @@ jobs:
               --title "Setpiece $tag" \
               -R "$GITHUB_REPOSITORY"
           fi
+
+  preview-macos:
+    name: macOS ${{ matrix.arch }} unsigned preview
+    if: inputs.unsigned_preview == true
+    runs-on: macos-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the unsigned macOS preview
+        run: pnpm --filter setpiece-desktop release --arch=${{ matrix.arch }} --preview --unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-macos-${{ matrix.arch }}
+          if-no-files-found: error
+          path: |
+            apps/desktop/.release/${{ matrix.arch }}/out/*.dmg
+            apps/desktop/.release/${{ matrix.arch }}/out/*.zip
+
+  preview-windows:
+    name: Windows x64 unsigned preview
+    if: inputs.unsigned_preview == true
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the unsigned Windows preview
+        shell: pwsh
+        run: pnpm --filter setpiece-desktop release --platform=win --arch=x64 --preview --unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-windows-x64
+          if-no-files-found: error
+          path: apps/desktop/.release/win-x64/out/*.exe
+
+  preview-publish:
+    name: Publish unsigned preview release
+    needs: [preview-macos, preview-windows]
+    if: inputs.unsigned_preview == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: preview-macos-arm64
+          path: dist/macos-arm64
+      - uses: actions/download-artifact@v4
+        with:
+          name: preview-macos-x64
+          path: dist/macos-x64
+      - uses: actions/download-artifact@v4
+        with:
+          name: preview-windows-x64
+          path: dist/windows-x64
+      - name: Checksums
+        run: |
+          find dist -type f -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > dist/SHA256SUMS.txt
+          cat dist/SHA256SUMS.txt
+      - name: Create the GitHub pre-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Release $TAG already exists"
+            exit 1
+          fi
+          cat > "$RUNNER_TEMP/notes.md" <<'EOF'
+          Setpiece / 造境 **0.3.2 Desktop Preview**，macOS 与 Windows 未签名安装包。
+
+          三个平台均由当前重设计代码构建：Apple Silicon、Intel Mac 与 Windows x64。包括 Finder 式项目库、新的编辑器工作台、检查器和 AI 助理界面。
+
+          - macOS 13+ · Apple Silicon：DMG / ZIP
+          - macOS 13+ · Intel：DMG / ZIP
+          - Windows 10 / 11 · x64：EXE
+          - 所有安装包均未签名；macOS 首次打开可能被 Gatekeeper 阻止，Windows SmartScreen 可能提示“未知发布者”
+
+          这是预发布版本，不会替换稳定版 Latest。Setpiece 是 OpenFilm 的独立商业衍生版，遵循 MIT License；上游版权与许可声明见仓库中的 LICENSE、LICENSES/OpenFilm-MIT.txt 与 NOTICE.md。
+          EOF
+          mapfile -d '' files < <(find dist -type f -print0)
+          gh release create "$TAG" "${files[@]}" \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Setpiece Preview 0.3.2 · macOS + Windows" \
+            --notes-file "$RUNNER_TEMP/notes.md" \
+            -R "$GITHUB_REPOSITORY"
