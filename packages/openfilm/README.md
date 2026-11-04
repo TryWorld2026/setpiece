@@ -6,8 +6,8 @@ the `setpiece` command runs the work, and Studio is the desktop-class editor for
 Ask Codex, Claude Code or another coding agent to make a film. It writes the film as web pages (`film.html` cuts them
 together with footage, pictures and sound), and Studio shows it taking shape. Then edit by hand or by asking.
 
-Setpiece preserves the upstream MIT license and copyright notice; see [NOTICE](../../NOTICE.md) and
-[TRADEMARK.md](TRADEMARK.md).
+Setpiece includes the upstream and third-party notices required for distribution in [NOTICE.md](NOTICE.md),
+[LICENSES](LICENSES) and [TRADEMARK.md](TRADEMARK.md).
 
 ## Install
 
@@ -35,7 +35,7 @@ anyone building a player, renderer or editor.
 
 Source: [github.com/TryWorld2026/setpiece](https://github.com/TryWorld2026/setpiece).
 
-## License
+## Notices
 
-[MIT](LICENSE). The OpenFilm name and logo are trademarks of their respective owner: see [TRADEMARK.md](TRADEMARK.md).
-Setpiece uses its own product name and branding and is not affiliated with or endorsed by the OpenFilm project.
+Distribution notices and component licenses are included in [NOTICE.md](NOTICE.md), [LICENSES](LICENSES) and
+[TRADEMARK.md](TRADEMARK.md).
