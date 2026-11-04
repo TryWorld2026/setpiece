@@ -13,6 +13,7 @@ permissions:
   contents: write
   pull-requests: write
   id-token: write
+  actions: write
 
 jobs:
   version:
@@ -46,13 +47,20 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # npm attests a publish to its source repository, and only accepts one that is public
           NPM_CONFIG_PROVENANCE: ${{ !github.event.repository.private }}
-      - name: Tag the published version
+      - name: Tag the published version and start the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           version="$(node -p "require('./packages/openfilm/package.json').version")"
           tag="v$version"
+          created=false
           if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then
             echo "$tag already exists"
           else
             git tag "$tag"
             git push origin "$tag"
+            created=true
+          fi
+          if [ "$created" = true ]; then
+            gh workflow run release.yml -f tag="$tag" -R "$GITHUB_REPOSITORY"
           fi
