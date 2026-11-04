@@ -1,6 +1,6 @@
 /**
  * Build the app people install: `pnpm --filter setpiece-desktop release` (`--arch=x64` for Intel Macs, default this
- * Mac's; `--unsigned` for a local try; `--platform=win --arch=x64|arm64` for the Windows installer, built here too;
+ * Mac's; `--unsigned` for a local try; `--platform=win --arch=x64|arm64` for the Windows installer, built on Windows;
  * `--official` for the project's own build; `--preview` for "Setpiece Preview", an app of its own to try a build in).
  *
  * Which build it is comes from the `@tryworld/setpiece` package's product files: a build of this source uses product.json,
@@ -20,15 +20,17 @@
  *      playwright-core takes). People never download either: on a slow or blocked connection the first start used to
  *      fail there;
  *   3. electron-builder makes the .dmg (to download) and the .zip (for updates), signed with the Developer ID
- *      SETPIECE_SIGN_IDENTITY ("Name (TEAMID)") and notarized (APPLE_TEAM_ID, the `setpiece-notary` keychain profile or
- *      SETPIECE_NOTARY_PROFILE), with the update feed written in (none without one). Without SETPIECE_SIGN_IDENTITY
- *      and APPLE_TEAM_ID the build is unsigned, as with --unsigned.
+ *      SETPIECE_SIGN_IDENTITY ("Developer ID Application: Name (TEAMID)", or just "Name (TEAMID)") and notarized
+ *      (APPLE_TEAM_ID, the `setpiece-notary` keychain profile or SETPIECE_NOTARY_PROFILE), with the update feed
+ *      written in (none without one). Without SETPIECE_SIGN_IDENTITY and APPLE_TEAM_ID the build is unsigned, as
+ *      with --unsigned.
  *
  *   4. the .dmg is signed and notarized too, so the download itself opens without a warning.
  *
- * Windows: an NSIS installer (Setpiece-Setup-<version>-<arch>.exe, per user, no admin) and its feed (latest.yml). It is
- * built on this Mac: the program's icon and version are written into Setpiece.exe with resedit (rcedit would need
- * wine). Not code-signed yet (no Windows certificate): SmartScreen asks once, "More info" → "Run anyway".
+ * Windows: an NSIS installer (Setpiece-Setup-<version>-<arch>.exe, per user, no admin) and its feed (latest.yml). Built
+ * on a Windows runner, electron-builder edits the executable and signs both it and the installer with WIN_CSC_LINK /
+ * WIN_CSC_KEY_PASSWORD. A cross-build on macOS can still make an unsigned installer for local testing, using resedit
+ * to write the icon and version because rcedit would need wine.
  *
  * Output: .release/<arch>/out (git-ignored). Nothing is uploaded: official builds are published by the project's
  * release pipeline.
@@ -49,16 +51,31 @@ const protocol = dirname(require.resolve(`${PACKAGE}/package.json`));
 const asked = process.argv.find((a) => a.startsWith('--arch='))?.slice('--arch='.length);
 const arch = asked === 'x64' || asked === 'arm64' ? asked : process.arch === 'arm64' ? 'arm64' : 'x64';
 const win = process.argv.includes('--platform=win');
+const nativeWindows = win && process.platform === 'win32';
 const work = join(desktop, '.release', win ? `win-${arch}` : arch);
 const stage = join(work, 'app');
 const out = join(work, 'out');
-/* the Developer ID ("Name (TEAMID)") and its team, from the environment (the release pipeline's secrets) */
+/* the Developer ID ("Developer ID Application: Name (TEAMID)", or just "Name (TEAMID)") and its team, from the
+   environment (the release pipeline's secrets) */
 const IDENTITY = (process.env.SETPIECE_SIGN_IDENTITY ?? process.env.OPENFILM_SIGN_IDENTITY)?.trim() || '';
 const TEAM_ID = process.env.APPLE_TEAM_ID?.trim() || '';
-const unsigned = process.argv.includes('--unsigned') || (!win && (!IDENTITY || !TEAM_ID));
+/* electron-builder's Windows certificate variables; the workflow uses the WIN_* names */
+const WINDOWS_CERT = (process.env.WIN_CSC_LINK ?? process.env.CSC_LINK)?.trim() || '';
+const WINDOWS_CERT_PASSWORD = (process.env.WIN_CSC_KEY_PASSWORD ?? process.env.CSC_KEY_PASSWORD)?.trim() || '';
+const unsigned = process.argv.includes('--unsigned')
+  || (win ? !(WINDOWS_CERT && WINDOWS_CERT_PASSWORD) : (!IDENTITY || !TEAM_ID));
 if (unsigned && !win && !process.argv.includes('--unsigned')) {
   console.warn('SETPIECE_SIGN_IDENTITY and APPLE_TEAM_ID are not set: building an unsigned app (not notarized). Official builds are signed by the release pipeline.');
 }
+if (unsigned && win && !process.argv.includes('--unsigned')) {
+  console.warn('WIN_CSC_LINK and WIN_CSC_KEY_PASSWORD are not set: building an unsigned Windows installer.');
+}
+if (win && !unsigned && !nativeWindows) {
+  throw new Error('A signed Windows build needs a Windows runner; use --unsigned for a local cross-build on macOS.');
+}
+const signingIdentity = IDENTITY && !IDENTITY.startsWith('Developer ID Application:')
+  ? `Developer ID Application: ${IDENTITY}`
+  : IDENTITY;
 
 /* this build's product: its update feed (see the header) */
 const official = process.argv.includes('--official');
@@ -72,6 +89,9 @@ const product = JSON.parse(readFileSync(productFile, 'utf8'));
 const updates = typeof product.desktop?.updates === 'string' ? product.desktop.updates.trim().replace(/\/+$/, '') : '';
 /** Where the packaged app looks for updates (the release's files are uploaded there), or null: it never looks. */
 export const FEED = updates ? `${updates}/${win ? 'win' : 'mac'}/${arch}` : null;
+if (official && !FEED) {
+  console.warn('This official build has no update feed: set desktop.updates in product.official.json before shipping it to users.');
+}
 const NOTARY_PROFILE = process.env.SETPIECE_NOTARY_PROFILE || process.env.OPENFILM_NOTARY_PROFILE || 'setpiece-notary';
 
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: 'inherit', ...opts });
@@ -127,7 +147,13 @@ run(process.execPath, [join(stage, 'node_modules/playwright-core/cli.js'), 'inst
 /* 3. the app */
 const builder = require('electron-builder');
 const electronVersion = require('electron/package.json').version;
-const env = unsigned || win ? { CSC_IDENTITY_AUTO_DISCOVERY: 'false' } : { APPLE_KEYCHAIN_PROFILE: NOTARY_PROFILE, APPLE_TEAM_ID: TEAM_ID };
+if (nativeWindows && !unsigned) {
+  process.env.CSC_LINK ||= WINDOWS_CERT;
+  process.env.CSC_KEY_PASSWORD ||= WINDOWS_CERT_PASSWORD;
+}
+const env = unsigned ? { CSC_IDENTITY_AUTO_DISCOVERY: 'false' }
+  : win ? {}
+  : { APPLE_KEYCHAIN_PROFILE: NOTARY_PROFILE, APPLE_TEAM_ID: TEAM_ID };
 Object.assign(process.env, env);
 await builder.build({
   projectDir: stage,
@@ -135,15 +161,16 @@ await builder.build({
   ...(win ? { win: ['nsis'] } : { mac: ['dmg', 'zip'] }),
   [arch]: true,
   config: {
-    afterPack: win ? (context) => windowsResources(context) : undefined,
+    afterPack: win && !nativeWindows ? (context) => windowsResources(context) : undefined,
     /* unsigned on a Mac: signed ad hoc, whole, before the .dmg and .zip are made. Electron's fuses are written into
        its framework after the linker signed it, and an Apple chip kills a program whose pages no longer match its
        signature ("Code Signature Invalid") the moment it starts */
     afterSign: !win && unsigned ? (context) => adHocSign(context) : undefined,
     win: {
       icon: join(desktop, 'build/icon.ico'),
-      /* resedit writes the icon and version (afterPack); rcedit would need wine on this Mac */
-      signAndEditExecutable: false,
+      /* on Windows, electron-builder's rcedit writes the icon and version and the certificate signs the result;
+         a cross-build uses resedit in afterPack because rcedit would need wine */
+      signAndEditExecutable: nativeWindows,
       artifactName: `${NAME.replace(' ', '-')}-Setup-\${arch}.\${ext}`,
     },
     nsis: {
@@ -161,12 +188,20 @@ await builder.build({
     productName: NAME,
     copyright: 'Copyright © 2026 TryWorld',
     electronVersion,
+    forceCodeSigning: !unsigned,
     asar: true,
     /* run by Electron as Node from outside the archive: the CLI the agents run, the agents' adapters */
     asarUnpack: [`node_modules/${PACKAGE}/**`, 'node_modules/@agentclientprotocol/**', 'node_modules/playwright-core/**'],
     files: ['src/**/*', 'shell/dist/**/*', 'package.json', 'node_modules/**/*'],
     /* ffmpeg and the headless browser (2b), as files of their own beside the archive: they run as programs */
-    extraResources: [{ from: runtime, to: 'runtime' }],
+    extraResources: [
+      { from: runtime, to: 'runtime' },
+      { from: join(desktop, '../../NOTICE.md'), to: 'NOTICE.md' },
+      { from: join(desktop, '../../LICENSE'), to: 'LICENSE' },
+      { from: join(desktop, '../../THIRD_PARTY_NOTICES.md'), to: 'THIRD_PARTY_NOTICES.md' },
+      { from: join(desktop, '../../LICENSES'), to: 'LICENSES' },
+      { from: join(desktop, '../../legal'), to: 'legal' },
+    ],
     directories: { output: out, buildResources: join(desktop, 'build') },
     electronFuses: {
       runAsNode: true,
@@ -189,30 +224,32 @@ await builder.build({
       gatekeeperAssess: false,
       entitlements: join(desktop, 'build/entitlements.mac.plist'),
       entitlementsInherit: join(desktop, 'build/entitlements.mac.plist'),
-      ...(unsigned ? { identity: null } : { identity: IDENTITY, notarize: true }),
+      ...(unsigned ? { identity: null } : { identity: signingIdentity, notarize: true }),
     },
     /* the downloads keep one name from version to version: the website links the latest release's by it */
     dmg: { title: NAME, artifactName: `${NAME.replace(' ', '-')}-\${arch}.\${ext}` },
   },
 });
 
-if (!unsigned && !win && FEED) {
+if (!unsigned && !win) {
   const app = join(out, arch === 'arm64' ? 'mac-arm64' : 'mac', `${NAME}.app`);
   run('/usr/bin/codesign', ['--verify', '--deep', '--strict', app]);
   run('/usr/bin/xcrun', ['stapler', 'validate', app]);
   /* 4. the download */
   const dmg = join(out, `${NAME.replace(' ', '-')}-${arch}.dmg`);
-  run('/usr/bin/codesign', ['--sign', `Developer ID Application: ${IDENTITY}`, '--timestamp', dmg]);
+  run('/usr/bin/codesign', ['--sign', signingIdentity, '--timestamp', dmg]);
   run('/usr/bin/xcrun', ['notarytool', 'submit', dmg, '--keychain-profile', NOTARY_PROFILE, '--wait']);
   run('/usr/bin/xcrun', ['stapler', 'staple', dmg]);
   run('/usr/sbin/spctl', ['-a', '-t', 'open', '--context', 'context:primary-signature', '-v', dmg]);
-  /* signing and stapling changed the .dmg: the feed lists it as it is now (the updater itself takes the .zip) */
-  const bytes = readFileSync(dmg);
-  const sha512 = createHash('sha512').update(bytes).digest('base64');
-  const feed = join(out, 'latest-mac.yml');
-  const name = basename(dmg);
-  writeFileSync(feed, readFileSync(feed, 'utf8').replace(new RegExp(`(- url: ${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\n\\s+sha512: )\\S+(\\n\\s+size: )\\d+`), `$1${sha512}$2${bytes.length}`));
-  if (!readFileSync(feed, 'utf8').includes(sha512)) throw new Error('the feed does not list the signed .dmg');
+  if (FEED) {
+    /* signing and stapling changed the .dmg: the feed lists it as it is now (the updater itself takes the .zip) */
+    const bytes = readFileSync(dmg);
+    const sha512 = createHash('sha512').update(bytes).digest('base64');
+    const feed = join(out, 'latest-mac.yml');
+    const name = basename(dmg);
+    writeFileSync(feed, readFileSync(feed, 'utf8').replace(new RegExp(`(- url: ${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\n\\s+sha512: )\\S+(\\n\\s+size: )\\d+`), `$1${sha512}$2${bytes.length}`));
+    if (!readFileSync(feed, 'utf8').includes(sha512)) throw new Error('the feed does not list the signed .dmg');
+  }
 }
 console.log(`\n${readdirSync(out).filter((f) => /\.(dmg|zip|exe|yml)$/.test(f)).map((f) => join(out, f)).join('\n')}`);
 console.log(`feed: ${FEED ?? 'none (a build of this source: it never looks for updates)'}`);

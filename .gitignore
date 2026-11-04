@@ -5,8 +5,13 @@ node_modules/
 # builds and caches
 dist/
 .release/
+.feed-source/
 coverage/
 *.tsbuildinfo
+
+# generated update feeds: deployed by .github/workflows/update-feed.yml
+site/download/public/updates/
+.wrangler/
 
 # from-source runs: their own state, projects and exports (`pnpm dev`, `pnpm dev:desktop`)
 .dev/

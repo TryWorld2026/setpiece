@@ -1,0 +1,95 @@
+name: Publish update feed
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published release tag, such as v0.3.1
+        required: true
+      channel:
+        description: Which feed clients should read
+        type: choice
+        options: [stable, beta]
+        default: stable
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-feed-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Deploy signed-update metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Choose the channel
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
+          if [ "${{ github.event_name }}" = "release" ]; then
+            if [ "${{ github.event.release.prerelease }}" = "true" ]; then
+              echo "CHANNEL=beta" >> "$GITHUB_ENV"
+            else
+              echo "CHANNEL=stable" >> "$GITHUB_ENV"
+            fi
+          else
+            echo "CHANNEL=${{ inputs.channel }}" >> "$GITHUB_ENV"
+          fi
+      - name: Verify the Cloudflare token
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not set"
+            exit 1
+          fi
+      - name: Download the release feeds
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p .feed-source
+          gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" \
+            -p latest-mac-arm64.yml -p latest-mac-x64.yml -p latest.yml \
+            -D .feed-source
+          gh release view "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" --json assets \
+            --jq '.assets[].name' > .feed-source/assets.txt
+      - name: Rewrite feed URLs to the immutable release assets
+        shell: bash
+        run: |
+          node scripts/prepare-update-feed.mjs \
+            --tag "$RELEASE_TAG" \
+            --repository "$GITHUB_REPOSITORY" \
+            --source .feed-source \
+            --output site/download/public/updates \
+            --channel "$CHANNEL" \
+            --assets .feed-source/assets.txt
+      - name: Validate the deployed feed files
+        shell: bash
+        run: |
+          for file in \
+            "site/download/public/updates/mac/arm64/$([ "$CHANNEL" = beta ] && echo beta-mac.yml || echo latest-mac.yml)" \
+            "site/download/public/updates/mac/x64/$([ "$CHANNEL" = beta ] && echo beta-mac.yml || echo latest-mac.yml)" \
+            "site/download/public/updates/win/x64/$([ "$CHANNEL" = beta ] && echo beta.yml || echo latest.yml)"; do
+            test -s "$file"
+            grep -q 'https://github.com/' "$file"
+          done
+      - name: Deploy the feed with the download page
+        working-directory: site/download
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx -y wrangler@4.157.0 deploy --config wrangler.jsonc

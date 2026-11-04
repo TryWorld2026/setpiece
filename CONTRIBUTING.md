@@ -106,9 +106,11 @@ Its renamed copy of Electron lives in `apps/desktop/.dev/` (git-ignored), signed
 certificate to run or change it. Its window's page imports Studio's editor
 from `packages/openfilm` as source, so a change to Studio shows in the app at its next start.
 
-`pnpm --filter setpiece-desktop release` builds an installable app into `apps/desktop/.release/` (git-ignored),
-unsigned unless `OPENFILM_SIGN_IDENTITY` and `APPLE_TEAM_ID` are set. A build you make is yours to try; before you
-distribute one, read [TRADEMARK.md](TRADEMARK.md): a fork published as its own needs its own name and icon.
+`pnpm --filter setpiece-desktop release` builds an installable app into `apps/desktop/.release/` (git-ignored).
+A local build is unsigned unless its platform's signing variables are set. Official releases have no unsigned
+fallback: the release workflow requires the macOS and Windows credentials, verifies both signatures, and refuses to
+upload a package that fails. Before you distribute a build of your own, read [TRADEMARK.md](TRADEMARK.md): a fork
+published as its own needs its own name and icon.
 
 ## The update feed and product.json
 
@@ -126,10 +128,11 @@ file it writes in `.changeset/`. A change to tests, docs or CI alone needs none 
 Each line in the changelog links its pull request and thanks its author.
 
 All the packages share one version. When changesets reach `main`, the version workflow opens a "Version packages"
-pull request that bumps it and writes the changelogs; merging it publishes `@tryworld/setpiece` to npm (with provenance, from CI
-only) and pushes the tag `v<version>`. The desktop workflow then builds the app, signs and notarizes it when the signing
-secrets are set (unsigned otherwise), and makes a draft GitHub release with the installers. Publishing that release
-makes it the latest, which the website's download links and the apps' update checks follow. The required secrets are in
+pull request that bumps it and writes the changelogs; merging it publishes `@tryworld/setpiece` to npm (with provenance,
+from CI only) and pushes the tag `v<version>`. The desktop workflow then builds the app, requires the macOS and Windows
+signing secrets, verifies both signatures, and makes a draft GitHub release with the installers. There is no unsigned
+official build. Publishing the release makes its installers available to the website, and the update-feed workflow
+deploys the architecture-specific metadata the apps follow. The required secrets are in
 [.github/workflows/README.md](.github/workflows/README.md).
 
 ## Where to start

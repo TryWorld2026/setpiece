@@ -18,6 +18,7 @@
     "twset": "node packages/openfilm/bin/twset.mjs",
     "audit:public": "node scripts/audit-public.mjs",
     "check:pack": "node scripts/check-pack.mjs",
+    "release:preflight": "node scripts/release-preflight.mjs",
     "skills:sync": "node scripts/sync-skills.mjs",
     "changeset": "changeset",
     "examples:sync": "node scripts/sync-examples.mjs"

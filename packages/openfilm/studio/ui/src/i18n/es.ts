@@ -1614,6 +1614,8 @@ lockedBody: 'Studio está en marcha, pero solo deja entrar a un navegador que lo
       github: 'GitHub',
       examples: 'Ejemplos',
       site: 'Sitio web',
+      eula: 'Licencia',
+      privacy: 'Privacidad',
     },
     sections: {
       agents: 'Agentes',

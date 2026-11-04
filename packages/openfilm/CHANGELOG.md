@@ -1,5 +1,12 @@
 # @tryworld/set
 
+## 0.3.1
+
+### Patch Changes
+
+- Prepare the v0.3.1 release: include legal notices in packaged builds, link them from Settings and the download page,
+  and prevent update metadata from being cached by the download host.
+
 ## 0.2.8
 
 ### Patch Changes

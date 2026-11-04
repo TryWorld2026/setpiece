@@ -7,7 +7,7 @@ Setpiece identity, not the TryWorld brand.
 
 ```powershell
 cd "path\to\setpiece\site\download"
-npx -y wrangler@4.155.0 deploy --config wrangler.jsonc
+npx -y wrangler@4.157.0 deploy --config wrangler.jsonc
 ```
 
 The Worker is `tryworld-set-download`; `wrangler.jsonc` binds the custom domain

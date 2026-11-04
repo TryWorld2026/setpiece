@@ -105,9 +105,13 @@ try {
       const packed = JSON.parse(read('product.json'));
       const official = JSON.parse(readFileSync(join(pkgDir, 'product.official.json'), 'utf8'));
       if (!isDeepStrictEqual(packed, official)) problem(name, 'product.json in the package is not product.official.json');
-      else console.log(`  product.json: official (updates ${packed.desktop.updates})`);
+      else if (packed.desktop.updates) console.log(`  product.json: official (updates ${packed.desktop.updates})`);
+      else console.warn('  product.json: official, but updates are disabled (desktop.updates is empty)');
       if (!readFileSync(join(pkgDir, 'product.json')).equals(productBefore)) problem(name, "the checkout's product.json was not restored after packing");
       if (!listed.has('studio/ui/dist/index.html')) problem(name, "Studio's editor is not built (studio/ui/dist)");
+      for (const file of ['LICENSE', 'NOTICE.md', 'LICENSES/OpenFilm-MIT.txt', 'THIRD_PARTY_NOTICES.md']) {
+        if (!listed.has(file)) problem(name, `${file} is missing from the published package`);
+      }
     }
   }
 } finally {

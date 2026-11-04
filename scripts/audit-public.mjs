@@ -5,8 +5,8 @@
  * node_modules, dist, .dev and .release, and reports:
  *
  *   cjk       Chinese, Japanese or Korean prose outside the i18n dictionaries, the release notes (whats-new.ts), translated docs,
- *             public site copy under site/download/public/, the design references under docs/redesign/, and a skill's
- *             openfilm.json (its title and summary in each language)
+ *             public site copy under site/download/public/, the design references under docs/redesign/, the public legal
+ *             drafts under legal/, and a skill's openfilm.json (its title and summary in each language)
  *             (README.zh-CN.md): comments and text are in English.
  *             A line is prose when its CJK characters outweigh its Latin words (one character for four letters), so
  *             an English comment that quotes 永 or 2026年10月7日 passes. In tests and fixtures, string literals are
@@ -43,6 +43,7 @@ const SKIP_DIR = /(^|\/)(node_modules|dist|\.dev|\.release|\.git)\//;
 const LOCALE = /(^|\/)(i18n|locales)\/|\/whats-new\.ts$|\.(zh-CN|ja|ko|es)\.md$|(^|\/)skills\/[^/]+\/openfilm\.json$/;
 const SITE_COPY = /(^|\/)site\/download\/public\//;
 const DESIGN_COPY = /^docs\/redesign\//;
+const LEGAL_COPY = /^legal\//;
 const TESTISH = /(\.test\.[cm]?[jt]sx?$|(^|\/)(test|tests|fixtures?|__fixtures__)\/)/;
 
 /** A home folder with a real name in it; the placeholders docs and tests use are fine. */
@@ -142,11 +143,12 @@ function scan(files) {
     const locale = LOCALE.test(file);
     const siteCopy = SITE_COPY.test(file);
     const designCopy = DESIGN_COPY.test(file);
+    const legalCopy = LEGAL_COPY.test(file);
     const testish = TESTISH.test(file);
-    if ((locale || siteCopy || designCopy) && HAS_CJK.test(text)) locales++;
+    if ((locale || siteCopy || designCopy || legalCopy) && HAS_CJK.test(text)) locales++;
     text.split('\n').forEach((line, i) => {
       const n = i + 1;
-      if (!locale && !siteCopy && !designCopy && isProse(testish ? withoutStrings(line) : line)) report(file, n, 'cjk', line.trim());
+      if (!locale && !siteCopy && !designCopy && !legalCopy && isProse(testish ? withoutStrings(line) : line)) report(file, n, 'cjk', line.trim());
       if (HOME.test(line)) report(file, n, 'private', `home folder: ${line.trim()}`);
       for (const term of TERMS) if (term.test(line)) report(file, n, 'private', `${term.source}: ${line.trim()}`);
       if (line.includes('../')) checkPath(file, n, line);

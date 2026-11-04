@@ -19,7 +19,15 @@ Codex, Claude Code, the other agents, your own key, and Studio with your own med
 
 ## Builds
 
-`npm run release` builds the app into `.release/` (git-ignored). Without `OPENFILM_SIGN_IDENTITY` and `APPLE_TEAM_ID`
-it is unsigned. Like a run from source, it never looks for updates: the feed comes from the `setpiece` package's
-`product.json`, empty in the repository. Official builds, signed, notarized and
-published, are produced by the project's release pipeline; see TRADEMARK.md before distributing a build of your own.
+`npm run release` builds the app into `.release/` (git-ignored). A local macOS build is unsigned unless
+`SETPIECE_SIGN_IDENTITY` and `APPLE_TEAM_ID` are set. On Windows, `WIN_CSC_LINK` and `WIN_CSC_KEY_PASSWORD` sign both
+the executable and the NSIS installer; a signed Windows build must run on Windows, while `--unsigned` remains available
+for a local cross-build on macOS. A build of this source uses the empty `product.json` and never looks for updates.
+Official builds use `product.official.json`, must be signed and notarized by the release workflow, and point at the
+update feed `https://set.tryworld.com.cn/updates`. The feed route is wired; it becomes live after a published release
+successfully runs `update-feed.yml`.
+
+The release pipeline verifies `codesign` / `spctl` on macOS and `Get-AuthenticodeSignature` on Windows before uploading
+anything. See [docs/releases/v0.3.1.md](../../docs/releases/v0.3.1.md) for the required secrets and
+[TRADEMARK.md](../../TRADEMARK.md) before distributing a build of your own. The EULA and privacy draft are copied into
+the app as `legal/EULA.md` and `legal/PRIVACY.md`.

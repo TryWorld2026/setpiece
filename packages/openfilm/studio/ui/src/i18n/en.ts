@@ -1615,6 +1615,8 @@ lockedBody: 'Studio is running, but it only lets in a browser that opened it onc
       github: 'GitHub',
       examples: 'Examples',
       site: 'Website',
+      eula: 'License',
+      privacy: 'Privacy',
     },
     sections: {
       agents: 'Agents',

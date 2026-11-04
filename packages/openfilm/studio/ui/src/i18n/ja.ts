@@ -1614,6 +1614,8 @@ lockedBody: 'Studio は動いていますが、キー付きのアドレスで一
       github: 'GitHub',
       examples: 'サンプル',
       site: 'ウェブサイト',
+      eula: 'ライセンス',
+      privacy: 'プライバシー',
     },
     sections: {
       agents: 'エージェント',

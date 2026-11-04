@@ -67,3 +67,4 @@ jobs:
       - run: pnpm test
       - run: pnpm audit:public
       - run: pnpm check:pack
+      - run: pnpm release:preflight
