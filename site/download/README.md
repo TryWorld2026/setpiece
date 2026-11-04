@@ -27,9 +27,8 @@ so old links keep working without serving a second copy of the site.
 ## Release state
 
 - The npm package is `@tryworld/setpiece` at `0.3.2`; the page shows the npx quick start.
-- The redesigned desktop UI is available for all three platforms in the unsigned `v0.3.2-preview.2` pre-release:
+- The redesigned desktop UI is available for all three platforms in the unsigned `v0.3.2-preview.4` pre-release:
   Apple Silicon DMG/ZIP, Intel Mac DMG/ZIP, Windows x64 EXE and `SHA256SUMS.txt`.
 - All three installers are built from the same source revision. Signed and notarized desktop builds still require the
   release credentials.
-- Desktop Preview: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.2
-- Upstream: https://github.com/openfilm/openfilm
+- Desktop Preview: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.4

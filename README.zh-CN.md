@@ -12,7 +12,7 @@
 ## 状态
 
 `@tryworld/setpiece@0.3.2` 是当前 CLI、npm 版本，`v0.3.2` 仍是 GitHub Latest。重设计后的桌面界面已随未签名
-[`v0.3.2-preview.2`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.2) 预发布版开放测试：
+[`v0.3.2-preview.4`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.4) 预发布版开放测试：
 Apple Silicon、Intel Mac 与 Windows x64 安装包均由同一份源码构建。正式签名与公证的桌面版本仍需发布密钥。
 源码保留上游 Git 历史与必要的 MIT 归属声明。
 
@@ -25,7 +25,7 @@ Apple Silicon、Intel Mac 与 Windows x64 安装包均由同一份源码构建�
 - 共享包：`setpiece-shared`
 - 仓库：https://github.com/TryWorld2026/setpiece
 - CLI 与 npm 版本：`0.3.2`
-- 桌面 Preview：`0.3.2-preview.2`（macOS Apple Silicon、Intel Mac 与 Windows x64；未签名）
+- 桌面 Preview：`0.3.2-preview.4`（macOS Apple Silicon、Intel Mac 与 Windows x64；未签名）
 
 命令只提供 `setpiece`，不再安装旧命令别名。旧 npm 包 `@tryworld/set` 已弃用，并指引用户迁移到
 `@tryworld/setpiece`。
@@ -39,7 +39,7 @@ npx -y @tryworld/setpiece@latest open
 ```
 
 用户可以下载未签名的
-[造境 0.3.2 桌面 Preview](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.2)：
+[造境 0.3.2 桌面 Preview](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.4)：
 Apple Silicon DMG/ZIP、Intel Mac DMG/ZIP 与 Windows x64 EXE。macOS 首次打开请右键选择打开；
 如被 Gatekeeper 阻止，可执行 `xattr -cr /Applications/Setpiece.app`。
 

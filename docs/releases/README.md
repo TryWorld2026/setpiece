@@ -5,9 +5,9 @@
 - `@tryworld/setpiece@0.3.2` is the current npm release. A fresh install exposes only the `setpiece` command;
   the interim `twset` and `openfilm` aliases are no longer installed.
 - `v0.3.2` remains the GitHub Latest release. The redesigned desktop UI is published as the unsigned all-platform
-  pre-release `v0.3.2-preview.2`, with Apple Silicon, Intel Mac and Windows x64 installers built from the same source
-  revision; it does not replace Latest. The older `v0.3.0` and `v0.3.2-preview.1` downloads remain as release history
-  only and are no longer linked from the download page.
+  pre-release `v0.3.2-preview.4`, with Apple Silicon, Intel Mac and Windows x64 installers built from the same source
+  revision; it does not replace Latest. The older `v0.3.0` and `v0.3.2-preview.1`–`preview.3` downloads remain as
+  release history only and are no longer linked from the download page.
 - The `v0.3.1` and `v0.3.2` tags have no signed desktop installer set. The desktop release workflow skips signed builds
   when the macOS or Windows signing credentials are absent, rather than failing the run.
 - The former `v0.2.8` GitHub releases were removed. The old `@tryworld/set` npm package is deprecated and points users
