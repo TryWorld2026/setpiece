@@ -11,9 +11,9 @@
 
 ## 状态
 
-`@tryworld/setpiece@0.3.1` 是当前 CLI 与 npm 版本。公开桌面 Alpha 仍为 `v0.3.0`，提供未签名的 macOS 与
-Windows 安装包；`v0.3.1` 桌面安装包正在等待发布签名和公证密钥，尚未发布。源码保留上游 Git 历史与必要的 MIT
-归属声明。
+`@tryworld/setpiece@0.3.2` 是当前 CLI 与 npm 版本。公开桌面 Alpha 仍为 `v0.3.0`，提供未签名的 macOS 与
+Windows 安装包；`v0.3.1` 与 `v0.3.2` 桌面安装包正在等待发布签名和公证密钥，尚未发布。源码保留上游 Git
+历史与必要的 MIT 归属声明。
 
 ## 产品
 
@@ -23,7 +23,7 @@ Windows 安装包；`v0.3.1` 桌面安装包正在等待发布签名和公证密
 - CLI 与 npm 包：`@tryworld/setpiece`（命令：`setpiece`）
 - 共享包：`setpiece-shared`
 - 仓库：https://github.com/TryWorld2026/setpiece
-- CLI 与 npm 版本：`0.3.1`
+- CLI 与 npm 版本：`0.3.2`
 - 公开桌面 Alpha：`0.3.0`（未签名）
 
 命令只提供 `setpiece`，不再安装旧命令别名。旧 npm 包 `@tryworld/set` 由 `@tryworld/setpiece` 接替。

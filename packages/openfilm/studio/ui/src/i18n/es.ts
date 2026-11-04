@@ -1612,7 +1612,7 @@ lockedBody: 'Studio está en marcha, pero solo deja entrar a un navegador que lo
     },
     links: {
       github: 'GitHub',
-      examples: 'Ejemplos',
+      examples: 'Ejemplos upstream',
       site: 'Sitio web',
       eula: 'Licencia',
       privacy: 'Privacidad',

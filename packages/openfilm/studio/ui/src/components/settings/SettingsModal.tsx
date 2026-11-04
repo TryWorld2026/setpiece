@@ -3,7 +3,7 @@
  * right as a page of titled groups. General (the theme and the language), Agents (in an app with a chat: the agents
  * it can use), Providers (the person's own keys for media services), Models (which provider and model makes each kind
  * of media), the keyboard shortcuts, Advanced and Developer; the search finds a section by any phrase on it. At the
- * foot of the nav, quietly, where OpenFilm lives: its code, the examples and the website.
+ * foot of the nav, quietly, where Setpiece lives: its code, the examples and the website.
  */
 import React from 'react';
 import { createPortal } from 'react-dom';
@@ -27,7 +27,7 @@ import { StorageGroup } from './StorageGroup';
 
 export type SettingsSection = 'general' | 'agents' | 'providers' | 'models' | 'developer' | 'shortcuts' | 'advanced';
 
-/* the nav, in groups: what OpenFilm does, then help (Agents only inside an app with a chat: lib/host.ts `agents`;
+/* the nav, in groups: what Setpiece does, then help (Agents only inside an app with a chat: lib/host.ts `agents`;
    Advanced for what is already set for the best experience; Developer always, for its diagnostics) */
 const NAV: Array<{ group: 'settings' | 'help'; sections: SettingsSection[] }> = [
   { group: 'settings', sections: ['general', ...(studioHost?.agents ? ['agents' as const] : []), 'providers', 'models'] },

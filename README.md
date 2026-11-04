@@ -12,9 +12,10 @@ with a new identity and interface.
 
 ## Status
 
-`@tryworld/setpiece@0.3.1` is the current CLI and npm release. The public desktop Alpha remains `v0.3.0`, with
-unsigned macOS and Windows installers; `v0.3.1` desktop binaries are waiting on the release signing and notarization
-secrets and have not been published. The source preserves the upstream Git history and required MIT attribution.
+`@tryworld/setpiece@0.3.2` is the current CLI and npm release. The public desktop Alpha remains `v0.3.0`, with
+unsigned macOS and Windows installers; the `v0.3.1` and `v0.3.2` desktop binaries are waiting on the release signing
+and notarization secrets and have not been published. The source preserves the upstream Git history and required MIT
+attribution.
 
 ## Product
 
@@ -24,7 +25,7 @@ secrets and have not been published. The source preserves the upstream Git histo
 - CLI and npm package: `@tryworld/setpiece` (command: `setpiece`)
 - Shared package: `setpiece-shared`
 - Repository: https://github.com/TryWorld2026/setpiece
-- CLI and npm version: `0.3.1`
+- CLI and npm version: `0.3.2`
 - Public desktop Alpha: `0.3.0` (unsigned)
 
 The command is `setpiece`. Legacy command aliases are no longer installed. The previous `@tryworld/set` npm package

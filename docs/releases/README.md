@@ -2,16 +2,16 @@
 
 ## Current state
 
-- `@tryworld/setpiece@0.3.1` is the current npm release. It still exposes the interim `twset` and `openfilm`
-  command aliases; the pending `0.3.2` changeset removes them so a fresh install exposes only `setpiece`.
-- `v0.3.0` is the current GitHub Latest release and the current public desktop Alpha, with unsigned macOS and Windows
-  installers.
-- A `v0.3.1` Git tag exists, but there is no `v0.3.1` GitHub release or desktop installer set yet. The release
-  workflow requires the macOS and Windows signing credentials before it will build.
+- `@tryworld/setpiece@0.3.2` is the current npm release. A fresh install exposes only the `setpiece` command;
+  the interim `twset` and `openfilm` aliases are no longer installed.
+- `v0.3.2` is a CLI and npm release without desktop installers. `v0.3.0` remains the current GitHub Latest release
+  and the current public desktop Alpha, with unsigned macOS and Windows installers.
+- The `v0.3.1` and `v0.3.2` tags have no signed desktop installer set. The desktop release workflow now skips signed
+  builds when the macOS or Windows signing credentials are absent, rather than failing the run.
 - The former `v0.2.8` GitHub releases were removed. Published npm versions are immutable release history; the old
   `@tryworld/set` package should be deprecated after npm authentication is restored.
-- The `v0.3.0` installers remain unsigned. The release workflow refuses to build desktop binaries without the
-  macOS and Windows signing secrets, and that gate has not yet produced a signed release.
+- The `v0.3.0` installers remain unsigned. The release workflow skips signed desktop jobs when the macOS or Windows
+  signing secrets are absent; it does not publish an unsigned build in their place.
 - `product.official.json` points at `https://setpiece.tryworld.com.cn/updates`. The feed generator and deployment workflow
   exist, but the route is not live until a published release runs `update-feed.yml` with `CLOUDFLARE_API_TOKEN`.
 - The public repository is MIT-licensed. A future closed-source commercial build needs a separate private repository

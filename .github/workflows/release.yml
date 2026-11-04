@@ -6,15 +6,50 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing tag to build, such as v0.3.1
+        description: Existing tag to build, such as v0.3.2
         required: true
 
 permissions:
   contents: write
 
 jobs:
+  signing:
+    name: Check signing credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - name: Check required secrets
+        id: check
+        shell: bash
+        env:
+          SETPIECE_SIGN_IDENTITY: ${{ secrets.SETPIECE_SIGN_IDENTITY }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_NOTARY_APPLE_ID: ${{ secrets.APPLE_NOTARY_APPLE_ID }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+        run: |
+          missing=0
+          for name in SETPIECE_SIGN_IDENTITY APPLE_TEAM_ID APPLE_CERTIFICATE_P12 APPLE_CERTIFICATE_PASSWORD APPLE_NOTARY_APPLE_ID APPLE_NOTARY_PASSWORD WIN_CSC_LINK WIN_CSC_KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::warning::$name is not set; the signed desktop build will be skipped"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 0 ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
   macos:
     name: macOS signed installers
+    needs: signing
+    if: needs.signing.outputs.ready == 'true'
     runs-on: macos-latest
     timeout-minutes: 90
     env:
@@ -119,6 +154,8 @@ jobs:
 
   windows:
     name: Windows signed installer
+    needs: signing
+    if: needs.signing.outputs.ready == 'true'
     runs-on: windows-latest
     timeout-minutes: 90
     env:
@@ -174,7 +211,8 @@ jobs:
 
   publish:
     name: Draft GitHub release
-    needs: [macos, windows]
+    needs: [signing, macos, windows]
+    if: needs.signing.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
