@@ -40,7 +40,7 @@ npx -y @tryworld/setpiece@latest open
 ```
 
 Unsigned desktop Alpha installers for macOS (Apple Silicon / Intel) and Windows x64 are attached to the
-[`v0.3.0` pre-release](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0). On macOS, right-click the app
+[`v0.3.0` public Alpha release](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0). On macOS, right-click the app
 to open it, or run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
 
 ## Run from source
