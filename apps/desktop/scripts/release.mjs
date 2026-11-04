@@ -129,7 +129,7 @@ writeFileSync(join(stage, 'package.json'), `${JSON.stringify({
   ...(preview ? { setpieceFlavor: 'preview' } : {}),
   version: pkg.version,
   description: pkg.description,
-  author: 'TryWorld',
+  author: 'Setpiece',
   license: 'UNLICENSED',
   private: true,
   type: 'module',
@@ -197,7 +197,7 @@ await builder.build({
     },
     appId: preview ? 'com.tryworld.setpiece.preview' : 'com.tryworld.setpiece',
     productName: NAME,
-    copyright: 'Copyright © 2026 TryWorld',
+    copyright: 'Copyright © 2026 Setpiece · 造境',
     electronVersion,
     forceCodeSigning: !unsigned,
     asar: true,
@@ -285,8 +285,8 @@ async function windowsResources(context) {
   info.setFileVersion(major, minor, patch, 0, 1033);
   info.setProductVersion(major, minor, patch, 0, 1033);
   info.setStringValues({ lang: 1033, codepage: 1200 }, {
-    ProductName: NAME, FileDescription: NAME, CompanyName: 'TryWorld', OriginalFilename: `${NAME}.exe`,
-    InternalName: NAME, LegalCopyright: 'Copyright © 2026 TryWorld', FileVersion: pkg.version, ProductVersion: pkg.version,
+    ProductName: NAME, FileDescription: NAME, CompanyName: 'Setpiece', OriginalFilename: `${NAME}.exe`,
+    InternalName: NAME, LegalCopyright: 'Copyright © 2026 Setpiece · 造境', FileVersion: pkg.version, ProductVersion: pkg.version,
   });
   info.outputToResourceEntries(res.entries);
   res.outputResource(exe);

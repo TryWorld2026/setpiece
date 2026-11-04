@@ -54,7 +54,7 @@ test('a fetch: a wrong address is refused at once, with its code; an unknown job
 
 test('the examples, from the index Studio is pointed at', async () => {
   const { body } = await api('examples');
-  assert.deepEqual(body.examples.map((e) => [e.id, e.duration, e.url]), [['one-prompt', 89, 'https://github.com/openfilm/examples/tree/main/one-prompt']]);
+  assert.deepEqual(body.examples.map((e) => [e.id, e.duration, e.url]), [['one-prompt', 89, 'https://github.com/TryWorld2026/setpiece/tree/main/one-prompt']]);
 });
 
 test('a project whose folder moved is located, though its folder is gone; it opens again', async () => {

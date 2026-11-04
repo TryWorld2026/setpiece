@@ -1618,7 +1618,6 @@ lockedBody: 'Studio 正在运行，但只接受用带 key 的地址打开过一�
     },
     links: {
       github: 'GitHub',
-      examples: '上游示例',
       site: '官网',
       eula: '许可',
       privacy: '隐私',

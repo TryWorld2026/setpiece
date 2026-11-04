@@ -1,20 +1,21 @@
 {
-  "repo": "https://github.com/openfilm/examples",
+  "repo": "https://github.com/TryWorld2026/setpiece",
   "branch": "main",
   "examples": [
     {
-      "folder": "one-prompt",
+      "folder": "examples/one-prompt",
       "title": "One Prompt",
-      "description": "A 90-second lyric music video where every frame is code.",
-      "poster": "one-prompt/look.jpg",
-      "duration": "1:31"
-    },
-    {
-      "folder": "openfilm-intro",
-      "title": "OpenFilm intro",
-      "description": "The 1:42 film that introduces OpenFilm, made with OpenFilm: footage, app recordings and motion graphics cut to a Chinese voice-over.",
-      "poster": "openfilm-intro/look.jpg",
-      "duration": "1:42"
+      "description": "A short title sequence where every frame begins as code.",
+      "poster": "examples/one-prompt/look.jpg",
+      "duration": "0:08",
+      "category": "titles",
+      "segments": [
+        {
+          "title": "Title",
+          "from": 0,
+          "to": 8
+        }
+      ]
     }
   ]
 }

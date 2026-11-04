@@ -339,7 +339,7 @@ function SkillPage({ skill, projectId, onTurn, onInstall, onRemove, onTry, onCov
   const details = inLanguage(skill.shown?.details, lang);
   const installed = installedOf(skill);
   const group = skill.source === 'official' ? (skill.kind === 'style' ? 'gallery.style' : 'gallery.workflow') : skill.source === 'mine' ? 'gallery.mine' : 'gallery.project';
-  const source = skill.repository ?? (skill.origin?.from === 'link' ? skill.origin.address : undefined);
+  const source = skill.source === 'official' ? undefined : skill.repository ?? (skill.origin?.from === 'link' ? skill.origin.address : undefined);
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const coverInput = React.useRef<HTMLInputElement>(null);

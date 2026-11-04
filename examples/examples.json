@@ -1,0 +1,21 @@
+{
+  "repo": "https://github.com/TryWorld2026/setpiece",
+  "branch": "main",
+  "examples": [
+    {
+      "folder": "examples/one-prompt",
+      "title": "One Prompt",
+      "description": "A short title sequence where every frame begins as code.",
+      "poster": "examples/one-prompt/look.jpg",
+      "duration": "0:08",
+      "category": "titles",
+      "segments": [
+        {
+          "title": "Title",
+          "from": 0,
+          "to": 8
+        }
+      ]
+    }
+  ]
+}

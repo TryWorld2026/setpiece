@@ -357,7 +357,7 @@ jobs:
           - Windows 10 / 11 · x64：EXE
           - 所有安装包均未签名；macOS 首次打开可能被 Gatekeeper 阻止，Windows SmartScreen 可能提示“未知发布者”
 
-          这是预发布版本，不会替换稳定版 Latest。Setpiece 是 OpenFilm 的独立商业衍生版，遵循 MIT License；上游版权与许可声明见仓库中的 LICENSE、LICENSES/OpenFilm-MIT.txt 与 NOTICE.md。
+          这是预发布版本，不会替换稳定版 Latest。许可证与第三方声明随安装包提供。
           EOF
           mapfile -d '' files < <(find dist -type f -print0)
           gh release create "$TAG" "${files[@]}" \

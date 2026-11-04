@@ -18,12 +18,12 @@ test('an index\'s examples: each with the address that fetches its folder, its p
   assert.deepEqual(examples, [
     {
       id: 'one-prompt', title: 'One Prompt', description: 'Every frame is code.', duration: 89,
-      poster: 'https://raw.githubusercontent.com/openfilm/examples/main/one-prompt/look.png',
-      video: 'https://raw.githubusercontent.com/openfilm/examples/main/one-prompt/preview.mp4',
-      url: 'https://github.com/openfilm/examples/tree/main/one-prompt',
+      poster: 'https://raw.githubusercontent.com/TryWorld2026/setpiece/main/one-prompt/look.png',
+      video: 'https://raw.githubusercontent.com/TryWorld2026/setpiece/main/one-prompt/preview.mp4',
+      url: 'https://github.com/TryWorld2026/setpiece/tree/main/one-prompt',
       category: 'music', segments: [{ title: 'S1-Open', from: 0, to: 12 }],
     },
-    { id: 'abs', title: 'Abs', description: '', duration: 12, poster: 'https://example.com/p.png', video: null, url: 'https://github.com/openfilm/examples/tree/main/abs', category: null, segments: [] },
+    { id: 'abs', title: 'Abs', description: '', duration: 12, poster: 'https://example.com/p.png', video: null, url: 'https://github.com/TryWorld2026/setpiece/tree/main/abs', category: null, segments: [] },
   ]);
   /* another repository: named by the index, or the one it is read from */
   assert.equal(readExamples({ repo: 'https://github.com/a/b', branch: 'dev', examples: [{ folder: 'x', title: 'X' }] })[0].url, 'https://github.com/a/b/tree/dev/x');
@@ -79,7 +79,26 @@ test('an example\'s folder: beside a local index, or fetched into the cache and 
   assert.equal(fetched, 2, 'a day on: fetched again');
 });
 
-test('GitHub\'s index shows at once: the copy OpenFilm came with, then the last one read, while GitHub is asked', async () => {
+test('an example in a nested repository folder is cached by a flattened name', async () => {
+  const { mkdirSync } = await import('node:fs');
+  const { exampleFolder } = await import('./examples.mjs');
+  const home = mkdtempSync(join(tmpdir(), 'of-example-nested-'));
+  const index = 'https://index.test/nested.json';
+  const fetchImpl = async () => ({ ok: true, json: async () => ({ repo: 'https://github.com/a/b', examples: [{ folder: 'examples/one-prompt', title: 'One Prompt' }] }) });
+  await listExamples({ source: index, fetchImpl });
+  const fromRepo = async (url, into) => {
+    assert.equal(url, 'https://github.com/a/b/tree/main/examples/one-prompt');
+    const d = join(into, 'one-prompt');
+    mkdirSync(d);
+    writeFileSync(join(d, 'film.html'), 'x');
+    return d;
+  };
+  const dir = await exampleFolder('examples/one-prompt', { home, source: index, fetchFolder: fromRepo });
+  assert.equal(dir, join(home, 'cache', 'examples', 'examples__one-prompt'));
+  assert.ok(existsSync(join(dir, 'film.html')));
+});
+
+test('the index shows at once: the copy Setpiece came with, then the last one read, while GitHub is asked', async () => {
   const { EXAMPLES_INDEX, listExamples } = await import('./examples.mjs');
   const home = mkdtempSync(join(tmpdir(), 'of-examples-home-'));
   let answer;

@@ -1611,7 +1611,6 @@ lockedBody: 'Studio는 실행 중이지만, 키가 붙은 주소로 한 번 연 
     },
     links: {
       github: 'GitHub',
-      examples: '업스트림 예제',
       site: '웹사이트',
       eula: '라이선스',
       privacy: '개인정보',

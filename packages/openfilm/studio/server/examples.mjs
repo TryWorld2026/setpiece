@@ -5,13 +5,13 @@
  * example is a folder of that repository, opened with the same fetch as "Get from GitHub". Unreachable, or not an
  * index: no examples, and the window shows none.
  *
- *   { "repo": "https://github.com/openfilm/examples", "branch": "main",
+ *   { "repo": "https://github.com/TryWorld2026/setpiece", "branch": "main",
  *     "examples": [{ "folder": "one-prompt", "title": "…", "description": "…", "poster": "one-prompt/look.png", "duration": "1:29" }] }
  *
  * An index read from a file on this computer (trying a new one) has its posters and previews served by Studio from
  * the folder it is in (`/api/examples/file/<path>`), so they show before the repository has them.
  *
- * GitHub's index shows at once: OpenFilm comes with a copy of it and its posters (examples-index, `pnpm examples:sync`),
+ * Setpiece comes with a copy of the index and its posters (examples-index),
  * and the last one read is kept in Studio's home. Those are shown while GitHub is asked in the background (Studio asks
  * as it starts), and a poster the copy has is served from it, so a slow or blocked GitHub costs no wait.
  *
@@ -27,13 +27,13 @@ import { envValue } from '../../src/env.mjs';
 import { fileURLToPath } from 'node:url';
 import { studioHomeDir } from '../../src/locations.mjs';
 
-export const EXAMPLES_INDEX = 'https://raw.githubusercontent.com/openfilm/examples/main/examples.json';
-const DEFAULT_REPO = { owner: 'openfilm', repo: 'examples', branch: 'main' };
+export const EXAMPLES_INDEX = 'https://raw.githubusercontent.com/TryWorld2026/setpiece/main/examples/examples.json';
+const DEFAULT_REPO = { owner: 'TryWorld2026', repo: 'setpiece', branch: 'main' };
 /* an index read is kept a while; one that failed is tried again sooner */
 const KEEP_MS = 10 * 60 * 1000;
 const RETRY_MS = 60 * 1000;
 const NAME = /^[\w.-]+$/;
-/** The copy of GitHub's index and its posters that comes with OpenFilm (`pnpm examples:sync`). */
+/** The copy of the index and its posters that comes with Setpiece. */
 export const BUNDLED_INDEX = fileURLToPath(new URL('../../examples-index/', import.meta.url));
 /** Where the last index read from GitHub is kept, for the next start. */
 const savedIndex = (/** @type {string} */ home) => join(home, 'cache', 'examples-index.json');
@@ -74,7 +74,7 @@ export function readExamples(raw, source = EXAMPLES_INDEX) {
   for (const entry of index.examples.slice(0, 50)) {
     if (!entry || typeof entry !== 'object' || !repoPath(entry.folder) || typeof entry.title !== 'string' || !entry.title.trim()) continue;
     const local = !/^https?:\/\//.test(source);
-    /* GitHub's index: a poster the copy that came with OpenFilm has is served from it */
+    /* a poster the copy that came with Setpiece has is served from it */
     const bundled = source === EXAMPLES_INDEX ? (/** @type {string} */ v) => existsSync(join(BUNDLED_INDEX, ...v.split('/'))) : () => false;
     const media = (/** @type {unknown} */ v) => (typeof v === 'string' && /^https:\/\//.test(v) ? v
       : !repoPath(v) ? null
@@ -105,7 +105,7 @@ export function readExamples(raw, source = EXAMPLES_INDEX) {
  */
 export function exampleFile(path, { source = envValue('EXAMPLES_INDEX') || EXAMPLES_INDEX } = {}) {
   if (!repoPath(path)) return null;
-  /* GitHub's index: the posters of the copy that came with OpenFilm */
+  /* the posters of the copy that came with Setpiece */
   if (source === EXAMPLES_INDEX) return existsSync(join(BUNDLED_INDEX, ...path.split('/'))) ? join(BUNDLED_INDEX, ...path.split('/')) : null;
   if (/^https?:\/\//.test(source)) return null;
   return join(dirname(source), ...path.split('/'));
@@ -117,15 +117,15 @@ const cache = new Map();
 /** @type {Map<string, Promise<Example[]>>} */
 const reading = new Map();
 
-/** An index kept on disk (the last read, or the copy that came with OpenFilm), as examples; null when there is none. @param {string} file */
+/** An index kept on disk (the last read, or the copy that came with Setpiece), as examples; null when there is none. @param {string} file */
 function indexAt(file) {
   try { return readExamples(JSON.parse(readFileSync(file, 'utf8')), EXAMPLES_INDEX); } catch { return null; }
 }
 
 /**
  * The examples, read from the index (cached a while). Never fails: an index that cannot be read is no examples.
- * GitHub's index never waits on GitHub when there is one to show: the last read (here, then in Studio's home), else
- * the copy that came with OpenFilm, while GitHub is asked in the background.
+ * The index never waits on GitHub when there is one to show: the last read (here, then in Studio's home), else
+ * the copy that came with Setpiece, while GitHub is asked in the background.
  * @param {{ source?: string, fetchImpl?: typeof fetch, home?: string }} [options]
  */
 export async function listExamples({ source = envValue('EXAMPLES_INDEX') || EXAMPLES_INDEX, fetchImpl = fetch, home = studioHomeDir() } = {}) {
@@ -179,7 +179,7 @@ const DAY = 24 * 60 * 60 * 1000;
  *   `fetchFolder`: a repository folder's address fetched into a folder (fetch-repo.mjs), → where it landed
  */
 export async function exampleFolder(id, { home, source = envValue('EXAMPLES_INDEX') || EXAMPLES_INDEX, fetchFolder, now = Date.now }) {
-  if (!repoPath(id) || id.includes('/')) throw new Error('There is no such example.');
+  if (!repoPath(id)) throw new Error('There is no such example.');
   if (!/^https?:\/\//.test(source)) {
     const dir = join(dirname(source), id);
     if (existsSync(join(dir, 'film.html'))) return dir;
@@ -188,10 +188,12 @@ export async function exampleFolder(id, { home, source = envValue('EXAMPLES_INDE
   const example = (await listExamples({ source })).find((e) => e.id === id);
   if (!example) throw new Error('There is no such example.');
   const cache = join(home, 'cache', 'examples');
-  const dir = join(cache, id);
+  /* the cached folder's name: the example's path, flattened so a nested folder can be made */
+  const key = id.replaceAll('/', '__');
+  const dir = join(cache, key);
   try { if (now() - statSync(dir).mtimeMs < DAY && existsSync(join(dir, 'film.html'))) return dir; } catch { /* not kept yet */ }
   await mkdir(cache, { recursive: true });
-  const work = await mkdtemp(join(cache, `.${id}-`));
+  const work = await mkdtemp(join(cache, `.${key}-`));
   try {
     const landed = await fetchFolder(example.url, work);
     await rm(dir, { recursive: true, force: true });

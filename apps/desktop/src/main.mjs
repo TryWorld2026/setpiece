@@ -438,7 +438,7 @@ async function start() {
       applicationName: 'Setpiece · 造境',
       applicationVersion: app.getVersion(),
       version: app.getVersion(),
-      copyright: 'Copyright © 2026 TryWorld. An independent derivative of OpenFilm (MIT).',
+      copyright: 'Copyright © 2026 Setpiece · 造境.',
     });
   }
   /* updates (updates.mjs): Restart waits while an agent's turn runs or Studio exports, either would be lost */

@@ -1618,7 +1618,6 @@ lockedBody: 'Studio is running, but it only lets in a browser that opened it onc
     },
     links: {
       github: 'GitHub',
-      examples: 'Upstream examples',
       site: 'Website',
       eula: 'License',
       privacy: 'Privacy',

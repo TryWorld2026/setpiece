@@ -1,6 +1,6 @@
 # Setpiece · 造境 隐私说明
 
-最后更新：2026 年 11 月 4 日
+最后更新：2026 年 11 月 5 日
 
 > **版本状态**
 >
@@ -81,4 +81,4 @@ Setpiece 不是面向十四岁以下儿童设计的产品。我们不会有意�
 
 ## 9. 联系
 
-隐私问题请通过 [TryWorld 联系入口](https://tryworld.com.cn/#contact) 联系我们。许可和商业问题请阅读 [最终用户许可协议](EULA.md)。
+隐私问题请通过 [Setpiece 支持入口](https://github.com/TryWorld2026/setpiece/issues) 联系我们。许可和商业问题请阅读 [最终用户许可协议](EULA.md)。
