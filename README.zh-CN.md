@@ -11,9 +11,10 @@
 
 ## 状态
 
-`@tryworld/setpiece@0.3.2` 是当前 CLI、npm 与 GitHub Latest 版本，不包含桌面安装包。公开桌面 Alpha 仍为
-`v0.3.0`，提供未签名的 macOS 与 Windows 安装包；`v0.3.0` 之后的桌面版本需要 macOS 和 Windows 的签名与公证
-密钥。源码保留上游 Git 历史与必要的 MIT 归属声明。
+`@tryworld/setpiece@0.3.2` 是当前 CLI、npm 版本，`v0.3.2` 仍是 GitHub Latest。重设计后的桌面界面已随未签名
+Windows x64 [`v0.3.2-preview.1`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1)
+预发布版开放测试；macOS 未签名安装包仍为 `v0.3.0`。正式签名与公证的桌面版本仍需发布密钥。源码保留上游
+Git 历史与必要的 MIT 归属声明。
 
 ## 产品
 
@@ -24,7 +25,8 @@
 - 共享包：`setpiece-shared`
 - 仓库：https://github.com/TryWorld2026/setpiece
 - CLI 与 npm 版本：`0.3.2`
-- 公开桌面 Alpha：`0.3.0`（未签名）
+- Windows 桌面 Preview：`0.3.2-preview.1`（未签名）
+- macOS 公开桌面 Alpha：`0.3.0`（未签名）
 
 命令只提供 `setpiece`，不再安装旧命令别名。旧 npm 包 `@tryworld/set` 已弃用，并指引用户迁移到
 `@tryworld/setpiece`。
@@ -37,7 +39,9 @@
 npx -y @tryworld/setpiece@latest open
 ```
 
-macOS（Apple Silicon / Intel）与 Windows x64 的未签名桌面 Alpha 安装包见
+Windows x64 用户可以下载未签名的
+[造境 0.3.2 桌面 Preview](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1)。
+macOS（Apple Silicon / Intel）的未签名安装包仍见
 [`v0.3.0` 公开 Alpha 版本](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0)。macOS 首次打开请右键选择打开；
 如被 Gatekeeper 阻止，可执行 `xattr -cr /Applications/Setpiece.app`。
 

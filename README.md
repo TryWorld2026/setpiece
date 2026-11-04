@@ -12,10 +12,11 @@ with a new identity and interface.
 
 ## Status
 
-`@tryworld/setpiece@0.3.2` is the current CLI and npm release. `v0.3.2` is the GitHub Latest release and contains no
-desktop installers. The public desktop Alpha remains `v0.3.0`, with unsigned macOS and Windows installers. Desktop
-releases after `v0.3.0` require the macOS and Windows signing and notarization secrets. The source preserves the
-upstream Git history and required MIT attribution.
+`@tryworld/setpiece@0.3.2` is the current CLI and npm release, and `v0.3.2` remains the GitHub Latest release. The
+redesigned desktop UI is available for testing in the unsigned Windows x64
+[`v0.3.2-preview.1`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1) pre-release. Unsigned
+macOS installers remain on `v0.3.0`. Signed and notarized desktop builds still require the release credentials. The
+source preserves the upstream Git history and required MIT attribution.
 
 ## Product
 
@@ -26,7 +27,8 @@ upstream Git history and required MIT attribution.
 - Shared package: `setpiece-shared`
 - Repository: https://github.com/TryWorld2026/setpiece
 - CLI and npm version: `0.3.2`
-- Public desktop Alpha: `0.3.0` (unsigned)
+- Windows desktop Preview: `0.3.2-preview.1` (unsigned)
+- macOS public desktop Alpha: `0.3.0` (unsigned)
 
 The command is `setpiece`. Legacy command aliases are no longer installed. The previous `@tryworld/set` npm package
 is deprecated and points users to `@tryworld/setpiece`.
@@ -39,9 +41,10 @@ Requires Node.js `>=22.18`:
 npx -y @tryworld/setpiece@latest open
 ```
 
-Unsigned desktop Alpha installers for macOS (Apple Silicon / Intel) and Windows x64 are attached to the
-[`v0.3.0` public Alpha release](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0). On macOS, right-click the app
-to open it, or run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
+Windows x64 testers can download the unsigned [Setpiece Preview 0.3.2](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1)
+installer from GitHub. Unsigned macOS installers for Apple Silicon and Intel remain attached to the
+[`v0.3.0` public Alpha release](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0). On macOS, right-click the
+app to open it, or run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
 
 ## Run from source
 

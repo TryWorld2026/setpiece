@@ -4,14 +4,15 @@
 
 - `@tryworld/setpiece@0.3.2` is the current npm release. A fresh install exposes only the `setpiece` command;
   the interim `twset` and `openfilm` aliases are no longer installed.
-- `v0.3.2` is the GitHub Latest release and contains the CLI and npm package, without desktop installers. `v0.3.0`
-  remains the current public desktop Alpha, with unsigned macOS and Windows installers.
-- The `v0.3.1` and `v0.3.2` tags have no signed desktop installer set. The desktop release workflow now skips signed
-  builds when the macOS or Windows signing credentials are absent, rather than failing the run.
+- `v0.3.2` remains the GitHub Latest release. The redesigned desktop UI is published as the unsigned Windows x64
+  pre-release `v0.3.2-preview.1`; it does not replace Latest. `v0.3.0` remains the public macOS Alpha, with unsigned
+  Apple Silicon and Intel installers.
+- The `v0.3.1` and `v0.3.2` tags have no signed desktop installer set. The desktop release workflow skips signed builds
+  when the macOS or Windows signing credentials are absent, rather than failing the run.
 - The former `v0.2.8` GitHub releases were removed. The old `@tryworld/set` npm package is deprecated and points users
   to `@tryworld/setpiece`; its published metadata remains immutable npm release history.
-- The `v0.3.0` installers remain unsigned. The release workflow skips signed desktop jobs when the macOS or Windows
-  signing secrets are absent; it does not publish an unsigned build in their place.
+- The `v0.3.0` and `v0.3.2-preview.1` installers remain unsigned. The release workflow skips signed desktop jobs when
+  the macOS or Windows signing secrets are absent; it does not publish a signed build in their place.
 - `product.official.json` points at `https://setpiece.tryworld.com.cn/updates`. The feed generator and deployment workflow
   exist, but the route is not live until a published release runs `update-feed.yml` with `CLOUDFLARE_API_TOKEN`.
 - The public repository is MIT-licensed. A future closed-source commercial build needs a separate private repository

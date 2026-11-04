@@ -27,8 +27,10 @@ so old links keep working without serving a second copy of the site.
 ## Release state
 
 - The npm package is `@tryworld/setpiece` at `0.3.2`; the page shows the npx quick start.
-- Unsigned desktop Alpha installers remain available as the `v0.3.0` pre-release: macOS arm64/x64 DMG and ZIP,
-  Windows x64 EXE, plus `SHA256SUMS.txt`. The `v0.3.1` and `v0.3.2` desktop releases are blocked on signing and
-  notarization credentials.
-- Release assets: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0
+- The redesigned desktop UI is available as the unsigned Windows x64 pre-release `v0.3.2-preview.1`, with the
+  `Setpiece-Preview-Setup-x64.exe` installer and `SHA256SUMS.txt`.
+- Unsigned macOS arm64/x64 DMG and ZIP installers remain available in the `v0.3.0` pre-release. Signed and notarized
+  desktop builds still require the release credentials.
+- Desktop Preview: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1
+- macOS Alpha: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0
 - Upstream: https://github.com/openfilm/openfilm

@@ -284,27 +284,35 @@
           </div>
           <p class="download-status">
             <span class="status-dot" aria-hidden="true"></span>
-            Public Alpha · CLI 0.3.2 · 桌面 0.3.0
+            Public Alpha · CLI 0.3.2 · Windows Preview 0.3.2
           </p>
         </header>
 
         <div class="release-note">
           <div>
-            <h3>当前阶段：CLI 与桌面 Alpha 已发布</h3>
+            <h3>当前阶段：Windows 桌面 Preview 已发布</h3>
             <p>
               CLI 已发布为 <code>@tryworld/setpiece</code> 0.3.2，可以直接用 npx 启动 Studio。
-              macOS 与 Windows 的公开桌面 Alpha 仍为 0.3.0，安装包未签名；0.3.1 与 0.3.2 桌面版需完成签名与公证后发布。
-              macOS 首次打开如被系统阻止，请右键打开，或执行
+              Windows 10 / 11 x64 的新界面 Preview 已发布，安装包未签名，SmartScreen 可能提示“未知发布者”。
+              macOS 未签名 Alpha 仍为 0.3.0；首次打开如被系统阻止，请右键打开，或执行
               <code>xattr -cr /Applications/Setpiece.app</code>。
             </p>
+            <a
+              class="text-link"
+              href="https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Release 信息与 SHA256 <span aria-hidden="true">↗</span>
+            </a>
           </div>
           <a
             class="button button--primary"
-            href="https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0"
+            href="https://github.com/TryWorld2026/setpiece/releases/download/v0.3.2-preview.1/Setpiece-Preview-Setup-x64.exe"
             target="_blank"
             rel="noreferrer"
           >
-            下载 0.3.0 桌面 Alpha
+            下载 Windows x64 Preview
             <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -314,19 +322,19 @@
             <p class="platforms__label">macOS</p>
             <h3>Apple Silicon</h3>
             <p>M1 · M2 · M3 · M4 / arm64</p>
-            <span>未签名 Alpha · DMG / ZIP</span>
+            <span>v0.3.0 未签名 Alpha · DMG / ZIP</span>
           </article>
           <article>
             <p class="platforms__label">macOS</p>
             <h3>Intel</h3>
             <p>Intel 处理器 / x64</p>
-            <span>未签名 Alpha · DMG / ZIP</span>
+            <span>v0.3.0 未签名 Alpha · DMG / ZIP</span>
           </article>
           <article>
             <p class="platforms__label">Windows</p>
             <h3>PC · x64</h3>
             <p>Windows 10 / 11 · 64-bit</p>
-            <span>未签名 Alpha · EXE</span>
+            <span>v0.3.2 新界面 Preview · 未签名 EXE</span>
           </article>
         </div>
       </section>
@@ -363,7 +371,7 @@ npx -y @tryworld/setpiece@latest open</code></pre>
             复制启动命令
           </button>
           <p class="terminal__note">
-            npm 已发布 0.3.2。桌面未签名 Alpha 安装包仍见 v0.3.0 Release。
+            npm 已发布 0.3.2。Windows 桌面 Preview 见 v0.3.2-preview.1；macOS 未签名 Alpha 见 v0.3.0。
           </p>
         </div>
       </section>
