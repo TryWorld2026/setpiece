@@ -18,38 +18,33 @@ export interface ReleaseNote { kind: NoteKind; text: string }
 export interface ReleaseNotes { version: string; date: string; notes: Record<Language, ReleaseNote[]> }
 
 export const RELEASE: ReleaseNotes = {
-  version: '0.3.0',
-  date: '2026-11-03',
+  version: '0.3.1',
+  date: '2026-11-04',
   notes: {
     en: [
-      { kind: 'new', text: 'Setpiece · 造境: a refined, Apple-inspired workspace with a quieter interface, warmer neutrals and a fog-blue focus color.' },
-      { kind: 'new', text: 'The Projects window is now a full-window library with recents, folders, examples, search, sorting and grid or list views.' },
-      { kind: 'improved', text: 'The editor, inspector, timeline, settings and assistant share one visual system, with clearer dividers and lighter motion.' },
-      { kind: 'fixed', text: 'Existing projects, preferences and the setpiece, twset and openfilm commands keep working through the rename.' },
+      { kind: 'new', text: 'License and Privacy are now available from Settings, and the desktop app carries both documents with its notices.' },
+      { kind: 'improved', text: 'Release packages now include complete third-party notices and legal documents.' },
+      { kind: 'fixed', text: 'Existing projects, preferences and the setpiece, twset and openfilm commands carry over unchanged.' },
     ],
     'zh-CN': [
-      { kind: 'new', text: 'Setpiece · 造境：全新的 Apple 风格专业工作台，更安静的中性色、更细的分隔和雾蓝色焦点。' },
-      { kind: 'new', text: '项目库改为全窗口 Finder 式布局，集中呈现最近项目、文件夹、示例、搜索、排序以及网格和列表视图。' },
-      { kind: 'improved', text: '编辑器、检查器、时间线、设置和 AI 助理统一使用同一套视觉与动效语言。' },
-      { kind: 'fixed', text: '已有项目、偏好设置，以及 setpiece、twset、openfilm 三个命令在更名后继续可用。' },
+      { kind: 'new', text: '设置中新增“许可”和“隐私”入口，桌面应用也会随安装包附带这两份文档。' },
+      { kind: 'improved', text: '发布包现在完整包含第三方声明与法律文件，分发信息更清楚。' },
+      { kind: 'fixed', text: '已有项目、偏好设置，以及 setpiece、twset、openfilm 命令继续原样可用。' },
     ],
     ja: [
-      { kind: 'new', text: 'Setpiece · 造境：Apple のプロ向けアプリを参考にした、静かな中性色とフォグブルーの焦点を持つ新しいワークスペース。' },
-      { kind: 'new', text: 'プロジェクトウィンドウが全画面のライブラリになり、最近の作品、フォルダー、作例、検索、並べ替え、グリッド／リスト表示をまとめて扱えます。' },
-      { kind: 'improved', text: 'エディター、インスペクター、タイムライン、設定、AI アシスタントが一つの視覚言語と控えめな動きを共有します。' },
-      { kind: 'fixed', text: '名前の変更後も、既存のプロジェクト、設定、setpiece・twset・openfilm コマンドはそのまま使えます。' },
+      { kind: 'new', text: '設定に「ライセンス」と「プライバシー」への入口を追加し、デスクトップアプリにも両方の文書を同梱しました。' },
+      { kind: 'improved', text: 'リリースパッケージにサードパーティ通知と法的文書を完全に含めるようにしました。' },
+      { kind: 'fixed', text: '既存のプロジェクト、設定、setpiece・twset・openfilm コマンドはそのまま引き継がれます。' },
     ],
     ko: [
-      { kind: 'new', text: 'Setpiece · 造境: Apple 스타일의 전문 작업 공간으로, 더 차분한 중성색과 포그 블루 포인트를 사용합니다.' },
-      { kind: 'new', text: '프로젝트 창이 전체 창 라이브러리로 바뀌어 최근 작품, 폴더, 예제, 검색, 정렬, 그리드 및 목록 보기를 한곳에서 제공합니다.' },
-      { kind: 'improved', text: '편집기, 인스펙터, 타임라인, 설정, AI 어시스턴트가 하나의 시각 언어와 절제된 움직임을 공유합니다.' },
-      { kind: 'fixed', text: '이름 변경 후에도 기존 프로젝트, 환경 설정, setpiece·twset·openfilm 명령이 계속 작동합니다.' },
+      { kind: 'new', text: '설정에 라이선스와 개인정보 보호 항목을 추가했으며, 데스크톱 앱에도 두 문서를 함께 포함합니다.' },
+      { kind: 'improved', text: '릴리스 패키지에 타사 고지와 법적 문서를 빠짐없이 포함합니다.' },
+      { kind: 'fixed', text: '기존 프로젝트, 환경 설정, setpiece·twset·openfilm 명령이 그대로 유지됩니다.' },
     ],
     es: [
-      { kind: 'new', text: 'Setpiece · 造境: un espacio de trabajo profesional inspirado en Apple, con neutros más serenos y un acento azul niebla.' },
-      { kind: 'new', text: 'La ventana de proyectos ahora es una biblioteca a pantalla completa con recientes, carpetas, ejemplos, búsqueda, orden y vistas de cuadrícula o lista.' },
-      { kind: 'improved', text: 'El editor, el inspector, la línea de tiempo, los ajustes y el asistente comparten un mismo lenguaje visual y un movimiento discreto.' },
-      { kind: 'fixed', text: 'Los proyectos, las preferencias y los comandos setpiece, twset y openfilm siguen funcionando tras el cambio de nombre.' },
+      { kind: 'new', text: 'Licencia y Privacidad ya están disponibles en Ajustes, y la aplicación de escritorio incluye ambos documentos.' },
+      { kind: 'improved', text: 'Los paquetes de release incluyen ahora los avisos de terceros y los documentos legales completos.' },
+      { kind: 'fixed', text: 'Los proyectos, las preferencias y los comandos setpiece, twset y openfilm se conservan sin cambios.' },
     ],
   },
 };
