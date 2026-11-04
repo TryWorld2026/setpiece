@@ -254,14 +254,10 @@ jobs:
           fi
 
   preview-macos:
-    name: macOS ${{ matrix.arch }} unsigned preview
+    name: macOS unsigned preview
     if: inputs.unsigned_preview == true
     runs-on: macos-latest
     timeout-minutes: 90
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [arm64, x64]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -272,15 +268,24 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Build the unsigned macOS preview
-        run: pnpm --filter setpiece-desktop release --arch=${{ matrix.arch }} --preview --unsigned
+      - name: Build the unsigned Apple Silicon preview
+        run: pnpm --filter setpiece-desktop release --arch=arm64 --preview --unsigned
       - uses: actions/upload-artifact@v4
         with:
-          name: preview-macos-${{ matrix.arch }}
+          name: preview-macos-arm64
           if-no-files-found: error
           path: |
-            apps/desktop/.release/${{ matrix.arch }}/out/*.dmg
-            apps/desktop/.release/${{ matrix.arch }}/out/*.zip
+            apps/desktop/.release/arm64/out/*.dmg
+            apps/desktop/.release/arm64/out/*.zip
+      - name: Build the unsigned Intel Mac preview
+        run: pnpm --filter setpiece-desktop release --arch=x64 --preview --unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-macos-x64
+          if-no-files-found: error
+          path: |
+            apps/desktop/.release/x64/out/*.dmg
+            apps/desktop/.release/x64/out/*.zip
 
   preview-windows:
     name: Windows x64 unsigned preview
