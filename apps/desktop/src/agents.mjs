@@ -853,7 +853,8 @@ export const CLIENT_CAPABILITIES = {
   _meta: { parameterizedModelPicker: true, jetbrains: { air: { version: 1, capabilities: ['recommendedValue'] } } },
 };
 
-const CLIENT_INFO = { name: 'setpiece-desktop', title: 'Setpiece', version: '0.3.0' };
+const DESKTOP_VERSION = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'), 'utf8')).version;
+export const CLIENT_INFO = { name: 'setpiece-desktop', title: 'Setpiece', version: DESKTOP_VERSION };
 
 /** How long an agent may wait on its model with nothing coming before the turn is stopped. */
 const MODEL_STALL_MS = 5 * 60_000;

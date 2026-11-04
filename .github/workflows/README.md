@@ -34,7 +34,7 @@ The update feed deployment uses:
 
 - `CLOUDFLARE_API_TOKEN`: a token allowed to deploy the `tryworld-set-download` Worker
 
-The feed URL is `https://set.tryworld.com.cn/updates`, configured in
+The feed URL is `https://setpiece.tryworld.com.cn/updates`, configured in
 `packages/openfilm/product.official.json`. Archives stay on GitHub Releases; only the small YAML files are served by
 the Worker. See [docs/releases/v0.3.1.md](../../docs/releases/v0.3.1.md).
 

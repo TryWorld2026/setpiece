@@ -2,13 +2,15 @@
 
 ## Current state
 
-- `v0.3.0` is the current public Alpha. It is published on npm as `@tryworld/setpiece@0.3.0` and as a GitHub
-  pre-release with unsigned macOS and Windows installers.
+- `@tryworld/setpiece@0.3.1` is the current CLI and npm release. The current public desktop Alpha remains the
+  `v0.3.0` GitHub pre-release with unsigned macOS and Windows installers.
+- A `v0.3.1` Git tag exists, but there is no `v0.3.1` GitHub release or desktop installer set yet. The release
+  workflow requires the macOS and Windows signing credentials before it will build.
 - GitHub still marks `v0.2.8` as the latest stable release because `v0.3.0` is a pre-release. The download page must
   continue to link the current Alpha explicitly rather than the repository's "Latest" badge.
-- The `v0.3.0` installers remain unsigned. The release workflow now refuses to build without the macOS and Windows
-  signing secrets, but that gate has not yet produced a signed release.
-- `product.official.json` points at `https://set.tryworld.com.cn/updates`. The feed generator and deployment workflow
+- The `v0.3.0` installers remain unsigned. The release workflow refuses to build desktop binaries without the
+  macOS and Windows signing secrets, and that gate has not yet produced a signed release.
+- `product.official.json` points at `https://setpiece.tryworld.com.cn/updates`. The feed generator and deployment workflow
   exist, but the route is not live until a published release runs `update-feed.yml` with `CLOUDFLARE_API_TOKEN`.
 - The public repository is MIT-licensed. A future closed-source commercial build needs a separate private repository
   and distribution plan; changing repository visibility does not revoke rights already granted for published code.

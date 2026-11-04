@@ -38,9 +38,9 @@ const NAV: Array<{ group: 'settings' | 'help'; sections: SettingsSection[] }> = 
 const LINKS = [
   { label: 'settings.links.github', href: 'https://github.com/TryWorld2026/setpiece' },
   { label: 'settings.links.examples', href: 'https://github.com/openfilm/examples' },
-  { label: 'settings.links.site', href: 'https://set.tryworld.com.cn' },
-  { label: 'settings.links.eula', href: 'https://set.tryworld.com.cn/legal/eula/' },
-  { label: 'settings.links.privacy', href: 'https://set.tryworld.com.cn/legal/privacy/' },
+  { label: 'settings.links.site', href: 'https://setpiece.tryworld.com.cn' },
+  { label: 'settings.links.eula', href: 'https://setpiece.tryworld.com.cn/legal/eula/' },
+  { label: 'settings.links.privacy', href: 'https://setpiece.tryworld.com.cn/legal/privacy/' },
 ];
 
 const SECTION_ICON: Record<SettingsSection, React.ReactNode> = {

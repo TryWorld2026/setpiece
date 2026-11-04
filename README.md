@@ -12,8 +12,10 @@ toolchain, with a new identity and interface.
 
 ## Status
 
-`0.3.0` is the first public Alpha, distributed through npm and GitHub pre-releases. The source is an independent
-commercial derivative of OpenFilm, with the upstream Git history preserved.
+`@tryworld/setpiece@0.3.1` is the current CLI and npm release. The public desktop Alpha remains `v0.3.0`, with
+unsigned macOS and Windows installers; `v0.3.1` desktop binaries are waiting on the release signing and notarization
+secrets and have not been published. The source is an independent commercial derivative of OpenFilm, with the
+upstream Git history preserved.
 
 ## Product
 
@@ -23,7 +25,8 @@ commercial derivative of OpenFilm, with the upstream Git history preserved.
 - CLI and npm package: `@tryworld/setpiece` (command: `setpiece`)
 - Shared package: `setpiece-shared`
 - Repository: https://github.com/TryWorld2026/setpiece
-- Version: `0.3.0`
+- CLI and npm version: `0.3.1`
+- Public desktop Alpha: `0.3.0` (unsigned)
 
 The `twset` and `openfilm` command names remain hidden compatibility aliases. The previous `@tryworld/set` npm
 package is superseded by `@tryworld/setpiece`.

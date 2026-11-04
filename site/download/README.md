@@ -1,6 +1,6 @@
 # Setpiece · 造境 download page
 
-Static site for `set.tryworld.com.cn`. The domain is technical infrastructure only; the page uses the
+Static site for `setpiece.tryworld.com.cn`. The domain is technical infrastructure only; the page uses the
 Setpiece identity, not the TryWorld brand.
 
 ## Deploy
@@ -11,7 +11,8 @@ npx -y wrangler@4.157.0 deploy --config wrangler.jsonc
 ```
 
 The Worker is `tryworld-set-download`; `wrangler.jsonc` binds the custom domain
-`set.tryworld.com.cn`.
+`setpiece.tryworld.com.cn`. The legacy `set.tryworld.com.cn` hostname stays bound to the same Worker so installs
+shipped before the rename can still reach updates.
 
 ## Structure
 
@@ -25,8 +26,9 @@ The Worker is `tryworld-set-download`; `wrangler.jsonc` binds the custom domain
 
 ## Release state
 
-- The npm package is `@tryworld/setpiece` at `0.3.0`; the page shows the npx quick start.
-- Unsigned desktop Alpha installers are published as the `v0.3.0` pre-release: macOS arm64/x64 DMG and ZIP,
-  Windows x64 EXE, plus `SHA256SUMS.txt`. Signed and notarized builds remain a later milestone.
+- The npm package is `@tryworld/setpiece` at `0.3.1`; the page shows the npx quick start.
+- Unsigned desktop Alpha installers remain available as the `v0.3.0` pre-release: macOS arm64/x64 DMG and ZIP,
+  Windows x64 EXE, plus `SHA256SUMS.txt`. The `v0.3.1` desktop release is blocked on signing and notarization
+  credentials.
 - Release assets: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0
 - Upstream: https://github.com/openfilm/openfilm

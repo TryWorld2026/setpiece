@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://set.tryworld.com.cn/sitemap.xml
+Sitemap: https://setpiece.tryworld.com.cn/sitemap.xml

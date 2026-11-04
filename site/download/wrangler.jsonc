@@ -9,6 +9,10 @@
   },
   "routes": [
     {
+      "pattern": "setpiece.tryworld.com.cn",
+      "custom_domain": true
+    },
+    {
       "pattern": "set.tryworld.com.cn",
       "custom_domain": true
     }
