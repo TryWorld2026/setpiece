@@ -845,6 +845,59 @@ main {
   font-size: 10.5px;
 }
 
+.platform-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.platform-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background 120ms var(--ease),
+    border-color 120ms var(--ease),
+    color 120ms var(--ease),
+    transform 120ms var(--ease);
+}
+
+.platform-button:hover {
+  border-color: rgba(111, 135, 156, 0.48);
+  background: var(--bg);
+  transform: translateY(-1px);
+}
+
+.platform-button--primary {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.platform-button--primary:hover {
+  border-color: #303236;
+  background: #303236;
+  color: #fff;
+}
+
+.platform-button span {
+  color: inherit;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
 .cli {
   display: grid;
   grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
