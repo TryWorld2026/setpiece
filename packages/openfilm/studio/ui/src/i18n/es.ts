@@ -147,6 +147,9 @@ lockedBody: 'Studio está en marcha, pero solo deja entrar a un navegador que lo
   },
   projects: {
     newProject: 'Nuevo proyecto',
+    continueEditing: 'Seguir editando',
+    readyOnSet: 'Listo en el set',
+    openSet: 'Abrir set',
     localProjectFailed: 'No se pudo crear el proyecto. Inténtalo de nuevo.',
     loadFailed: 'No se pudieron cargar tus proyectos.',
     loadRetry: 'Reintentar',

@@ -656,7 +656,6 @@ function LibraryHero({
 }: ItemProps & { folderName?: string }) {
   const t = useT();
   const language = useLanguage();
-  const chinese = language === 'zh-CN';
   const open = selecting ? onToggleSelect : onOpen;
   return (
     <article className="group relative min-h-[220px] overflow-hidden rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] shadow-[var(--shadow-sm)]">
@@ -672,7 +671,7 @@ function LibraryHero({
       <div className="pointer-events-none relative z-[2] flex min-h-[220px] max-w-[72%] flex-col justify-end px-7 pb-6 pt-10 text-white">
         <div className="mb-6 flex items-center gap-2 text-[11px] font-medium tracking-[0.01em] text-white/65">
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)] ring-2 ring-white/15" />
-          <span>{chinese ? '继续创作' : 'Continue editing'}</span>
+          <span>{t('projects.continueEditing')}</span>
           <span className="text-white/30">·</span>
           <span>{formatDate(project.openedAt, language)}</span>
         </div>
@@ -682,7 +681,7 @@ function LibraryHero({
         <div className="mt-2 flex min-w-0 items-center gap-2 text-[12px] text-white/65">
           {folderName ? <span className="truncate">{folderName}</span> : null}
           {folderName ? <span className="text-white/25">/</span> : null}
-          <span className="truncate">{project.missing ? t('projects.missing') : (chinese ? '项目已在片场中准备好' : 'Ready on the set')}</span>
+          <span className="truncate">{project.missing ? t('projects.missing') : t('projects.readyOnSet')}</span>
           {project.duration ? <span className="shrink-0 tabular-nums text-white/45">{formatDuration(project.duration)}</span> : null}
         </div>
       </div>
@@ -692,7 +691,7 @@ function LibraryHero({
           onClick={open}
           className="inline-flex h-8 items-center gap-2 rounded-[6px] border border-white/20 bg-white/12 px-3 text-[12px] font-medium text-white backdrop-blur-md transition hover:bg-white/20"
         >
-          {chinese ? '打开片场' : 'Open set'}
+          {t('projects.openSet')}
           <ArrowRight size={13} strokeWidth={1.8} />
         </button>
         {!selecting ? (

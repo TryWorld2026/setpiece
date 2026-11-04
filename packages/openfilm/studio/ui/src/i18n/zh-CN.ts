@@ -148,6 +148,9 @@ lockedBody: 'Studio 正在运行，但只接受用带 key 的地址打开过一�
   },
   projects: {
     newProject: '新建项目',
+    continueEditing: '继续创作',
+    readyOnSet: '项目已在片场中准备好',
+    openSet: '打开片场',
     localProjectFailed: '无法创建项目，请重试。',
     loadFailed: '无法加载你的项目。',
     loadRetry: '重试',

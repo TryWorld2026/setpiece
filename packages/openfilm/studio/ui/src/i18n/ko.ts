@@ -144,6 +144,9 @@ lockedBody: 'Studio는 실행 중이지만, 키가 붙은 주소로 한 번 연 
   },
   projects: {
     newProject: '새 프로젝트',
+    continueEditing: '편집 계속',
+    readyOnSet: '세트에서 준비됨',
+    openSet: '세트 열기',
     localProjectFailed: '프로젝트를 만들지 못했습니다. 다시 시도하세요.',
     loadFailed: '프로젝트를 불러오지 못했습니다.',
     loadRetry: '다시 시도',

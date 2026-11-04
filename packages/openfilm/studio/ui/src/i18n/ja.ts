@@ -147,6 +147,9 @@ lockedBody: 'Studio は動いていますが、キー付きのアドレスで一
   },
   projects: {
     newProject: '新規プロジェクト',
+    continueEditing: '編集を続ける',
+    readyOnSet: 'セットの準備ができました',
+    openSet: 'セットを開く',
     localProjectFailed: 'プロジェクトを作成できませんでした。もう一度お試しください。',
     loadFailed: 'プロジェクトを読み込めませんでした。',
     loadRetry: '再試行',

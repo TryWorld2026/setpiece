@@ -148,6 +148,9 @@ lockedBody: 'Studio is running, but it only lets in a browser that opened it onc
   },
   projects: {
     newProject: 'New project',
+    continueEditing: 'Continue editing',
+    readyOnSet: 'Ready on the set',
+    openSet: 'Open set',
     localProjectFailed: 'Couldn’t create the project. Please retry.',
     loadFailed: 'Couldn’t load your projects.',
     loadRetry: 'Try again',
