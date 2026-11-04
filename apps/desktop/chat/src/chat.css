@@ -1803,3 +1803,122 @@ body.tl-pinning, body.tl-pinning * { cursor: crosshair !important; }
 
 /* the desktop chat page: the column fills the view */
 #root { height: 100%; }
+
+/* ── Setpiece workbench alignment ─────────────────────────────────────────────────────────────
+   The copied chat shipped with an older teal/blue system. These values make it one surface with the
+   editor: warm neutral paper, fog-blue focus, hairline separators, and no floating card treatment. */
+:root,
+[data-theme='light'] {
+  --bg: #f6f6f3;
+  --bg-soft: #f2f2ef;
+  --canvas: #efefec;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f2f2ef;
+  --surface-3: #e9e9e5;
+
+  --border: rgba(28, 29, 31, 0.1);
+  --border-soft: rgba(28, 29, 31, 0.065);
+  --border-strong: rgba(28, 29, 31, 0.18);
+
+  --text: #1b1c1e;
+  --text-dim: #3f4246;
+  --text-muted: #56595d;
+  --text-faint: #7b7f84;
+  --chat-text: #1b1c1e;
+  --chat-hint: #56595d;
+
+  --ink: #1b1c1e;
+  --accent: #4e6a80;
+  --accent-2: #6f879c;
+  --accent-hover: #3f5b70;
+  --accent-soft: rgba(111, 135, 156, 0.14);
+  --accent-glow: rgba(111, 135, 156, 0.22);
+  --on-accent: #ffffff;
+
+  --ok: #4f7d63;
+  --warn: #a16f35;
+  --err: #b84a43;
+  --bg-hover: rgba(28, 29, 31, 0.045);
+  --bg-active: rgba(28, 29, 31, 0.08);
+
+  --composer-bg: #ffffff;
+  --composer-border: rgba(28, 29, 31, 0.12);
+  --composer-border-active: rgba(78, 106, 128, 0.62);
+  --fill-tsp: rgba(28, 29, 31, 0.05);
+  --chip-tsp: rgba(28, 29, 31, 0.05);
+  --chip-tsp-hover: rgba(28, 29, 31, 0.09);
+
+  --dock-shell: #efefec;
+  --dock-pane: #ffffff;
+  --app-content-bg: #f6f6f3;
+  --tooltip-bg: #ffffff;
+  --tooltip-text: #1b1c1e;
+  --tooltip-border: rgba(28, 29, 31, 0.14);
+}
+
+[data-theme='dark'] {
+  --bg: #141516;
+  --bg-soft: #191b1c;
+  --canvas: #111213;
+  --panel: #1b1d1f;
+  --surface: #1b1d1f;
+  --surface-2: #24272a;
+  --surface-3: #2d3033;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --text: #f1f1ef;
+  --text-dim: #c4c5c3;
+  --text-muted: #a2a4a3;
+  --text-faint: #777a7b;
+  --chat-text: #f1f1ef;
+  --chat-hint: #a2a4a3;
+
+  --ink: #f1f1ef;
+  --accent: #8da7ba;
+  --accent-2: #6f879c;
+  --accent-hover: #a5bdcd;
+  --accent-soft: rgba(141, 167, 186, 0.16);
+  --accent-glow: rgba(141, 167, 186, 0.24);
+  --on-accent: #ffffff;
+
+  --ok: #7da78d;
+  --warn: #c6a36d;
+  --err: #d1766f;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(255, 255, 255, 0.1);
+
+  --composer-bg: #1b1d1f;
+  --composer-border: rgba(255, 255, 255, 0.09);
+  --composer-border-active: rgba(141, 167, 186, 0.62);
+  --fill-tsp: rgba(255, 255, 255, 0.06);
+  --chip-tsp: rgba(255, 255, 255, 0.09);
+  --chip-tsp-hover: rgba(255, 255, 255, 0.14);
+
+  --dock-shell: #111213;
+  --dock-pane: #1b1d1f;
+  --app-content-bg: #141516;
+  --tooltip-bg: #232628;
+  --tooltip-text: #f1f1ef;
+  --tooltip-border: rgba(255, 255, 255, 0.14);
+}
+
+.openfilm-composer-tool {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+}
+
+.openfilm-chat-pill {
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.openfilm-prose {
+  font-size: 13px;
+  line-height: 1.68;
+  letter-spacing: -0.003em;
+}

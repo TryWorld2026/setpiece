@@ -17,7 +17,6 @@
 import React from 'react';
 import {
   ArrowUpDown,
-  Bookmark,
   BookmarkPlus,
   Layers,
   Component as ComponentIcon,
@@ -74,7 +73,6 @@ import { useMediaImage } from '@/lib/media-queue';
 import { Tooltip } from './Tooltip';
 import { retryImage } from '@/lib/retry-image';
 import { boxBetween, boxHits, boxPick, moveTargets, pickItem, type Box } from '@/lib/media-selection';
-import { barLayout, type BarWords } from '@/lib/media-bar';
 import { byName, folderFaces } from '@/lib/media-folders';
 import { readPreference, writePreference } from '@/lib/preference-storage';
 
@@ -717,37 +715,6 @@ export function MediaPool({
     setMenu({ x: r.left, y: r.bottom + 4, flipTo: r.top - 4, items, dense: true });
   };
 
-  /* the bar at the pane's width (the whole pane is measured: the bar's own padding changes with it) */
-  /* a callback ref: watched from when the element is there, however late it comes */
-  const [rootEl, setRootEl] = React.useState<HTMLDivElement | null>(null);
-  const [paneWidth, setPaneWidth] = React.useState(0);
-  React.useEffect(() => {
-    if (!rootEl || typeof ResizeObserver === 'undefined') return undefined;
-    const ro = new ResizeObserver(([entry]) => setPaneWidth(Math.round(entry?.contentRect.width ?? 0)));
-    ro.observe(rootEl);
-    return () => ro.disconnect();
-  }, [rootEl]);
-  /* what the bar's words measure in this language and font (again once the fonts have loaded) */
-  const [fontsTick, setFontsTick] = React.useState(0);
-  React.useEffect(() => { void document.fonts?.ready.then(() => setFontsTick((n) => n + 1)); }, []);
-  const hint = t('media.searchShort');
-  const uploadWord = t('media.upload');
-  const words = React.useMemo((): BarWords | null => {
-    const ctx = typeof document === 'undefined' ? null : document.createElement('canvas').getContext('2d');
-    if (!rootEl || !ctx) return null;
-    const family = getComputedStyle(rootEl).fontFamily;
-    const measure = (text: string, weight: number) => { ctx.font = `${weight} 12.5px ${family}`; return ctx.measureText(text).width; };
-    return { hint: measure(hint, 400), upload: measure(uploadWord, 500) };
-  }, [hint, uploadWord, fontsTick, rootEl]);
-  /* the fullest bar that fits (lib/media-bar); before the pane is measured, the full one */
-  const bar = paneWidth > 0 && words
-    ? barLayout(paneWidth, words, 5, Boolean(query))
-    : { field: true, uploadWord: true, tight: false, cramped: false };
-  const tight = bar.tight;
-  const [searchOpen, setSearchOpen] = React.useState(false);
-  /* a search opened (from the button, or a field too short to type in) is over the bar; one typed stays open */
-  const searching = bar.cramped && (searchOpen || Boolean(query));
-
   const crumbs = at ? at.split('/') : [];
   const flat = Boolean(query.trim()) || view.filter !== 'all';
   const rows = view.layout === 'list';
@@ -795,7 +762,6 @@ export function MediaPool({
 
   return (
     <div
-      ref={setRootEl}
       className="relative flex h-full min-h-0 flex-col"
       /* the pane's keys, while they are its own (the timeline's Delete is the timeline's): Delete (or Backspace) asks to
          delete what is picked, as an editor's project panel does; Enter puts the one file picked on the timeline, as
@@ -835,49 +801,44 @@ export function MediaPool({
         void importFiles([...e.dataTransfer.files]);
       }}
     >
-      {/* the bar at the pane's width (lib/media-bar): the search field fills the room left; narrowing, Upload is its
-          icon first, then the field shortens, then the search is a button that opens over the bar */}
-      <div className={`relative flex shrink-0 items-center pb-1.5 pt-2.5 ${tight ? 'gap-0.5 px-2' : 'gap-1 px-2.5'}`}>
-        {/* one field throughout: opened over the bar it is restyled, not made again, so it keeps the focus; there, its
-            see-through fill is laid on the pane's own, so the buttons under it do not show */}
-        {bar.field || searching ? (
-          <label className={`flex h-7 min-w-0 items-center gap-1.5 rounded-md bg-[var(--bg-hover)] px-2 text-[12.5px] text-[var(--text-muted)] ${searching ? `absolute top-2.5 z-10 ${tight ? 'inset-x-2' : 'inset-x-2.5'} [background:linear-gradient(var(--bg-hover),var(--bg-hover)),var(--dock-pane)]` : 'flex-1'}`}>
-            <Search size={13} className="shrink-0" />
-            <input autoFocus={!bar.field} value={query} onChange={(e) => setQuery(e.target.value)} placeholder={hint}
-              onFocus={() => { if (bar.cramped) setSearchOpen(true); }}
-              onBlur={() => { if (!query) setSearchOpen(false); }}
-              onKeyDown={(e) => { if (e.key === 'Escape' && searching) { setQuery(''); setSearchOpen(false); e.currentTarget.blur(); } }}
-              className="min-w-0 flex-1 bg-transparent text-[var(--text)] outline-none placeholder:text-[var(--text-faint)]" />
-            {query || searching ? (
-              <button type="button" aria-label={t('media.clearSearch')} onMouseDown={(e) => e.preventDefault()}
-                onClick={() => { setQuery(''); setSearchOpen(false); }} className="shrink-0 hover:text-[var(--text)]"><X size={12} /></button>
-            ) : null}
-          </label>
-        ) : null}
-        {bar.field ? null : (
-          /* the field down to its icon, still filling the room: clicked, it opens over the bar */
-          <Tooltip label={t('media.search')} side="bottom">
-            <button type="button" aria-label={t('media.search')} onClick={() => setSearchOpen(true)}
-              className="flex h-7 min-w-7 flex-1 items-center justify-center rounded-md bg-[var(--bg-hover)] text-[var(--text-muted)] transition hover:text-[var(--text)]">
-              <Search size={13} />
+      {/* the pane's identity, as in the workbench design: what this column holds, and which library it is showing */}
+      <div className="flex h-9 shrink-0 items-center border-b border-[var(--border)] px-3">
+        <span className="text-[12.5px] font-semibold text-[var(--text)]">{inSaved ? t('saved.title') : t('layout.assets')}</span>
+        <span className="ml-1.5 text-[10.5px] tabular-nums text-[var(--text-faint)]">{counts.all}</span>
+        {onScope ? (
+          <div className="ml-auto flex h-6 items-center rounded-[5px] bg-[var(--bg-hover)] p-0.5" aria-label={t('layout.assets')}>
+            <button type="button" aria-pressed={!inSaved} onClick={() => { if (inSaved) onScope('project'); }}
+              className={`h-5 rounded-[3px] px-1.5 text-[10.5px] font-medium transition ${!inSaved ? 'bg-[var(--surface)] text-[var(--text)] shadow-[0_1px_2px_rgba(0,0,0,0.08)]' : 'text-[var(--text-faint)] hover:text-[var(--text-muted)]'}`}>
+              {t('nav.projects')}
             </button>
-          </Tooltip>
-        )}
-        {/* bringing media in is what this pane is for: the one labeled button, right after the search */}
+            <button type="button" aria-pressed={inSaved} onClick={() => { if (!inSaved) onScope('saved'); }}
+              className={`h-5 rounded-[3px] px-1.5 text-[10.5px] font-medium transition ${inSaved ? 'bg-[var(--surface)] text-[var(--text)] shadow-[0_1px_2px_rgba(0,0,0,0.08)]' : 'text-[var(--text-faint)] hover:text-[var(--text-muted)]'}`}>
+              {t('saved.title')}
+            </button>
+          </div>
+        ) : null}
+      </div>
+      {/* the design's full search field on its own line, so a 200 px pane never hides it behind an icon */}
+      <div className="shrink-0 px-2.5 pt-2">
+        <label className="flex h-7 min-w-0 items-center gap-1.5 rounded-md bg-[var(--bg-hover)] px-2 text-[12.5px] text-[var(--text-muted)]">
+          <Search size={13} className="shrink-0" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('media.search')}
+            onKeyDown={(e) => { if (e.key === 'Escape') { setQuery(''); e.currentTarget.blur(); } }}
+            className="min-w-0 flex-1 bg-transparent text-[var(--text)] outline-none placeholder:text-[var(--text-faint)]" />
+          {query ? (
+            <button type="button" aria-label={t('media.clearSearch')} onClick={() => setQuery('')} className="shrink-0 hover:text-[var(--text)]"><X size={12} /></button>
+          ) : null}
+        </label>
+      </div>
+      <div className="flex shrink-0 items-center gap-0.5 px-2 pb-1.5 pt-1">
         <Tooltip label={t('media.import')} side="bottom">
           <button type="button" aria-label={t('media.import')} aria-haspopup={onPick && onBring ? 'menu' : undefined}
             onClick={(e) => (onPick && onBring ? (links ? barMenu(e, importMenu) : void bringFrom('copy', false)) : inputRef.current?.click())}
-            className={`flex h-7 shrink-0 items-center justify-center gap-1.5 rounded-md bg-[var(--bg-active)] text-[12.5px] font-medium text-[var(--text)] transition hover:bg-[var(--border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--border-strong)] ${bar.uploadWord ? 'px-2.5' : 'w-7'}`}>
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[var(--bg-active)] text-[var(--text)] transition hover:bg-[var(--border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--border-strong)]">
             <Upload size={13} strokeWidth={2.2} />
-            {bar.uploadWord ? uploadWord : null}
           </button>
         </Tooltip>
-        {/* Saved, the person's own library for every project: the pane shows it in place of the project's media, and back */}
-        {onScope ? (
-          <BarButton label={t(inSaved ? 'saved.back' : 'saved.title')} on={inSaved} onClick={() => onScope(inSaved ? 'project' : 'saved')}>
-            <Bookmark size={14} {...(inSaved ? { fill: 'currentColor' } : {})} />
-          </BarButton>
-        ) : null}
+        <span aria-hidden className="mx-0.5 h-4 w-px bg-[var(--border)]" />
         <BarButton label={t(rows ? 'media.viewGrid' : 'media.viewList')} onClick={() => setView((v) => ({ ...v, layout: rows ? 'grid' : 'list' }))}>
           {rows ? <LayoutGrid size={14} /> : <List size={14} />}
         </BarButton>
@@ -887,6 +848,7 @@ export function MediaPool({
         <BarButton label={t('media.sort')} onClick={(e) => barMenu(e, SORTS.map((key) => ({
           id: key, label: t(`media.sort_${key}`), checked: view.sort === key, onSelect: () => setView((v) => ({ ...v, sort: key })),
         })))}><ArrowUpDown size={14} /></BarButton>
+        <span className="min-w-0 flex-1" />
         <BarButton label={t('assets.newFolder')} onClick={() => { setQuery(''); setView((v) => ({ ...v, filter: 'all' })); setCreating(true); }}><FolderPlus size={14} /></BarButton>
         {/* any kind of file: what Studio cannot play is still the project's material */}
         <input ref={inputRef} type="file" multiple className="hidden"

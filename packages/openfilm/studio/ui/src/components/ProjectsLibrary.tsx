@@ -470,7 +470,7 @@ export function ProjectsPopover({
           {view === 'examples' ? (
             <ExamplesGallery
               mode="start"
-              heading={<div className="mr-auto min-w-0"><div className="mb-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-[var(--text-faint)]">{brand}</div><h2 className="text-[18px] font-semibold tracking-[-0.015em] text-[var(--text)]">{t('launcher.examples')}</h2></div>}
+              heading={<div className="mr-auto min-w-0"><div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.13em] text-[var(--text-faint)]">SETPIECE · {brand}</div><h2 className="text-[24px] font-semibold leading-none tracking-[-0.03em] text-[var(--text)]">{t('launcher.examples')}</h2></div>}
               onStart={(example) => setGithub({ url: example.url, start: true, title: example.title })}
             />
           ) : lib.loaded ? (
@@ -478,8 +478,8 @@ export function ProjectsPopover({
             <ProjectsView
               heading={
                 <div className="mr-auto min-w-0">
-                  <div className="mb-1.5 text-[9.5px] font-medium uppercase tracking-[0.12em] text-[var(--text-faint)]">{brand}</div>
-                  <h2 className="truncate text-[18px] font-semibold tracking-[-0.015em] text-[var(--text)]">
+                  <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.13em] text-[var(--text-faint)]">SETPIECE · {brand}</div>
+                  <h2 className="truncate text-[24px] font-semibold leading-none tracking-[-0.03em] text-[var(--text)]">
                     {t(scope === 'recent' ? 'library.recent' : 'library.all')}
                   </h2>
                 </div>
@@ -487,6 +487,7 @@ export function ProjectsPopover({
               scope={scope}
               folderId={folderId}
               onFolderChange={setFolderId}
+              onShowAll={() => { setScope('all'); setFolderId(null); }}
               projects={lib.projects}
               creating={busy !== null}
               onNewProject={(folderId) => void newProject(folderId)}

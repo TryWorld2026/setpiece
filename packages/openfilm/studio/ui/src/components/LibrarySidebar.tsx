@@ -1,6 +1,7 @@
 import { Clock3, Folder, FolderOpen, FolderPlus, Github, LayoutGrid, Plus, Sparkles, X } from 'lucide-react';
 import { useBrandName, useLanguage, useT } from '@/i18n';
 import { folderTrail, type ProjectFolder } from '@/lib/project-folders';
+import { shortcutHint } from '@/lib/shortcut-hint';
 import { BrandLogo } from './BrandLogo';
 import type { LibraryProject, LibraryScope } from './ProjectsView';
 
@@ -85,7 +86,7 @@ export function LibrarySidebar({
         >
           <Plus size={15} strokeWidth={2} />
           {t('projects.newProject')}
-          <span className="ml-auto text-[10px] font-normal opacity-55">⌘N</span>
+          <span className="ml-auto text-[10px] font-normal opacity-55">{shortcutHint('N', { mod: true })}</span>
         </button>
       </div>
 

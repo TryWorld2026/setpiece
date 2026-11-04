@@ -276,6 +276,8 @@ lockedBody: 'Studio 正在运行，但只接受用带 key 的地址打开过一�
   library: {
     recent: '最近',
     all: '全部作品',
+    recentlyEdited: '最近编辑',
+    showAll: '查看全部',
     sidebar: {
       library: '资料库',
       folders: '文件夹',

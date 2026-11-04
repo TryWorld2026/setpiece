@@ -276,6 +276,8 @@ lockedBody: 'Studio is running, but it only lets in a browser that opened it onc
   library: {
     recent: 'Recent',
     all: 'All projects',
+    recentlyEdited: 'Recently edited',
+    showAll: 'Show all',
     sidebar: {
       library: 'Library',
       folders: 'Folders',

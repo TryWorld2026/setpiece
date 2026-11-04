@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { History, Plus } from 'lucide-react';
 import { limitTitleWidth, SESSION_TITLE_MAX_WIDTH } from 'setpiece-shared';
 import { Tooltip } from './Tooltip';
-import { useT } from '@/i18n';
+import { useT, useUiLocale } from '@/i18n';
 import {
   groupSessionsByRecency,
   type ProjectSessionItem,
@@ -58,6 +58,8 @@ export function ConversationSessionBar({
   onRenameSession?: (title: string) => Promise<void>;
 }) {
   const t = useT();
+  const language = useUiLocale();
+  const chinese = language === 'zh-CN';
   const current = sessions.find((item) => item.id === currentSessionId);
   const label = current?.title.trim() ?? '';
   const [renaming, setRenaming] = React.useState(false);
@@ -140,7 +142,15 @@ export function ConversationSessionBar({
   const groups = groupSessionsByRecency(visible);
 
   return (
-    <div className={PANE_BAR}>
+    <div className={`${PANE_BAR} gap-2 px-3`}>
+      <div className="flex shrink-0 items-center gap-1.5 px-0.5">
+        <span className="text-[12.5px] font-semibold tracking-[-0.01em] text-[var(--text)]">
+          {chinese ? 'AI 助理' : 'Assistant'}
+        </span>
+        <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[var(--ok)]" />
+        <span className="text-[10.5px] text-[var(--text-faint)]">{chinese ? '在线' : 'Online'}</span>
+      </div>
+      {label ? <span aria-hidden className="h-3 w-px shrink-0 bg-[var(--border)]" /> : null}
       {label ? (
         renaming ? (
           <input

@@ -155,9 +155,9 @@ function useKeptFlag(key: string, initial = true): [boolean, (open: boolean) => 
   return [open, keep, setOpen];
 }
 const TIMELINE_H = 200;
-const TIMELINE_SHARE = 0.45;
+const TIMELINE_SHARE = 0.3;
 const TIMELINE_SPARE = 48;
-const VIEWER_BESIDE_ASSETS = 440;
+const VIEWER_BESIDE_ASSETS = 320;
 const TITLE_MAX_CHARS = 56;
 const TOP_BTN =
   'flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-md text-[var(--text-dim)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text)]';
@@ -713,9 +713,11 @@ export function ProjectView({ projectId, onProject, onLeave }: {
   /* ── layout ── */
   const dockColRef = React.useRef<HTMLDivElement | null>(null);
   const viewerRowRef = React.useRef<HTMLDivElement | null>(null);
-  const { width: storedTimelineHeight, commit: commitTimelineHeight, saved: timelineHeightSaved } = usePaneSize('openfilm.project.timelineH', TIMELINE_H, MIN_DOCK_H);
-  const { width: inspectorWidth, commit: commitInspectorWidth } = usePaneSize('openfilm.project.inspectorW', DEFAULT_INSPECTOR, MIN_INSPECTOR);
-  const [assetsPaneOpen, setAssetsPaneOpen] = useKeptFlag('openfilm.project.assets');
+  const { width: storedTimelineHeight, commit: commitTimelineHeight, saved: timelineHeightSaved } = usePaneSize('setpiece.project.timelineH', TIMELINE_H, MIN_DOCK_H);
+  const { width: inspectorWidth, commit: commitInspectorWidth } = usePaneSize('setpiece.project.inspectorW', DEFAULT_INSPECTOR, MIN_INSPECTOR);
+  /* The new workbench opens with the media beside the picture. A separate, versioned key resets the old docked-host
+     state once without discarding any project data or user choices about the other panes. */
+  const [assetsPaneOpen, setAssetsPaneOpen] = useKeptFlag('setpiece.project.assets.workspace', true);
   const [assetsWidth, setAssetsWidth] = React.useState(248);
   /* the Layers panel (components/LayersPanel), left of the picture, after the assets */
   const [layersPaneOpen, setLayersPaneOpen] = useKeptFlag('openfilm.project.layers', false);
@@ -1524,7 +1526,9 @@ export function ProjectView({ projectId, onProject, onLeave }: {
   const hostPanel = useHostPanel();
   /* an app that hosts Studio can keep the media in a drawer of its own panel (window.openfilmHost panel.assets): no
      left pane then, the viewer first on the left */
-  const hostAssets = hostPanel?.assets ?? null;
+  /* The host's drawer is a temporary view opened from chat, not a replacement for the editor's own media pane.
+     When it is closed, Studio keeps the workbench's left media column visible. */
+  const hostAssets = hostPanel?.assets?.open ? hostPanel.assets : null;
   const assetsShown = !hostAssets && assetsPaneOpen && assetsFit;
   const layersRoom = rowWidth - (inspectorShown ? inspectorShownWidth : 0) - (assetsShown ? assetsShownWidth : 0) - MIN_VIEWER - 16;
   const layersShownWidth = rowWidth ? Math.min(layersWidth, layersRoom) : layersWidth;
@@ -3101,13 +3105,15 @@ export function ProjectView({ projectId, onProject, onLeave }: {
                 hostPanel={hostPanel ? { label: hostPanel.label, open: hostPanel.open, onChange: hostPanel.setOpen } : null} />
               <ProjectHistoryButton open={historyOpen} onClick={openHistory} className={TOP_BTN} />
               <Tooltip label={t('projectMenu.export')} side="bottom">
-                <button type="button" aria-label={t('projectMenu.export')} aria-haspopup="dialog" aria-expanded={exportOpen} className={TOP_BTN}
+                <button type="button" aria-label={t('projectMenu.export')} aria-haspopup="dialog" aria-expanded={exportOpen}
+                  className="ml-0.5 flex h-7 shrink-0 items-center gap-1.5 rounded-[6px] bg-[var(--text)] px-2.5 text-[12px] font-medium text-[var(--bg)] transition hover:opacity-85"
                   onClick={() => {
                     if (previewError) toast.showError(`${t('project.filmCannotExport')} ${previewError}`);
                     else if (totalMs > 0) setExportOpen(true);
                     else toast.show(t('project.filmNotReady'));
                   }}>
-                  <Upload size={16} />
+                  <Upload size={14} strokeWidth={1.8} />
+                  <span>{t('projectMenu.export')}</span>
                 </button>
               </Tooltip>
               {/* in an app's tabs these are in the tab's menu */}

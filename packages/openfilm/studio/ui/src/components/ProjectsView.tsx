@@ -7,7 +7,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import {
-  ArrowLeft, Check, ChevronDown, ChevronRight, Clock3, Folder, FolderInput, FolderOpen, FolderPlus, FolderSearch, Github, LayoutGrid, List, MoreHorizontal, Pencil, Plus, Search, SlidersHorizontal, Trash2, Video, X,
+  ArrowLeft, ArrowRight, Check, ChevronDown, ChevronRight, Clock3, Folder, FolderInput, FolderOpen, FolderPlus, FolderSearch, Github, LayoutGrid, List, MoreHorizontal, Pencil, Plus, Search, SlidersHorizontal, Trash2, Video, X,
 } from 'lucide-react';
 import type { Example } from '@/lib/project-sources';
 import { ExamplesSection } from './ProjectSources';
@@ -55,6 +55,7 @@ export function ProjectsView({
   scope = 'all',
   folderId: shownFolderId,
   onFolderChange,
+  onShowAll,
 }: {
   projects: LibraryProject[];
   /** A project is being created or opened; "New project" does not take a second click meanwhile. */
@@ -99,6 +100,8 @@ export function ProjectsView({
   /** The folder chosen in the Finder sidebar (controlled). */
   folderId?: string | null;
   onFolderChange?: (folderId: string | null) => void;
+  /** Leave the recent view for the whole library (the "Show all" beside Recently edited). */
+  onShowAll?: () => void;
 }) {
   const t = useT();
   /* recently opened first: someone coming back to the list most likely wants the one they just had */
@@ -129,6 +132,17 @@ export function ProjectsView({
     [projects, query, folderId, sort, folders, t],
   );
   const shown = React.useMemo(() => (scope === 'recent' && !query.trim() && folderId === null ? visible.slice(0, 12) : visible), [scope, visible]);
+  /* the most recent work becomes the library's opening shot; it is not repeated in the grid below */
+  const heroProject = React.useMemo(
+    () => (scope === 'recent' && !query.trim() && folderId === null && view === 'cards'
+      ? shown.find((project) => !project.missing) ?? null
+      : null),
+    [scope, query, folderId, view, shown],
+  );
+  const gridProjects = React.useMemo(
+    () => (heroProject ? shown.filter((project) => project.id !== heroProject.id) : shown),
+    [shown, heroProject],
+  );
   /* folder cards only at the top level and not while searching: inside a folder is its content, a search its results */
   /* the folders here: the top level's, or those inside the folder open (a search shows projects only) */
   const showFolders = !query.trim() && scope !== 'recent';
@@ -252,13 +266,13 @@ export function ProjectsView({
   }
 
   const starts = listStarts({ folderId, query });
-  const showNew = starts.newProject;
+  const showNew = starts.newProject && !heroProject;
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
       {/* the header stays out of the scroll area: inside it, the list view's scrollbar would narrow the header */}
       <header className="flex shrink-0 flex-col gap-3 px-6 pb-4 pt-5">
-        <div className="flex min-h-8 items-center gap-2">
+        <div className="flex min-h-9 items-center gap-2">
           {/* inside a folder the title is the way back: "Projects / test", on the same line, so what is in the folder
               starts where the projects do */}
           {currentFolder ? (
@@ -320,17 +334,45 @@ export function ProjectsView({
 
       {/* the one scroll area; the scrollbar gutter is reserved so cards keep their width either way */}
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable]">
-        <div className="w-full flex-1 px-6 pb-6">
+        <div className="w-full flex-1 px-6 pb-8">
           {shown.length === 0 && !showNew && !(showFolders && levelFolders.length > 0) ? (
             <div className="flex min-h-[42vh] items-center justify-center text-[14px] text-[var(--text-muted)]">
               {t('library.noMatches')}
             </div>
           ) : view === 'cards' ? (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4">
-              {showNew ? <NewProjectCard creating={creating} onNewProject={() => onNewProject(folderId)} {...(folderId === null ? { onOpenFolder, onGetFromGitHub } : {})} /> : null}
-              {showFolders ? levelFolders.map((folder) => <FolderCard key={`folder:${folder.id}`} {...folderProps(folder)} />) : null}
-              {shown.map((project) => <ProjectCard key={project.id} {...itemProps(project)} />)}
-            </div>
+            <>
+              {heroProject ? (
+                <LibraryHero
+                  {...itemProps(heroProject)}
+                  folderName={folders.find((folder) => folder.id === heroProject.folderId)?.name}
+                />
+              ) : null}
+              {heroProject && gridProjects.length ? (
+                <div className="mb-3 mt-7 flex items-end justify-between gap-4">
+                  <div className="flex min-w-0 items-baseline gap-2">
+                    <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[var(--text)]">
+                      {t('library.recentlyEdited')}
+                    </h3>
+                    <span className="text-[11.5px] tabular-nums text-[var(--text-faint)]">{gridProjects.length}</span>
+                  </div>
+                  {onShowAll ? (
+                    <button
+                      type="button"
+                      onClick={onShowAll}
+                      className="inline-flex h-7 shrink-0 items-center gap-1 rounded-[6px] px-2 text-[12px] font-medium text-[var(--accent)] transition hover:bg-[var(--accent-soft)]"
+                    >
+                      {t('library.showAll')}
+                      <ArrowRight size={13} strokeWidth={1.8} />
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+              <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {showNew ? <NewProjectCard creating={creating} onNewProject={() => onNewProject(folderId)} {...(folderId === null ? { onOpenFolder, onGetFromGitHub } : {})} /> : null}
+                {showFolders ? levelFolders.map((folder) => <FolderCard key={`folder:${folder.id}`} {...folderProps(folder)} />) : null}
+                {gridProjects.map((project) => <ProjectCard key={project.id} {...itemProps(project)} />)}
+              </div>
+            </>
           ) : (
             <div className="flex flex-col divide-y divide-[var(--border)]">
               {showNew ? <NewProjectListRow creating={creating} onNewProject={() => onNewProject(folderId)} {...(folderId === null ? { onOpenFolder, onGetFromGitHub } : {})} /> : null}
@@ -589,6 +631,82 @@ function NewProjectCard({ creating, onNewProject, onOpenFolder, onGetFromGitHub 
       <div className="mt-2 flex">
         {onOpenFolder && onGetFromGitHub ? <ImportMenu creating={creating} onOpenFolder={onOpenFolder} onGetFromGitHub={onGetFromGitHub} className="-ml-1.5 h-7 px-1.5 text-[12.5px]" /> : null}
       </div>
+    </article>
+  );
+}
+
+/**
+ * The library's opening shot: the work returned to most recently, at the size of a film still. Everything it does is
+ * the card's own open, rename, select, move and delete, so it adds hierarchy without adding another way to manage a
+ * project.
+ */
+function LibraryHero({
+  project,
+  title,
+  selecting,
+  selected,
+  onToggleSelect,
+  onOpen,
+  onStartRename,
+  onStartSelect,
+  onMoveToFolder,
+  onLocate,
+  onDelete,
+  folderName,
+}: ItemProps & { folderName?: string }) {
+  const t = useT();
+  const language = useLanguage();
+  const chinese = language === 'zh-CN';
+  const open = selecting ? onToggleSelect : onOpen;
+  return (
+    <article className="group relative min-h-[220px] overflow-hidden rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)] shadow-[var(--shadow-sm)]">
+      <PosterMedia project={project} shade />
+      <span aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,10,12,0.72)_0%,rgba(8,10,12,0.40)_46%,rgba(8,10,12,0.08)_78%,rgba(8,10,12,0.18)_100%)]" />
+      <button
+        type="button"
+        onClick={open}
+        aria-label={title}
+        aria-pressed={selecting ? selected : undefined}
+        className="absolute inset-0 z-[1] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--accent)]"
+      />
+      <div className="pointer-events-none relative z-[2] flex min-h-[220px] max-w-[72%] flex-col justify-end px-7 pb-6 pt-10 text-white">
+        <div className="mb-6 flex items-center gap-2 text-[11px] font-medium tracking-[0.01em] text-white/65">
+          <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)] ring-2 ring-white/15" />
+          <span>{chinese ? '继续创作' : 'Continue editing'}</span>
+          <span className="text-white/30">·</span>
+          <span>{formatDate(project.openedAt, language)}</span>
+        </div>
+        <h3 className="truncate text-[28px] font-semibold leading-tight tracking-[-0.035em] text-white drop-shadow-sm">
+          {title}
+        </h3>
+        <div className="mt-2 flex min-w-0 items-center gap-2 text-[12px] text-white/65">
+          {folderName ? <span className="truncate">{folderName}</span> : null}
+          {folderName ? <span className="text-white/25">/</span> : null}
+          <span className="truncate">{project.missing ? t('projects.missing') : (chinese ? '项目已在片场中准备好' : 'Ready on the set')}</span>
+          {project.duration ? <span className="shrink-0 tabular-nums text-white/45">{formatDuration(project.duration)}</span> : null}
+        </div>
+      </div>
+      <div className="absolute bottom-6 right-6 z-[3] flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={open}
+          className="inline-flex h-8 items-center gap-2 rounded-[6px] border border-white/20 bg-white/12 px-3 text-[12px] font-medium text-white backdrop-blur-md transition hover:bg-white/20"
+        >
+          {chinese ? '打开片场' : 'Open set'}
+          <ArrowRight size={13} strokeWidth={1.8} />
+        </button>
+        {!selecting ? (
+          <span className="rounded-[6px] border border-white/15 bg-black/20 text-white backdrop-blur-md">
+            <ItemMenu project={project} onOpen={onOpen} onStartRename={onStartRename} onStartSelect={onStartSelect} onMoveToFolder={onMoveToFolder} onLocate={onLocate} onDelete={onDelete} size={15} />
+          </span>
+        ) : null}
+      </div>
+      {selecting ? (
+        <div className="absolute left-4 top-4 z-[4] rounded-md">
+          <SelectToggle selecting selected={selected} onToggle={onToggleSelect} label={t('library.toggleSelect')} />
+        </div>
+      ) : null}
+      {selected ? <span aria-hidden className="pointer-events-none absolute inset-0 z-[5] rounded-[12px] ring-2 ring-inset ring-[var(--accent)]" /> : null}
     </article>
   );
 }
@@ -1475,6 +1593,7 @@ function SortButton({
   onSort: (next: LibrarySort) => void;
 }) {
   const t = useT();
+  const currentLabel = t(SORT_OPTIONS.find((option) => option.id === sort)?.labelKey ?? 'library.sortLabel');
   const [anchor, setAnchor] = React.useState<{ left: number; top: number } | null>(null);
   const toggle = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -1515,13 +1634,14 @@ function SortButton({
           aria-haspopup="dialog"
           aria-expanded={anchor != null}
           aria-label={t('library.sortLabel')}
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] transition ${
+          className={`flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[var(--border)] px-2.5 transition ${
             anchor != null
               ? 'bg-[var(--bg-active)] text-[var(--text)]'
               : 'bg-[var(--surface)] text-[var(--text-muted)] hover:text-[var(--text)]'
           }`}
         >
           <SlidersHorizontal size={14} />
+          <span className="hidden text-[12px] font-medium lg:inline">{currentLabel}</span>
         </button>
       </Tooltip>
       {anchor
