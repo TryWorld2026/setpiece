@@ -95,6 +95,17 @@ if (official && !FEED) {
 const NOTARY_PROFILE = process.env.SETPIECE_NOTARY_PROFILE || process.env.OPENFILM_NOTARY_PROFILE || 'setpiece-notary';
 
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: 'inherit', ...opts });
+/* Windows cannot execute npm's .cmd shim through execFileSync. Run npm's JavaScript entry with the current Node. */
+const npmCli = [
+  join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+  resolve(dirname(process.execPath), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+].find((candidate) => existsSync(candidate));
+const npmSync = (args, opts = {}) => execFileSync(npmCli ? process.execPath : 'npm', npmCli ? [npmCli, ...args] : args, opts);
+const runNpm = (args, opts = {}) => npmSync(args, { stdio: 'inherit', ...opts });
+/* Windows' pnpm shim is a .cmd, which Node cannot execute directly. Its arguments here are fixed flags. */
+const pnpmSync = (args, opts = {}) => process.platform === 'win32'
+  ? execFileSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', ['pnpm', ...args].join(' ')], opts)
+  : execFileSync('pnpm', args, opts);
 const pkg = JSON.parse(readFileSync(join(desktop, 'package.json'), 'utf8'));
 
 /* 1. the window's page, and Studio's editor for the package */
@@ -108,10 +119,10 @@ rmSync(work, { recursive: true, force: true });
 mkdirSync(stage, { recursive: true });
 cpSync(join(desktop, 'src'), join(stage, 'src'), { recursive: true, filter: (from) => !from.endsWith('.test.mjs') });
 cpSync(join(desktop, 'shell/dist'), join(stage, 'shell/dist'), { recursive: true });
-const pack = (dir) => execFileSync('npm', ['pack', '--ignore-scripts', '--pack-destination', work, '--silent'], { cwd: dir, encoding: 'utf8' }).trim().split('\n').pop();
+const pack = (dir) => npmSync(['pack', '--ignore-scripts', '--pack-destination', work, '--silent'], { cwd: dir, encoding: 'utf8' }).trim().split('\n').pop();
 const dependencies = { ...pkg.dependencies, [PACKAGE]: `file:../${pack(protocol)}` };
 /* npm takes the versions pnpm's lockfile has (locked-versions.mjs): what the tests ran with, not the latest */
-const lockedTree = JSON.parse(execFileSync('pnpm', ['list', '--prod', '--depth', 'Infinity', '--json'], { cwd: desktop, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }))[0];
+const lockedTree = JSON.parse(pnpmSync(['list', '--prod', '--depth', 'Infinity', '--json'], { cwd: desktop, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }))[0];
 writeFileSync(join(stage, 'package.json'), `${JSON.stringify({
   name: 'setpiece-desktop',
   productName: NAME,
@@ -126,7 +137,7 @@ writeFileSync(join(stage, 'package.json'), `${JSON.stringify({
   dependencies,
   overrides: lockedOverrides(lockedTree, pkg.dependencies),
 }, null, 2)}\n`);
-run('npm', ['install', '--omit=dev', '--omit=optional', '--no-audit', '--no-fund', '--no-package-lock', '--loglevel=error'], { cwd: stage });
+runNpm(['install', '--omit=dev', '--omit=optional', '--no-audit', '--no-fund', '--no-package-lock', '--loglevel=error'], { cwd: stage });
 const offLock = versionsOffLock(lockedTree, join(stage, 'node_modules'));
 if (offLock.length) {
   throw new Error(`The installer's packages are not the lockfile's:\n${offLock.map((p) => `  ${p.name} ${p.version} (locked: ${p.locked.join(', ')})`).join('\n')}`);
