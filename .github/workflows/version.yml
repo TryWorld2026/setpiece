@@ -22,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
@@ -48,6 +49,7 @@ jobs:
           # npm attests a publish to its source repository, and only accepts one that is public
           NPM_CONFIG_PROVENANCE: ${{ !github.event.repository.private }}
       - name: Tag the published version and start the release
+        if: steps.changesets.outputs.published == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

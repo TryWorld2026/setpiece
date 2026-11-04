@@ -1,0 +1,26 @@
+name: Retire legacy npm package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deprecate:
+    name: Deprecate @tryworld/set
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Mark the old package as moved
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm deprecate "@tryworld/set" \
+            "Moved to @tryworld/setpiece. Install: npm i @tryworld/setpiece"
+      - name: Verify the deprecation
+        run: npm view "@tryworld/set" deprecated

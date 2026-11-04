@@ -7,7 +7,7 @@ body:
     attributes:
       label: Setpiece version
       description: What `setpiece --version` prints.
-      placeholder: 0.1.2
+      placeholder: 0.3.2
     validations:
       required: true
   - type: input
@@ -70,4 +70,4 @@ body:
       label: The film or logs
       description: |
         If you can, attach the film folder (zipped, without large media) or the smallest film.html that shows the bug,
-        and Studio's log (~/.openfilm/logs/studio.log). Leave out anything private, such as keys.
+        and Studio's diagnostic export from Settings → Developer. Leave out anything private, such as keys.
