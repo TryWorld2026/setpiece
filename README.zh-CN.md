@@ -11,9 +11,9 @@
 
 ## 状态
 
-`@tryworld/setpiece@0.3.2` 是当前 CLI 与 npm 版本。公开桌面 Alpha 仍为 `v0.3.0`，提供未签名的 macOS 与
-Windows 安装包；`v0.3.1` 与 `v0.3.2` 桌面安装包正在等待发布签名和公证密钥，尚未发布。源码保留上游 Git
-历史与必要的 MIT 归属声明。
+`@tryworld/setpiece@0.3.2` 是当前 CLI、npm 与 GitHub Latest 版本，不包含桌面安装包。公开桌面 Alpha 仍为
+`v0.3.0`，提供未签名的 macOS 与 Windows 安装包；`v0.3.0` 之后的桌面版本需要 macOS 和 Windows 的签名与公证
+密钥。源码保留上游 Git 历史与必要的 MIT 归属声明。
 
 ## 产品
 
@@ -26,7 +26,8 @@ Windows 安装包；`v0.3.1` 与 `v0.3.2` 桌面安装包正在等待发布签�
 - CLI 与 npm 版本：`0.3.2`
 - 公开桌面 Alpha：`0.3.0`（未签名）
 
-命令只提供 `setpiece`，不再安装旧命令别名。旧 npm 包 `@tryworld/set` 由 `@tryworld/setpiece` 接替。
+命令只提供 `setpiece`，不再安装旧命令别名。旧 npm 包 `@tryworld/set` 已弃用，并指引用户迁移到
+`@tryworld/setpiece`。
 
 ## 安装
 
@@ -37,7 +38,7 @@ npx -y @tryworld/setpiece@latest open
 ```
 
 macOS（Apple Silicon / Intel）与 Windows x64 的未签名桌面 Alpha 安装包见
-[`v0.3.0` 预发布](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0)。macOS 首次打开请右键选择打开；
+[`v0.3.0` 公开 Alpha 版本](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0)。macOS 首次打开请右键选择打开；
 如被 Gatekeeper 阻止，可执行 `xattr -cr /Applications/Setpiece.app`。
 
 ## 从源码运行

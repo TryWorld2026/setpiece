@@ -293,16 +293,22 @@ test("a skill's openfilm.json: its version, kind, order, mark and media; anythin
 test('where the person\'s skills came from: a folder, or the address commitSkills was given; forgotten when removed', async () => {
   const root = mkdtempSync(join(tmpdir(), 'of-skill-origin-'));
   const mine = join(root, 'mine');
-  const src = skill(join(root, 'src', 'cards'), 'cards', 'Makes cards.');
-  await addSkills(src, { mine });
-  assert.deepEqual((({ from, address }) => ({ from, address }))(skillOrigins(mine).cards), { from: 'folder', address: src });
-  const fetched = skill(join(root, 'net', 'lyrics'), 'lyrics', 'Makes lyric videos.');
-  const { staging } = await previewSkills('https://github.com/someone/lyrics', { mine, fetch: async (_url, into) => { const to = join(into, 'lyrics'); cpSync(fetched, to, { recursive: true }); return to; } });
-  await commitSkills(staging, { mine });
-  assert.deepEqual((({ from, address }) => ({ from, address }))(skillOrigins(mine).lyrics), { from: 'link', address: 'https://github.com/someone/lyrics' });
-  await removeSkill('cards', { mine });
-  assert.equal(skillOrigins(mine).cards, undefined);
-  assert.ok(skillOrigins(mine).lyrics);
+  const before = process.env.OPENFILM_TRASH_DIR;
+  process.env.OPENFILM_TRASH_DIR = join(root, 'trash');
+  try {
+    const src = skill(join(root, 'src', 'cards'), 'cards', 'Makes cards.');
+    await addSkills(src, { mine });
+    assert.deepEqual((({ from, address }) => ({ from, address }))(skillOrigins(mine).cards), { from: 'folder', address: src });
+    const fetched = skill(join(root, 'net', 'lyrics'), 'lyrics', 'Makes lyric videos.');
+    const { staging } = await previewSkills('https://github.com/someone/lyrics', { mine, fetch: async (_url, into) => { const to = join(into, 'lyrics'); cpSync(fetched, to, { recursive: true }); return to; } });
+    await commitSkills(staging, { mine });
+    assert.deepEqual((({ from, address }) => ({ from, address }))(skillOrigins(mine).lyrics), { from: 'link', address: 'https://github.com/someone/lyrics' });
+    await removeSkill('cards', { mine });
+    assert.equal(skillOrigins(mine).cards, undefined);
+    assert.ok(skillOrigins(mine).lyrics);
+  } finally {
+    if (before === undefined) delete process.env.OPENFILM_TRASH_DIR; else process.env.OPENFILM_TRASH_DIR = before;
+  }
 });
 
 test("a cover's format is what its bytes are, and a cover chosen before goes when it is replaced; the skill's own picture stays", () => {
