@@ -233,9 +233,10 @@ jobs:
           merge-multiple: true
       - name: Checksums
         run: |
-          find dist -type f ! -name SHA256SUMS.txt -print0 \
+          (cd dist && find . -type f ! -name SHA256SUMS.txt -print0 \
             | sort -z \
-            | xargs -0 sha256sum > dist/SHA256SUMS.txt
+            | xargs -0 sha256sum \
+            | sed 's#  \./#  #' > SHA256SUMS.txt)
           cat dist/SHA256SUMS.txt
       - name: Create or update the draft release
         env:
@@ -332,9 +333,10 @@ jobs:
           path: dist/windows-x64
       - name: Checksums
         run: |
-          find dist -type f -print0 \
+          (cd dist && find . -type f ! -name SHA256SUMS.txt -print0 \
             | sort -z \
-            | xargs -0 sha256sum > dist/SHA256SUMS.txt
+            | xargs -0 sha256sum \
+            | sed 's#  \./#  #' > SHA256SUMS.txt)
           cat dist/SHA256SUMS.txt
       - name: Create the GitHub pre-release
         env:

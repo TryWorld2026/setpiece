@@ -13,10 +13,10 @@ with a new identity and interface.
 ## Status
 
 `@tryworld/setpiece@0.3.2` is the current CLI and npm release, and `v0.3.2` remains the GitHub Latest release. The
-redesigned desktop UI is available for testing in the unsigned Windows x64
-[`v0.3.2-preview.1`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1) pre-release. Unsigned
-macOS installers remain on `v0.3.0`. Signed and notarized desktop builds still require the release credentials. The
-source preserves the upstream Git history and required MIT attribution.
+redesigned desktop UI is available for testing in the unsigned
+[`v0.3.2-preview.2`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.2) pre-release, with Apple
+Silicon, Intel Mac and Windows x64 installers built from the same source revision. Signed and notarized desktop builds
+still require the release credentials. The source preserves the upstream Git history and required MIT attribution.
 
 ## Product
 
@@ -27,8 +27,7 @@ source preserves the upstream Git history and required MIT attribution.
 - Shared package: `setpiece-shared`
 - Repository: https://github.com/TryWorld2026/setpiece
 - CLI and npm version: `0.3.2`
-- Windows desktop Preview: `0.3.2-preview.1` (unsigned)
-- macOS public desktop Alpha: `0.3.0` (unsigned)
+- Desktop Preview: `0.3.2-preview.2` (macOS Apple Silicon, Intel Mac and Windows x64; unsigned)
 
 The command is `setpiece`. Legacy command aliases are no longer installed. The previous `@tryworld/set` npm package
 is deprecated and points users to `@tryworld/setpiece`.
@@ -41,10 +40,9 @@ Requires Node.js `>=22.18`:
 npx -y @tryworld/setpiece@latest open
 ```
 
-Windows x64 testers can download the unsigned [Setpiece Preview 0.3.2](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.1)
-installer from GitHub. Unsigned macOS installers for Apple Silicon and Intel remain attached to the
-[`v0.3.0` public Alpha release](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.0). On macOS, right-click the
-app to open it, or run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
+Testers can download the unsigned [Setpiece Preview 0.3.2](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.2)
+from GitHub: Apple Silicon DMG/ZIP, Intel Mac DMG/ZIP and Windows x64 EXE. On macOS, right-click the app to open it, or
+run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
 
 ## Run from source
 
