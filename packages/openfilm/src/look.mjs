@@ -1,4 +1,4 @@
-// twset look: the agent's eyes. Draws the film (or one frame, or a range), checks it while drawing, and prints
+// setpiece look: the agent's eyes. Draws the film (or one frame, or a range), checks it while drawing, and prints
 // what is wrong before the path of the picture.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';

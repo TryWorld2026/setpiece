@@ -91,8 +91,8 @@ const DESKTOP_FILES = (() => { try { return String(JSON.parse(readFileSync(new U
  */
 export function desktopInstaller(os, arch, base = DESKTOP_FILES) {
   if (!base || (arch !== 'arm64' && arch !== 'x64')) return null;
-  if (os === 'mac') return `${base}/mac/${arch}/TryWorld-Set-${arch}.dmg`;
-  if (os === 'win') return `${base}/win/${arch}/TryWorld-Set-Setup-${arch}.exe`;
+  if (os === 'mac') return `${base}/mac/${arch}/Setpiece-${arch}.dmg`;
+  if (os === 'win') return `${base}/win/${arch}/Setpiece-Setup-${arch}.exe`;
   return null;
 }
 

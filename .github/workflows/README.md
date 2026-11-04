@@ -32,7 +32,7 @@ Windows signing runs on `windows-latest` and uses:
 
 The update feed deployment uses:
 
-- `CLOUDFLARE_API_TOKEN`: a token allowed to deploy the `tryworld-set-download` Worker
+- `CLOUDFLARE_API_TOKEN`: a token allowed to deploy the `setpiece-download` Worker
 
 The feed URL is `https://setpiece.tryworld.com.cn/updates`, configured in
 `packages/openfilm/product.official.json`. Archives stay on GitHub Releases; only the small YAML files are served by

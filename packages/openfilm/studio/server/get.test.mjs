@@ -395,7 +395,7 @@ test('Studio: GET /api/get lists what can be got, never who makes it; a video ru
 const freePort = () => new Promise((done) => { const probe = netServer().listen(0, '127.0.0.1', () => { const { port } = probe.address(); probe.close(() => done(port)); }); });
 
 test('setpiece get: what can be got here, connected, partly or not at all; wrong commands exit 2', { timeout: 60_000 }, async () => {
-  const bin = fileURLToPath(new URL('../../bin/twset.mjs', import.meta.url));
+  const bin = fileURLToPath(new URL('../../bin/setpiece.mjs', import.meta.url));
   const env = { ...process.env, OPENFILM_STUDIO_PORT: String(await freePort()) };
   const get = (cwd, ...args) => spawnSync(process.execPath, [bin, 'get', ...args], { cwd, env, encoding: 'utf8' });
   const run = (cwd, ...args) => new Promise((done) => execFile(process.execPath, [bin, 'get', ...args], { cwd, env, encoding: 'utf8' }, (error, stdout) => done({ status: error?.code ?? 0, stdout })));

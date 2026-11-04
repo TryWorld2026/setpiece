@@ -717,8 +717,8 @@ test('the Desktop button opens the installer for this computer, or the project\'
   assert.equal((await api('/api/desktop', { method: 'POST', body: { os: 'mac', arch: 'arm64' } })).status, 200);
   assert.equal(opened.at(-1), JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).homepage);
   const base = 'https://example.com/download/desktop';
-  assert.equal(desktopInstaller('mac', 'arm64', base), `${base}/mac/arm64/TryWorld-Set-arm64.dmg`);
-  assert.equal(desktopInstaller('win', 'x64', base), `${base}/win/x64/TryWorld-Set-Setup-x64.exe`);
+  assert.equal(desktopInstaller('mac', 'arm64', base), `${base}/mac/arm64/Setpiece-arm64.dmg`);
+  assert.equal(desktopInstaller('win', 'x64', base), `${base}/win/x64/Setpiece-Setup-x64.exe`);
   assert.equal(desktopInstaller('linux', 'x64', base), null);
   assert.equal(desktopInstaller('mac', 'ppc', base), null);
   assert.equal(desktopInstaller('mac', 'arm64', ''), null);

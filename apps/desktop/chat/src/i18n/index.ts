@@ -36,15 +36,9 @@ export function brandName(locale: UiLocale = language): string {
   return locale === 'zh-CN' ? '造境' : 'Setpiece';
 }
 
-function withBrand(text: string, locale: UiLocale): string {
-  return locale === 'zh-CN'
-    ? text.replaceAll('试界片场', '造境').replaceAll('TryWorld Set', '造境')
-    : text.replaceAll('TryWorld Set', 'Setpiece');
-}
-
 function say(locale: UiLocale, path: string): string {
   const said = locale === 'en' ? null : lookup(TABLES[locale], path);
-  return withBrand(said && said !== path ? said : lookup(enUS, path), locale);
+  return said && said !== path ? said : lookup(enUS, path);
 }
 
 export function useBrandName(): string {

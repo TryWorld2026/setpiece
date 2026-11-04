@@ -94,7 +94,7 @@ test('`openfilm open` never makes the current folder a project unasked, nor a co
   const scratch = mkdtempSync(join(tmpdir(), 'of-client-'));
   const env = { ...process.env, OPENFILM_HOME: join(scratch, 'home'), OPENFILM_LIBRARY: join(scratch, 'library'),
     OPENFILM_STUDIO_PORT: String(await freePort()), OPENFILM_NO_BROWSER: '1' };
-  const cli = (cwd, ...args) => spawnSync(process.execPath, [fileURLToPath(new URL('../bin/twset.mjs', import.meta.url)), 'open', ...args], { cwd, env, encoding: 'utf8' });
+  const cli = (cwd, ...args) => spawnSync(process.execPath, [fileURLToPath(new URL('../bin/setpiece.mjs', import.meta.url)), 'open', ...args], { cwd, env, encoding: 'utf8' });
   const repo = join(scratch, 'my-cli');
   mkdirSync(join(repo, '.git'), { recursive: true });
   writeFileSync(join(repo, 'package.json'), '{}');

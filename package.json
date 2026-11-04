@@ -1,7 +1,7 @@
 {
   "name": "setpiece-monorepo",
   "private": true,
-  "description": "Setpiece · 造境: an Apple-inspired AI film workspace. A commercial derivative of OpenFilm, with the film format, `setpiece` CLI and Studio, the desktop app, and what the clients share.",
+  "description": "Setpiece · 造境: an Apple-inspired AI film workspace, with the film format, `setpiece` CLI and Studio, the desktop app, and what the clients share.",
   "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@9.15.9",
@@ -14,8 +14,7 @@
     "build": "pnpm --filter @tryworld/setpiece build:ui && pnpm --filter setpiece-desktop build:shell",
     "test": "pnpm -r --workspace-concurrency=1 --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
-    "setpiece": "node packages/openfilm/bin/twset.mjs",
-    "twset": "node packages/openfilm/bin/twset.mjs",
+    "setpiece": "node packages/openfilm/bin/setpiece.mjs",
     "audit:public": "node scripts/audit-public.mjs",
     "check:pack": "node scripts/check-pack.mjs",
     "release:preflight": "node scripts/release-preflight.mjs",

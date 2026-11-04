@@ -1,7 +1,7 @@
 {
   "name": "@tryworld/setpiece",
   "version": "0.3.1",
-  "description": "Setpiece · 造境: films as web pages, the manual that teaches your coding agent to make them, the `setpiece` command, and Studio, the AI film workspace. An independent derivative of OpenFilm.",
+  "description": "Setpiece · 造境: films as web pages, the manual that teaches your coding agent to make them, the `setpiece` command, and Studio, the AI film workspace.",
   "license": "MIT",
   "homepage": "https://github.com/TryWorld2026/setpiece",
   "repository": {
@@ -23,9 +23,7 @@
   ],
   "type": "module",
   "bin": {
-    "setpiece": "bin/twset.mjs",
-    "twset": "bin/twset.mjs",
-    "openfilm": "bin/twset.mjs"
+    "setpiece": "bin/setpiece.mjs"
   },
   "exports": {
     "./film-doc": "./src/film-doc.mjs",

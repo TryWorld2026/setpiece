@@ -24,7 +24,7 @@ Codex, Claude Code, the other agents, your own key, and Studio with your own med
 the executable and the NSIS installer; a signed Windows build must run on Windows, while `--unsigned` remains available
 for a local cross-build on macOS. A build of this source uses the empty `product.json` and never looks for updates.
 Official builds use `product.official.json`, must be signed and notarized by the release workflow, and point at the
-update feed `https://setpiece.tryworld.com.cn/updates`. The legacy `set.tryworld.com.cn` alias remains bound for
+update feed `https://setpiece.tryworld.com.cn/updates`. The legacy `set.tryworld.com.cn` host redirects permanently for
 installs that shipped before the rename. The feed route is wired; it becomes live after a published release
 successfully runs `update-feed.yml`.
 

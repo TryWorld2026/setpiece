@@ -5,8 +5,8 @@
 > 把想法，造成现场。
 
 **Setpiece · 造境** is an AI film workspace: an Apple-inspired desktop editor and command line for making
-editable, exportable films as web pages. It keeps the complete OpenFilm editing, timeline, media, agent and export
-toolchain, with a new identity and interface.
+editable, exportable films as web pages. It keeps the complete editing, timeline, media, agent and export toolchain,
+with a new identity and interface.
 
 [简体中文](README.zh-CN.md)
 
@@ -14,8 +14,7 @@ toolchain, with a new identity and interface.
 
 `@tryworld/setpiece@0.3.1` is the current CLI and npm release. The public desktop Alpha remains `v0.3.0`, with
 unsigned macOS and Windows installers; `v0.3.1` desktop binaries are waiting on the release signing and notarization
-secrets and have not been published. The source is an independent commercial derivative of OpenFilm, with the
-upstream Git history preserved.
+secrets and have not been published. The source preserves the upstream Git history and required MIT attribution.
 
 ## Product
 
@@ -28,8 +27,8 @@ upstream Git history preserved.
 - CLI and npm version: `0.3.1`
 - Public desktop Alpha: `0.3.0` (unsigned)
 
-The `twset` and `openfilm` command names remain hidden compatibility aliases. The previous `@tryworld/set` npm
-package is superseded by `@tryworld/setpiece`.
+The command is `setpiece`. Legacy command aliases are no longer installed. The previous `@tryworld/set` npm package
+is superseded by `@tryworld/setpiece`.
 
 ## Install
 
@@ -72,7 +71,7 @@ pnpm build
 pnpm test
 ```
 
-## Open-source attribution
+## Required open-source attribution
 
 Setpiece is an independent derivative of [OpenFilm](https://github.com/openfilm/openfilm). OpenFilm's code is
 MIT-licensed, and its copyright belongs to the OpenFilm contributors. We preserve the upstream copyright notices,

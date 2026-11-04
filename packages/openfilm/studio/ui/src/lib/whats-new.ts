@@ -24,27 +24,27 @@ export const RELEASE: ReleaseNotes = {
     en: [
       { kind: 'new', text: 'License and Privacy are now available from Settings, and the desktop app carries both documents with its notices.' },
       { kind: 'improved', text: 'Release packages now include complete third-party notices and legal documents.' },
-      { kind: 'fixed', text: 'Existing projects, preferences and the setpiece, twset and openfilm commands carry over unchanged.' },
+      { kind: 'fixed', text: 'Existing projects and preferences carry over unchanged; the command is now setpiece.' },
     ],
     'zh-CN': [
       { kind: 'new', text: '设置中新增“许可”和“隐私”入口，桌面应用也会随安装包附带这两份文档。' },
       { kind: 'improved', text: '发布包现在完整包含第三方声明与法律文件，分发信息更清楚。' },
-      { kind: 'fixed', text: '已有项目、偏好设置，以及 setpiece、twset、openfilm 命令继续原样可用。' },
+      { kind: 'fixed', text: '已有项目和偏好设置继续原样可用，命令行统一为 setpiece。' },
     ],
     ja: [
       { kind: 'new', text: '設定に「ライセンス」と「プライバシー」への入口を追加し、デスクトップアプリにも両方の文書を同梱しました。' },
       { kind: 'improved', text: 'リリースパッケージにサードパーティ通知と法的文書を完全に含めるようにしました。' },
-      { kind: 'fixed', text: '既存のプロジェクト、設定、setpiece・twset・openfilm コマンドはそのまま引き継がれます。' },
+      { kind: 'fixed', text: '既存のプロジェクトと設定はそのまま引き継がれ、コマンドは setpiece に統一されます。' },
     ],
     ko: [
       { kind: 'new', text: '설정에 라이선스와 개인정보 보호 항목을 추가했으며, 데스크톱 앱에도 두 문서를 함께 포함합니다.' },
       { kind: 'improved', text: '릴리스 패키지에 타사 고지와 법적 문서를 빠짐없이 포함합니다.' },
-      { kind: 'fixed', text: '기존 프로젝트, 환경 설정, setpiece·twset·openfilm 명령이 그대로 유지됩니다.' },
+      { kind: 'fixed', text: '기존 프로젝트와 환경 설정은 그대로 유지되며, 명령은 setpiece로 통일됩니다.' },
     ],
     es: [
       { kind: 'new', text: 'Licencia y Privacidad ya están disponibles en Ajustes, y la aplicación de escritorio incluye ambos documentos.' },
       { kind: 'improved', text: 'Los paquetes de release incluyen ahora los avisos de terceros y los documentos legales completos.' },
-      { kind: 'fixed', text: 'Los proyectos, las preferencias y los comandos setpiece, twset y openfilm se conservan sin cambios.' },
+      { kind: 'fixed', text: 'Los proyectos y las preferencias se conservan; el comando pasa a ser setpiece.' },
     ],
   },
 };

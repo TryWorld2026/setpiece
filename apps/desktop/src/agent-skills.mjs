@@ -102,7 +102,6 @@ async function skillFolders(dir, { except = [] } = {}) {
  * `npx` would contradict it. Never shown, never let in. A skill an earlier OpenFilm install left behind is known too.
  */
 export const isOurs = (skill) => (skill.name === 'setpiece' && /\bSetpiece\b/.test(skill.description ?? ''))
-  || (skill.name === 'twset' && /\b(?:TryWorld Set|Setpiece)\b/.test(skill.description ?? ''))
   || (skill.name === 'openfilm' && /\bOpenFilm\b/.test(skill.description ?? ''));
 /** the folder and each above it, to the root */
 const upFrom = (cwd) => { const out = []; for (let up = resolve(cwd); ; up = dirname(up)) { out.push(up); if (up === dirname(up)) break; } return out; };

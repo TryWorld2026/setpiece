@@ -89,7 +89,7 @@ export function SkillsLibrary({ skills, setSkills, projectId, opened, onOpen, on
   const installed = skills.filter(installedOf).filter(matches);
   const groups = [
     { id: 'mine', label: t('gallery.mine'), hint: t('gallery.mineHint'), items: installed.filter((k) => k.source === 'mine').sort(byOrder) },
-    { id: 'official', label: t('gallery.fromOpenFilm'), hint: t('gallery.officialHint'), items: installed.filter((k) => k.source === 'official').sort(byOrder) },
+    { id: 'official', label: t('gallery.fromSetpiece'), hint: t('gallery.officialHint'), items: installed.filter((k) => k.source === 'official').sort(byOrder) },
     { id: 'project', label: t('gallery.project'), hint: t('gallery.projectHint'), items: installed.filter((k) => k.source === 'project').sort(byOrder) },
   ];
   const catalog = skills.filter((k) => k.source === 'official' && (kind === 'all' || (kind === 'style') === (k.kind === 'style')) && matches(k)).sort(byOrder);

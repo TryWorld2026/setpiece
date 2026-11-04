@@ -10,9 +10,9 @@ cd "path\to\setpiece\site\download"
 npx -y wrangler@4.157.0 deploy --config wrangler.jsonc
 ```
 
-The Worker is `tryworld-set-download`; `wrangler.jsonc` binds the custom domain
-`setpiece.tryworld.com.cn`. The legacy `set.tryworld.com.cn` hostname stays bound to the same Worker so installs
-shipped before the rename can still reach updates.
+The Worker is `setpiece-download`; `wrangler.jsonc` binds the custom domain
+`setpiece.tryworld.com.cn`. The legacy `set.tryworld.com.cn` hostname returns a 301 redirect to the primary domain,
+so old links keep working without serving a second copy of the site.
 
 ## Structure
 

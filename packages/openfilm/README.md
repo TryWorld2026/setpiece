@@ -6,8 +6,8 @@ the `setpiece` command runs the work, and Studio is the desktop-class editor for
 Ask Codex, Claude Code or another coding agent to make a film. It writes the film as web pages (`film.html` cuts them
 together with footage, pictures and sound), and Studio shows it taking shape. Then edit by hand or by asking.
 
-Setpiece is an independent derivative of [OpenFilm](https://github.com/openfilm/openfilm). The upstream MIT license and
-copyright notice are preserved; see [NOTICE](../../NOTICE.md) and [TRADEMARK.md](TRADEMARK.md).
+Setpiece preserves the upstream MIT license and copyright notice; see [NOTICE](../../NOTICE.md) and
+[TRADEMARK.md](TRADEMARK.md).
 
 ## Install
 
@@ -30,8 +30,8 @@ setpiece get    [what]            # voice-over, music, sound effects, transcript
 setpiece doctor                   # what this computer has for Setpiece, to paste into an issue
 ```
 
-`twset` and `openfilm` remain hidden compatibility aliases. `MANUAL.md` is what `setpiece` tells your agent, and
-`SPEC.md` is the film format for anyone building a player, renderer or editor.
+The command is `setpiece`. `MANUAL.md` is what `setpiece` tells your agent, and `SPEC.md` is the film format for
+anyone building a player, renderer or editor.
 
 Source: [github.com/TryWorld2026/setpiece](https://github.com/TryWorld2026/setpiece).
 

@@ -7,8 +7,8 @@
  * studio/ui changes (reload the page); Studio restarts when studio/server or src change. It opens a sample project in
  * your browser (SETPIECE_NO_BROWSER=1: it only prints the address). Ctrl+C stops it all.
  *
- * It also writes .dev/bin/setpiece (and .cmd on Windows), with twset as a compatibility alias: this checkout's command
- * on this Studio, for your own agent to try your changes with.
+ * It also writes .dev/bin/setpiece (and .cmd on Windows): this checkout's command on this Studio, for your own agent to
+ * try your changes with.
  */
 import { spawn } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, readFileSync, rmSync, watch, writeFileSync } from 'node:fs';
@@ -54,18 +54,14 @@ process.on('exit', () => {
 /* this checkout's `setpiece` on this Studio, for your agent: the same environment, and it names itself in the manual */
 const BIN = join(DEV, 'bin');
 mkdirSync(BIN, { recursive: true });
-const CLI = join(ROOT, 'bin', 'twset.mjs');
+const CLI = join(ROOT, 'bin', 'setpiece.mjs');
 const SHARED = ['SETPIECE_HOME', 'SETPIECE_LIBRARY', 'SETPIECE_SHARED_HOME', 'SETPIECE_EXPORTS', 'SETPIECE_STUDIO_PORT', 'SETPIECE_NO_UPDATE_CHECK', 'SETPIECE_OFFICIAL_SKILLS'].filter((k) => env[k]);
 const sh = join(BIN, 'setpiece');
 writeFileSync(sh, `#!/bin/sh\n${SHARED.map((k) => `export ${k}='${env[k]}'`).join('\n')}\nexec '${process.execPath}' '${CLI}' "$@"\n`);
 chmodSync(sh, 0o755);
-const alias = join(BIN, 'twset');
-writeFileSync(alias, `#!/bin/sh\nexec "${sh}" "$@"\n`);
-chmodSync(alias, 0o755);
 if (process.platform === 'win32') {
   const cmd = `@echo off\r\n${SHARED.map((k) => `set "${k}=${env[k]}"`).join('\r\n')}\r\n"${process.execPath}" "${CLI}" %*\r\n`;
   writeFileSync(join(BIN, 'setpiece.cmd'), cmd);
-  writeFileSync(join(BIN, 'twset.cmd'), cmd);
 }
 
 const command = process.platform === 'win32' ? join(BIN, 'setpiece.cmd') : sh;

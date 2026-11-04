@@ -89,9 +89,9 @@ setpiece skill remove <name>
 /* `setpiece` alone: the manual, the whole of what an agent needs to know. `get` takes any options its verb has,
    so it goes to Studio (studio/client.mjs) before the fixed options below are parsed. */
 const RAW = process.argv.slice(2);
-/* the command as the agent can type it here: SETPIECE_RUN, or the older TWSET_RUN / OPENFILM_RUN; through npx always
-   the newest (npx keeps the first one it fetched for a bare name), else `setpiece` where it is installed */
-const RUN = process.env.SETPIECE_RUN || process.env.TWSET_RUN || process.env.OPENFILM_RUN
+/* the command as the agent can type it here: SETPIECE_RUN; through npx always the newest (npx keeps the first one it
+   fetched for a bare name), else `setpiece` where it is installed */
+const RUN = process.env.SETPIECE_RUN
   || (process.env.npm_command === 'exec' ? 'npx -y @tryworld/setpiece@latest' : 'setpiece');
 /**
  * A newer Setpiece, said once in a line before what the command prints: looked up on npm (at most daily, briefly) when

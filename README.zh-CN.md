@@ -5,15 +5,15 @@
 > Bring ideas to the set.
 
 **Setpiece · 造境** 是一个 AI 片场：以网页为影片格式，提供 Apple 风格的专业桌面编辑器与命令行。它完整保留
-OpenFilm 的编辑、时间线、素材、智能体与导出能力，并采用全新的产品身份与界面。
+编辑、时间线、素材、智能体与导出能力，并采用全新的产品身份与界面。
 
 [English](README.md)
 
 ## 状态
 
 `@tryworld/setpiece@0.3.1` 是当前 CLI 与 npm 版本。公开桌面 Alpha 仍为 `v0.3.0`，提供未签名的 macOS 与
-Windows 安装包；`v0.3.1` 桌面安装包正在等待发布签名和公证密钥，尚未发布。本项目是 OpenFilm 的独立商业衍生
-版本，并保留上游 Git 历史。
+Windows 安装包；`v0.3.1` 桌面安装包正在等待发布签名和公证密钥，尚未发布。源码保留上游 Git 历史与必要的 MIT
+归属声明。
 
 ## 产品
 
@@ -26,7 +26,7 @@ Windows 安装包；`v0.3.1` 桌面安装包正在等待发布签名和公证密
 - CLI 与 npm 版本：`0.3.1`
 - 公开桌面 Alpha：`0.3.0`（未签名）
 
-`twset` 与 `openfilm` 命令继续作为隐藏兼容别名保留。旧 npm 包 `@tryworld/set` 由 `@tryworld/setpiece` 接替。
+命令只提供 `setpiece`，不再安装旧命令别名。旧 npm 包 `@tryworld/set` 由 `@tryworld/setpiece` 接替。
 
 ## 安装
 
@@ -69,7 +69,7 @@ pnpm build
 pnpm test
 ```
 
-## 开源归属
+## 必要开源归属
 
 Setpiece 是 [OpenFilm](https://github.com/openfilm/openfilm) 的独立衍生项目。OpenFilm 的代码采用 MIT
 许可证，原始版权归 OpenFilm contributors。我们保留上游版权声明、许可证和 Git 历史。

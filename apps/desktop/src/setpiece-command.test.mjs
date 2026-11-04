@@ -4,19 +4,19 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { commandScript, commandScriptWindows } from './openfilm-command.mjs';
+import { commandScript, commandScriptWindows } from './setpiece-command.mjs';
 
 test("the setpiece command alone has the app's ffmpeg first and its browser; the agent's PATH is left as it is", () => {
-  const sh = commandScript('/app/node', '/app/twset.mjs', { ffmpeg: '/app/ffmpeg', env: { PLAYWRIGHT_BROWSERS_PATH: '/app/pw' } });
+  const sh = commandScript('/app/node', '/app/setpiece.mjs', { ffmpeg: '/app/ffmpeg', env: { PLAYWRIGHT_BROWSERS_PATH: '/app/pw' } });
   assert.match(sh, /^#!\/bin\/sh\n/);
-  assert.match(sh, /PLAYWRIGHT_BROWSERS_PATH='\/app\/pw' PATH='\/app\/ffmpeg':"\$PATH" ELECTRON_RUN_AS_NODE=1 SETPIECE_NO_UPDATE_CHECK=1 exec '\/app\/node' '\/app\/twset.mjs' "\$@"\n$/);
+  assert.match(sh, /PLAYWRIGHT_BROWSERS_PATH='\/app\/pw' PATH='\/app\/ffmpeg':"\$PATH" ELECTRON_RUN_AS_NODE=1 SETPIECE_NO_UPDATE_CHECK=1 exec '\/app\/node' '\/app\/setpiece.mjs' "\$@"\n$/);
   assert.doesNotMatch(commandScript('/n', '/c'), /PATH=/);
-  const cmd = commandScriptWindows('C:\\app\\node.exe', 'C:\\app\\twset.mjs', { ffmpeg: 'C:\\app\\ffmpeg', env: { PLAYWRIGHT_BROWSERS_PATH: 'C:\\pw' } });
+  const cmd = commandScriptWindows('C:\\app\\node.exe', 'C:\\app\\setpiece.mjs', { ffmpeg: 'C:\\app\\ffmpeg', env: { PLAYWRIGHT_BROWSERS_PATH: 'C:\\pw' } });
   assert.match(cmd, /setlocal\r\nset "PLAYWRIGHT_BROWSERS_PATH=C:\\pw"\r\nset "PATH=C:\\app\\ffmpeg;%PATH%"\r\n/);
 });
 
 test('a script run after as-node.mjs is the main module, with its arguments, and no ELECTRON_RUN_AS_NODE', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'openfilm-as-node-'));
+  const dir = mkdtempSync(join(tmpdir(), 'setpiece-as-node-'));
   try {
     const script = join(dir, 'show.mjs');
     writeFileSync(script, "console.log(JSON.stringify({ main: import.meta.main, argv: process.argv.slice(1), runAsNode: process.env.ELECTRON_RUN_AS_NODE ?? null }));\n");

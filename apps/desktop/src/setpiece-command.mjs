@@ -19,7 +19,7 @@ import { nodeBinary } from './node-runtime.mjs';
 const require = createRequire(import.meta.url);
 
 /** The package's CLI. */
-export function twsetCli() {
+export function setpieceCli() {
   const manifest = require.resolve('@tryworld/setpiece/package.json');
   const bin = JSON.parse(readFileSync(manifest, 'utf8')).bin.setpiece;
   return join(dirname(manifest), bin);
@@ -43,23 +43,15 @@ export function commandScriptWindows(node, cli, { ffmpeg = null, env = {} } = {}
  * Write the command into `<dir>/bin` and answer that folder, for PATH. `ffmpeg`: the app's ffmpeg folder, first on the
  * command's PATH; `env`: what else it runs with.
  */
-export function installTwsetCommand(dir, { node = nodeBinary(), platform = process.platform, ffmpeg = null, env = {} } = {}) {
+export function installSetpieceCommand(dir, { node = nodeBinary(), platform = process.platform, ffmpeg = null, env = {} } = {}) {
   const bin = join(dir, 'bin');
   mkdirSync(bin, { recursive: true });
   if (platform === 'win32') {
-    writeFileSync(join(bin, 'setpiece.cmd'), commandScriptWindows(node, twsetCli(), { ffmpeg, env }));
-    writeFileSync(join(bin, 'twset.cmd'), commandScriptWindows(node, twsetCli(), { ffmpeg, env }));
-    writeFileSync(join(bin, 'openfilm.cmd'), commandScriptWindows(node, twsetCli(), { ffmpeg, env }));
+    writeFileSync(join(bin, 'setpiece.cmd'), commandScriptWindows(node, setpieceCli(), { ffmpeg, env }));
     return bin;
   }
   const file = join(bin, 'setpiece');
-  writeFileSync(file, commandScript(node, twsetCli(), { ffmpeg, env }));
+  writeFileSync(file, commandScript(node, setpieceCli(), { ffmpeg, env }));
   chmodSync(file, 0o755);
-  const alias = join(bin, 'twset');
-  writeFileSync(alias, commandScript(node, twsetCli(), { ffmpeg, env }));
-  chmodSync(alias, 0o755);
-  const legacy = join(bin, 'openfilm');
-  writeFileSync(legacy, commandScript(node, twsetCli(), { ffmpeg, env }));
-  chmodSync(legacy, 0o755);
   return bin;
 }

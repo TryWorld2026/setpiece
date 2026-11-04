@@ -1,10 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tryworld-set-download",
+  "name": "setpiece-download",
   "account_id": "d59de4a1d41cd3bfce2ce0c459cfe359",
   "compatibility_date": "2026-11-03",
+  "main": "./src/index.js",
   "assets": {
     "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
     "not_found_handling": "404-page"
   },
   "routes": [

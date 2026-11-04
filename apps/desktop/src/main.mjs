@@ -29,7 +29,7 @@ import { registerSkillsIpc } from './skills-ipc.mjs';
 import { createRoster } from './agent-roster.mjs';
 import { checkAgentProgram, closeEverySession, diagnoseAgent, forgetAgentStatus, listAgents, localAgent, openAgentInstaller, openAgentSignIn, setChosenPaths, signOutAgent } from './agents.mjs';
 import { agentUsage, forgetAgentUsage } from './agent-usage.mjs';
-import { installTwsetCommand } from './openfilm-command.mjs';
+import { installSetpieceCommand } from './setpiece-command.mjs';
 import { startUpdates } from './updates.mjs';
 import { stepAside } from './update-launch.mjs';
 import { ensureFfmpeg, ffmpegDir, ffmpegDownloadable, ffmpegIn, ffmpegOnPath } from './ffmpeg-runtime.mjs';
@@ -623,9 +623,9 @@ async function start() {
     /* a tab says when its agent waits for the person's answer */
     onAsking: (folders) => void tellTabsWorking({ asking: folders }),
     onConnectionResult: (id, error) => roster?.recordConnectionResult(id, error),
-    /* the `openfilm` command first (with the app's ffmpeg and browser in it); the app's ffmpeg last, for a computer
+    /* the `setpiece` command first (with the app's ffmpeg and browser in it); the app's ffmpeg last, for a computer
        that has none of its own: the person's own ffmpeg and browsers are what the agent's commands use */
-    binDir: installTwsetCommand(DATA, { ffmpeg: ffmpegHere, env: browsers }),
+    binDir: installSetpieceCommand(DATA, { ffmpeg: ffmpegHere, env: browsers }),
     fallbackDir: ffmpegHere,
     env: {
       SETPIECE_HOME: env.SETPIECE_HOME,

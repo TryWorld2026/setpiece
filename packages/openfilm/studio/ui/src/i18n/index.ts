@@ -84,11 +84,7 @@ function current(): Language {
 /** The path in `language`'s table, else in English's, else the path itself. */
 export function lookup(path: string, language: Language = current()): string {
   const words = LANGUAGES.find((l) => l.code === language)?.words;
-  const text = (words && language !== 'en' ? find(words, path) : null) ?? find(en, path) ?? path;
-  const branded = language === 'zh-CN'
-    ? text.replaceAll('试界片场', '造境').replaceAll('TryWorld Set', '造境')
-    : text.replaceAll('TryWorld Set', 'Setpiece');
-  return branded.replaceAll('OPENFILM_NO_UPDATE_CHECK', 'SETPIECE_NO_UPDATE_CHECK');
+  return (words && language !== 'en' ? find(words, path) : null) ?? find(en, path) ?? path;
 }
 
 /** The product's name in the language shown: 造境 in Chinese, Setpiece everywhere else. */
