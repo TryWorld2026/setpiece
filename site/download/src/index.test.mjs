@@ -53,7 +53,7 @@ test('known download files proxy through the official site and preserve a range 
     assert.equal(response.headers.get('content-range'), 'bytes 0-8/9');
     assert.equal(calls.length, 1);
     assert.equal(calls[0].headers.get('range'), 'bytes=0-9');
-    assert.equal(calls[0].url, `https://github.com/TryWorld2026/setpiece/releases/download/v0.3.2-preview.4/${DOWNLOAD_FILES[0]}`);
+    assert.equal(calls[0].url, `https://github.com/TryWorld2026/setpiece/releases/download/v0.3.2-preview.5/${DOWNLOAD_FILES[0]}`);
   } finally {
     globalThis.fetch = originalFetch;
   }

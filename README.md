@@ -4,6 +4,9 @@
 >
 > 把想法，造成现场。
 
+> **Repository status:** this public repository is the archived MIT-licensed history through `v0.3.2-preview.5`.
+> Current commercial development continues in a private repository.
+
 **Setpiece · 造境** is an AI film workspace: an Apple-inspired desktop editor and command line for making
 editable, exportable films as web pages. It keeps the complete editing, timeline, media, agent and export toolchain,
 with a new identity and interface.
@@ -14,7 +17,7 @@ with a new identity and interface.
 
 `@tryworld/setpiece@0.3.2` is the current CLI and npm release, and `v0.3.2` remains the GitHub Latest release. The
 redesigned desktop UI is available for testing in the unsigned
-[`v0.3.2-preview.4`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.4) pre-release, with Apple
+[`v0.3.2-preview.5`](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.5) pre-release, with Apple
 Silicon, Intel Mac and Windows x64 installers built from the same source revision. Signed and notarized desktop builds
 still require the release credentials. The source preserves the upstream Git history and required MIT attribution.
 
@@ -27,7 +30,7 @@ still require the release credentials. The source preserves the upstream Git his
 - Shared package: `setpiece-shared`
 - Repository: https://github.com/TryWorld2026/setpiece
 - CLI and npm version: `0.3.2`
-- Desktop Preview: `0.3.2-preview.4` (macOS Apple Silicon, Intel Mac and Windows x64; unsigned)
+- Desktop Preview: `0.3.2-preview.5` (macOS Apple Silicon, Intel Mac and Windows x64; unsigned)
 
 The command is `setpiece`. Legacy command aliases are no longer installed. The previous `@tryworld/set` npm package
 is deprecated and points users to `@tryworld/setpiece`.
@@ -40,7 +43,7 @@ Requires Node.js `>=22.18`:
 npx -y @tryworld/setpiece@latest open
 ```
 
-Testers can download the unsigned [Setpiece Preview 0.3.2](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.4)
+Testers can download the unsigned [Setpiece Preview 0.3.2](https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.5)
 from GitHub: Apple Silicon DMG/ZIP, Intel Mac DMG/ZIP and Windows x64 EXE. On macOS, right-click the app to open it, or
 run `xattr -cr /Applications/Setpiece.app` if Gatekeeper blocks the first launch.
 

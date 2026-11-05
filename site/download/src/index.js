@@ -1,6 +1,6 @@
 const PRIMARY_HOST = 'setpiece.tryworld.com.cn';
 const LEGACY_HOST = 'set.tryworld.com.cn';
-const RELEASE_TAG = 'v0.3.2-preview.4';
+const RELEASE_TAG = 'v0.3.2-preview.5';
 const RELEASE_BASE = `https://github.com/TryWorld2026/setpiece/releases/download/${RELEASE_TAG}`;
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
 const MAX_REDIRECTS = 3;
@@ -14,11 +14,11 @@ export const DOWNLOAD_FILES = [
   'SHA256SUMS.txt',
 ];
 
-const CHECKSUMS = `8f51db7d7431e9a5a2676ab15a4dd37ad27990482c45a2e8f417164f5d440cf9  macos-arm64/Setpiece-Preview-0.3.2-arm64-mac.zip
-f102afe399fbdb41ad91a9e4b0d1aba4b4dd2bbe12eaed82c8ae4d238daed77a  macos-arm64/Setpiece-Preview-arm64.dmg
-e77710b6e51f01fb3c730f2b5a92efae28445910a6f980dedac5fbade31be0eb  macos-x64/Setpiece-Preview-0.3.2-x64-mac.zip
-da302c692fea5f3b25b42df7daf0670d0a23f5c53bebf827e1ae2ae581095693  macos-x64/Setpiece-Preview-x64.dmg
-7f3c4093828514f4382fce8c38e81262b1debfb24ba1dfcfc8104cb11d5e8c68  windows-x64/Setpiece-Preview-Setup-x64.exe
+const CHECKSUMS = `420d9e94dca251f50f8961851070a994325b3e5e7c777c38bb3cbf172135ee15  macos-arm64/Setpiece-Preview-0.3.2-arm64-mac.zip
+f2f145a4c291d5307c74c065fac7bc952a04f0120401ae28093a266c50e34ab4  macos-arm64/Setpiece-Preview-arm64.dmg
+027f14852b885c6c5a4c5a7e14e4e6cc5f5011a11f96d381078febbd929bde8f  macos-x64/Setpiece-Preview-0.3.2-x64-mac.zip
+50a43ce3697a17020fe2b5d90a8d008f8c2cab97495ea11cc718268474a9f22d  macos-x64/Setpiece-Preview-x64.dmg
+a09d7aa4a1110b4a0ac3cd39674e8b05b3cfeb13b598ee928dd9916075f9010c  windows-x64/Setpiece-Preview-Setup-x64.exe
 `;
 
 const passthroughHeaders = (headers) => {

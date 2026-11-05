@@ -29,7 +29,7 @@ so old links keep working without serving a second copy of the site.
 ## Release state
 
 - The npm package is `@tryworld/setpiece` at `0.3.2`; the page shows the npx quick start.
-- The redesigned desktop UI is available for all three platforms from the unsigned `v0.3.2-preview.4` build:
+- The redesigned desktop UI is available for all three platforms from the unsigned `v0.3.2-preview.5` build:
   Apple Silicon DMG/ZIP, Intel Mac DMG/ZIP, Windows x64 EXE and `SHA256SUMS.txt`.
 - All three installers are built from the same source revision. Signed and notarized desktop builds still require the
   release credentials.
