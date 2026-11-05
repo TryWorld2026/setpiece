@@ -93,7 +93,7 @@ export const ko: Words = {
     eyebrow: '업데이트됨',
     title: 'Setpiece {version}의 새로운 기능',
     close: '닫기',
-    changelog: 'GitHub 릴리스',
+    changelog: '사용 안내 보기',
     ok: '확인',
     kind: {
       new: '새 기능',
@@ -1610,8 +1610,9 @@ lockedBody: 'Studio는 실행 중이지만, 키가 붙은 주소로 한 번 연 
       help: '도움말',
     },
     links: {
-      github: 'GitHub',
       site: '웹사이트',
+      guide: '사용 안내',
+      support: '지원',
       eula: '라이선스',
       privacy: '개인정보',
     },

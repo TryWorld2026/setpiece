@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F6F6F3" />
+    <meta name="robots" content="index,follow" />
+    <title>使用说明 · 造境 Setpiece</title>
+    <meta name="description" content="Setpiece 造境桌面版安装、首次打开、项目编辑、导出与命令行启动说明。" />
+    <link rel="icon" type="image/svg+xml" href="../assets/brand/setpiece-icon.svg" />
+    <link rel="stylesheet" href="../legal/legal.css" />
+  </head>
+  <body>
+    <header class="legal-header">
+      <div class="legal-header__inner">
+        <a class="legal-brand" href="/" aria-label="返回造境官网">
+          <img src="../assets/brand/setpiece-icon.svg" width="26" height="26" alt="" />
+          <span>造境 <small>Setpiece</small></span>
+        </a>
+        <nav class="legal-nav" aria-label="页面导航">
+          <a href="/#download">下载</a>
+          <a href="./" aria-current="page">使用说明</a>
+          <a href="/legal/eula/">许可</a>
+          <a href="/legal/privacy/">隐私</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-shell">
+      <p class="eyebrow">SETPIECE · QUICK START</p>
+      <h1>开始使用造境</h1>
+      <p class="updated">适用于 Desktop Preview 0.3.2 · Preview.4</p>
+
+      <section>
+        <h2>1. 选择并安装</h2>
+        <p>
+          在<a href="/#download">官网下载区</a>选择与电脑对应的版本：Apple Silicon、Intel Mac 或 Windows x64。
+          macOS 使用 DMG 打开后将 <code>Setpiece.app</code> 拖入「应用程序」；Windows 运行 EXE 安装程序。ZIP 是 macOS 的备用便携格式。
+        </p>
+        <p>
+          当前为未签名公开测试版。macOS 首次打开若被系统阻止，可在访达中右键应用并选择「打开」；也可执行
+          <code>xattr -cr /Applications/Setpiece.app</code>。Windows SmartScreen 可能提示「未知发布者」，确认文件来自本官网后再选择继续。
+        </p>
+      </section>
+
+      <section>
+        <h2>2. 从项目库开始</h2>
+        <p>
+          首次启动会进入项目库。可以新建作品、打开文件夹中的项目，或从示例开始。顶部标签页允许多个作品同时打开；项目库会保留在后方，不中断当前编辑。
+        </p>
+        <p>
+          编辑器从左到右是素材、画面、检查器和 AI 助理，下方是时间线。可在画面中直接选择元素，也可在时间线上移动、裁剪、分割或吸附片段，所有修改都能撤销。
+        </p>
+      </section>
+
+      <section>
+        <h2>3. 连接智能体与服务</h2>
+        <p>
+          AI 助理可以使用本机已安装的智能体命令行工具。媒体服务、模型与密钥在「设置」中配置，默认保存在本机。不连接任何服务也能打开项目、编辑时间线、播放和导出本地已有素材。
+        </p>
+      </section>
+
+      <section>
+        <h2>4. 导出作品</h2>
+        <p>
+          使用右上角「导出」生成 MP4、透明视频、图片、音频或剪辑工程文件。导出前请确认时间线长度、帧率、音频电平与字幕内容。处理大文件时，请保留足够的磁盘空间。
+        </p>
+      </section>
+
+      <section>
+        <h2>5. 命令行启动</h2>
+        <p>需要 Node.js 22.18 或更新版本。npm 包为 <code>@tryworld/setpiece</code>，命令为 <code>setpiece</code>：</p>
+        <p><code>npx -y @tryworld/setpiece@latest open</code></p>
+        <p>这条命令启动本地 Studio，并在默认浏览器中打开项目库。项目与导出文件仍保存在你自己的电脑上。</p>
+      </section>
+
+      <section>
+        <h2>6. 校验安装包</h2>
+        <p>
+          <a href="/checksums">查看 SHA256 校验值</a>。下载完成后，可在 macOS 终端运行
+          <code>shasum -a 256 文件名</code>，或在 Windows PowerShell 运行
+          <code>Get-FileHash 文件名 -Algorithm SHA256</code>，与官网列出的值核对。
+        </p>
+      </section>
+
+      <section>
+        <h2>7. 获取帮助</h2>
+        <p>
+          使用中遇到问题，请通过<a href="/support/">支持入口</a>联系。可在应用「设置 → 开发者」中复制诊断报告；发送前请检查报告内容，不要包含密钥或私人素材。
+        </p>
+      </section>
+    </main>
+
+    <footer class="legal-footer">
+      <div class="legal-footer__inner">
+        <p>© 2026 Setpiece · 造境</p>
+        <nav aria-label="页脚">
+          <a href="/">下载</a>
+          <a href="./">使用说明</a>
+          <a href="/support/">支持</a>
+          <a href="/legal/eula/">许可</a>
+          <a href="/legal/privacy/">隐私</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

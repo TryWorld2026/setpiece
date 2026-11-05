@@ -1,7 +1,7 @@
 /**
  * "What's new" after an update (lib/whats-new.ts): once Studio runs a newer version than the one whose notes were last
  * shown, this version's notes, in the language shown, grouped as new, improved and fixed. Only this version's, however
- * many came between: earlier releases are in the changelog on GitHub, a click away. Closing it marks this version
+ * many came between: earlier releases are described on the official guide, a click away. Closing it marks this version
  * seen. A new install shows nothing (it only remembers the version). Settings › About shows them again, and Developer
  * previews them before they ship (WHATS_NEW_EVENT).
  */
@@ -12,7 +12,7 @@ import { api } from '@/api';
 import { useLanguage, useT } from '@/i18n';
 import { RELEASE, WHATS_NEW_EVENT, compareVersions, releaseNotes, type NoteKind, type ReleaseNotes } from '@/lib/whats-new';
 
-const CHANGELOG = 'https://github.com/TryWorld2026/setpiece/releases';
+const CHANGELOG = 'https://setpiece.tryworld.com.cn/guide/';
 const KINDS: readonly NoteKind[] = ['new', 'improved', 'fixed'];
 const KIND_ICON: Record<NoteKind, React.ReactNode> = {
   new: <Sparkles size={14} aria-hidden />,

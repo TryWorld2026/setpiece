@@ -96,7 +96,7 @@ export const ja: Words = {
     eyebrow: 'アップデート済み',
     title: 'Setpiece {version} の新機能',
     close: '閉じる',
-    changelog: 'GitHub のリリース',
+    changelog: '使い方を見る',
     ok: 'OK',
     kind: {
       new: '新機能',
@@ -1614,8 +1614,9 @@ lockedBody: 'Studio は動いていますが、キー付きのアドレスで一
       help: 'ヘルプ',
     },
     links: {
-      github: 'GitHub',
       site: 'ウェブサイト',
+      guide: '使い方',
+      support: 'サポート',
       eula: 'ライセンス',
       privacy: 'プライバシー',
     },

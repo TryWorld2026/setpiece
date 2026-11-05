@@ -97,7 +97,7 @@ export const zhCN: Words = {
     eyebrow: '已更新',
     title: '造境 {version} 有哪些新内容',
     close: '关闭',
-    changelog: 'GitHub 上的发布记录',
+    changelog: '查看使用说明',
     ok: '知道了',
     kind: {
       new: '新功能',
@@ -1617,8 +1617,9 @@ lockedBody: 'Studio 正在运行，但只接受用带 key 的地址打开过一�
       help: '帮助',
     },
     links: {
-      github: 'GitHub',
       site: '官网',
+      guide: '使用说明',
+      support: '支持',
       eula: '许可',
       privacy: '隐私',
     },

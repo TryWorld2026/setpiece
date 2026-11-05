@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F6F6F3" />
+    <meta name="robots" content="index,follow" />
+    <title>支持 · 造境 Setpiece</title>
+    <meta name="description" content="Setpiece 造境公开测试版支持入口、问题反馈方式与诊断信息说明。" />
+    <link rel="icon" type="image/svg+xml" href="../assets/brand/setpiece-icon.svg" />
+    <link rel="stylesheet" href="../legal/legal.css" />
+  </head>
+  <body>
+    <header class="legal-header">
+      <div class="legal-header__inner">
+        <a class="legal-brand" href="/" aria-label="返回造境官网">
+          <img src="../assets/brand/setpiece-icon.svg" width="26" height="26" alt="" />
+          <span>造境 <small>Setpiece</small></span>
+        </a>
+        <nav class="legal-nav" aria-label="页面导航">
+          <a href="/#download">下载</a>
+          <a href="/guide/">使用说明</a>
+          <a href="./" aria-current="page">支持</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-shell">
+      <p class="eyebrow">SETPIECE · SUPPORT</p>
+      <h1>需要帮助？</h1>
+      <p class="updated">公开测试版支持</p>
+
+      <div class="notice">
+        <strong>直接联系，无需账号</strong>
+        <p>
+          当前提供邮件支持，不需要注册账号，也不需要开发者平台。请尽量附上版本号、操作系统、复现步骤和截图；不要发送 API 密钥、密码或未公开的项目素材。
+        </p>
+      </div>
+
+      <section>
+        <h2>联系邮箱</h2>
+        <p><a href="mailto:tryworld@foxmail.com">tryworld@foxmail.com</a></p>
+      </section>
+
+      <section>
+        <h2>反馈前可以准备什么</h2>
+        <ul>
+          <li>造境版本与安装包平台，可在应用「设置 → 关于」查看；</li>
+          <li>macOS 或 Windows 版本，以及 Apple Silicon、Intel 或 x64 架构；</li>
+          <li>问题发生前的操作步骤，最好能稳定复现；</li>
+          <li>应用「设置 → 开发者」中的诊断报告，发送前请先阅读内容；</li>
+          <li>如涉及导出，请说明格式、分辨率、帧率和是否有外部素材。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>常见问题</h2>
+        <h3>macOS 提示应用已损坏或无法打开</h3>
+        <p>这是未签名测试版的常见系统提示。右键应用选择「打开」，或执行 <code>xattr -cr /Applications/Setpiece.app</code>。只运行从本官网下载并核对过校验值的安装包。</p>
+        <h3>Windows 提示未知发布者</h3>
+        <p>当前 EXE 未做代码签名。确认文件来自 <code>setpiece.tryworld.com.cn</code> 且 SHA256 与官网一致后，再决定是否继续。</p>
+        <h3>AI 助理没有响应</h3>
+        <p>检查本机智能体工具是否已安装并登录，在「设置 → 智能体」确认连接状态，再查看所选模型与第三方服务密钥是否有效。</p>
+      </section>
+    </main>
+
+    <footer class="legal-footer">
+      <div class="legal-footer__inner">
+        <p>© 2026 Setpiece · 造境</p>
+        <nav aria-label="页脚">
+          <a href="/">下载</a>
+          <a href="/guide/">使用说明</a>
+          <a href="./">支持</a>
+          <a href="/legal/eula/">许可</a>
+          <a href="/legal/privacy/">隐私</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

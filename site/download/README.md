@@ -17,6 +17,8 @@ so old links keep working without serving a second copy of the site.
 ## Structure
 
 - `public/index.html` — landing page
+- `public/guide/` — first-party quick-start and installation guide
+- `public/support/` — first-party email support and troubleshooting
 - `public/styles.css` — Setpiece visual system and responsive layout
 - `public/script.js` — header state, reveal, copy command
 - `public/assets/brand/` — Setpiece icon
@@ -27,8 +29,9 @@ so old links keep working without serving a second copy of the site.
 ## Release state
 
 - The npm package is `@tryworld/setpiece` at `0.3.2`; the page shows the npx quick start.
-- The redesigned desktop UI is available for all three platforms in the unsigned `v0.3.2-preview.4` pre-release:
+- The redesigned desktop UI is available for all three platforms from the unsigned `v0.3.2-preview.4` build:
   Apple Silicon DMG/ZIP, Intel Mac DMG/ZIP, Windows x64 EXE and `SHA256SUMS.txt`.
 - All three installers are built from the same source revision. Signed and notarized desktop builds still require the
   release credentials.
-- Desktop Preview: https://github.com/TryWorld2026/setpiece/releases/tag/v0.3.2-preview.4
+- The public site exposes `/downloads/<filename>` and `/checksums`; the Worker maps them to immutable release
+  artifacts while ordinary users stay on the official domain.

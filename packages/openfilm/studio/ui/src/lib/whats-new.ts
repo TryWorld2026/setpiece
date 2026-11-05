@@ -1,7 +1,7 @@
 /**
  * What this release brings, said to the person after an update, in every language Studio speaks (a release without them
  * all does not compile), grouped as new, improved and fixed. Only this release's: the dialog tells what the version now
- * running brings, and the changelog on GitHub keeps every release's.
+ * running brings, and the official guide keeps the product's documentation together.
  *
  * Written when a release is made (the "Version packages" pull request), in place of the release before's: the
  * changesets say everything that changed, for the changelog; these say every change a person would notice, in their

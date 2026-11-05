@@ -347,22 +347,22 @@ jobs:
             echo "::error::Release $TAG already exists"
             exit 1
           fi
-          cat > "$RUNNER_TEMP/notes.md" <<'EOF'
-          Setpiece / 造境 **0.3.2 Desktop Preview**，macOS 与 Windows 未签名安装包。
+          cat > "$RUNNER_TEMP/notes.md" <<EOF
+          **Setpiece ${TAG#v} Desktop Preview**: unsigned macOS and Windows installers.
 
-          三个平台均由当前重设计代码构建：Apple Silicon、Intel Mac 与 Windows x64。包括 Finder 式项目库、新的编辑器工作台、检查器和 AI 助理界面。
+          Built from the current redesigned source for all three platforms: Apple Silicon, Intel Mac, and Windows x64. Includes the Finder-style project library, the new editor workspace, inspector, and AI assistant interface.
 
-          - macOS 13+ · Apple Silicon：DMG / ZIP
-          - macOS 13+ · Intel：DMG / ZIP
-          - Windows 10 / 11 · x64：EXE
-          - 所有安装包均未签名；macOS 首次打开可能被 Gatekeeper 阻止，Windows SmartScreen 可能提示“未知发布者”
+          - macOS 13+ / Apple Silicon: DMG / ZIP
+          - macOS 13+ / Intel: DMG / ZIP
+          - Windows 10 / 11 / x64: EXE
+          - All installers are unsigned; Gatekeeper may block the first macOS launch and Windows SmartScreen may show an unknown publisher warning.
 
-          这是预发布版本，不会替换稳定版 Latest。许可证与第三方声明随安装包提供。
+          This is a pre-release and does not replace the stable Latest release. License and third-party notices ship with the installers.
           EOF
           mapfile -d '' files < <(find dist -type f -print0)
           gh release create "$TAG" "${files[@]}" \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "Setpiece Preview 0.3.2 · macOS + Windows" \
+            --title "Setpiece Preview ${TAG#v} · macOS + Windows" \
             --notes-file "$RUNNER_TEMP/notes.md" \
             -R "$GITHUB_REPOSITORY"

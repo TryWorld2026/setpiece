@@ -96,7 +96,7 @@ export const es: Words = {
     eyebrow: 'Actualizado',
     title: 'Novedades de Setpiece {version}',
     close: 'Cerrar',
-    changelog: 'Versiones en GitHub',
+    changelog: 'Ver la guía',
     ok: 'Entendido',
     kind: {
       new: 'Nuevo',
@@ -1614,8 +1614,9 @@ lockedBody: 'Studio está en marcha, pero solo deja entrar a un navegador que lo
       help: 'Ayuda',
     },
     links: {
-      github: 'GitHub',
       site: 'Sitio web',
+      guide: 'Guía',
+      support: 'Soporte',
       eula: 'Licencia',
       privacy: 'Privacidad',
     },

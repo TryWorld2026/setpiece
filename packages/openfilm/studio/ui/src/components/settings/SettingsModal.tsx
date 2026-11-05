@@ -3,7 +3,7 @@
  * right as a page of titled groups. General (the theme and the language), Agents (in an app with a chat: the agents
  * it can use), Providers (the person's own keys for media services), Models (which provider and model makes each kind
  * of media), the keyboard shortcuts, Advanced and Developer; the search finds a section by any phrase on it. At the
- * foot of the nav, quietly, where Setpiece lives: its code and the website.
+ * foot of the nav, quietly, where Setpiece lives: the website, guide, support and legal pages.
  */
 import React from 'react';
 import { createPortal } from 'react-dom';
@@ -36,8 +36,9 @@ const NAV: Array<{ group: 'settings' | 'help'; sections: SettingsSection[] }> = 
 
 /** where Setpiece lives, linked at the foot of the nav */
 const LINKS = [
-  { label: 'settings.links.github', href: 'https://github.com/TryWorld2026/setpiece' },
   { label: 'settings.links.site', href: 'https://setpiece.tryworld.com.cn' },
+  { label: 'settings.links.guide', href: 'https://setpiece.tryworld.com.cn/guide/' },
+  { label: 'settings.links.support', href: 'https://setpiece.tryworld.com.cn/support/' },
   { label: 'settings.links.eula', href: 'https://setpiece.tryworld.com.cn/legal/eula/' },
   { label: 'settings.links.privacy', href: 'https://setpiece.tryworld.com.cn/legal/privacy/' },
 ];

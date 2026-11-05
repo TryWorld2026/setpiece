@@ -97,7 +97,7 @@ export const en = {
     eyebrow: 'Updated',
     title: 'What’s new in Setpiece {version}',
     close: 'Close',
-    changelog: 'Releases on GitHub',
+    changelog: 'View the guide',
     ok: 'Got it',
     kind: {
       new: 'New',
@@ -1617,8 +1617,9 @@ lockedBody: 'Studio is running, but it only lets in a browser that opened it onc
       help: 'Help',
     },
     links: {
-      github: 'GitHub',
       site: 'Website',
+      guide: 'Guide',
+      support: 'Support',
       eula: 'License',
       privacy: 'Privacy',
     },
